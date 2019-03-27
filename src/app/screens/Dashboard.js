@@ -104,6 +104,8 @@ var UID = "";
 var width = Dimensions.get("window").width;
 var height = Dimensions.get("window").height;
 
+var distance = (width / 0.63) - 13;
+
 class Dashboard extends React.Component {
   static navigationOptions = {
     header: null
@@ -810,7 +812,7 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
     resizeMode: "contain",
-    marginLeft: width / 1.1
+    marginLeft: width / 0.6
   },
   settingImgTouch: {
     zIndex: 200,
@@ -820,31 +822,31 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
     resizeMode: "contain",
-    marginLeft: width / 1.68
+    marginLeft: (distance - 160)
   },
   numberTwoImg: {
     width: 50,
     height: 50,
     resizeMode: "contain",
-    marginLeft: width / 1.53
+    marginLeft: (distance - 120)
   },
   numberThreeImg: {
     width: 50,
     height: 50,
     resizeMode: "contain",
-    marginLeft: width / 1.4
+    marginLeft: (distance - 80)
   },
   numberFourImg: {
     width: 50,
     height: 50,
     resizeMode: "contain",
-    marginLeft: width / 1.3
+    marginLeft: (distance - 40)
   },
   numberFiveImg: {
     width: 50,
     height: 50,
     resizeMode: "contain",
-    marginLeft: width / 1.2
+    marginLeft: distance 
   },
   contView: {
     flex: 1,
