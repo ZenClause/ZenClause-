@@ -1,0 +1,32 @@
+{
+  "expo": {
+    "name": "Zen Clause",
+    "slug": "zen-clause",
+    "privacy": "public",
+    "sdkVersion": "32.0.0",
+    "platforms": [
+      "ios",
+      "android"
+    ],
+    "android": {
+      "package": "com.zenclause.zenclause",
+      "versionCode": 2,
+      "permissions": [],
+      "icon": "./assets/signUpLoginImages/myicon.png"
+    },
+    "version": "1.0.0",
+    "icon": "./assets/signUpLoginImages/myicon.png",
+    "splash": {
+      "image": "./assets/splash/Capture.png"
+    },
+    "updates": {
+      "fallbackToCacheTimeout": 0
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true
+    }
+  }
+}
