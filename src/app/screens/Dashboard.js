@@ -51,6 +51,7 @@ import NumberThree from "../../../assets/images/number-three.png";
 import NumberFour from "../../../assets/images/number-four.png";
 import NumberFive from "../../../assets/images/number-five.png";
 import House from '../../../assets/images/house.png'
+import Profile from '../../../assets/images/profile.png'
 
 import House1 from '../../../assets/images/house_1.png';
 import House2 from "../../../assets/images/house_2.png";
@@ -134,7 +135,8 @@ class Dashboard extends React.Component {
     headerText: "",
     image: null,
     btnValue: "Vibrate",
-    residentEmail: ""
+    residentEmail: "",
+    users: false
   };
 
   componentDidMount() {
@@ -143,6 +145,19 @@ class Dashboard extends React.Component {
     var a = this.props.navigation;
 
     ScreenOrientation.allowAsync(ScreenOrientation.Orientation.LANDSCAPE_RIGHT);
+  }
+
+  componentWillMount() {
+    this.getUsers();
+  }
+
+  getUsers = () => {
+    var users = firebase.database().ref('/users/').once('value').then((res) => {
+      this.setState({
+        users: Object.values(res.val())
+      });
+    }).catch(console.error)
+
   }
 
   changeBtn() {
@@ -566,16 +581,23 @@ class Dashboard extends React.Component {
               styles[`house_${i + 1}`] && styles[`house_${i + 1}`]
             ]}
             onPress={() =>
-              this.setState({ visibleInviteResident: true, house_no: h_no })
+              this.setState({
+                visibleInviteResident: true,
+                house_no: h_no
+              })
             }
           >
             <Image source={house} style={styles.house} />
+            {this.state.users[h_no-1] && this.state.users[h_no-1].mail && (
+              <Image source={Profile} style={styles.profile} />
+            )}
           </TouchableOpacity>
         </View>
       );
     });
 
   render() {
+    console.log(this.state.users[0]);
     return (
       <Container style={{ flex: 1 }}>
         <StatusBar hidden={true} />
@@ -641,7 +663,9 @@ class Dashboard extends React.Component {
         {/* /*************************************Modal pass  */}
         <Modal
           isVisible={this.state.visbleModalForEmail === true}
-          onBackdropPress={() => this.setState({ visbleModalForEmail: null })}
+          onBackdropPress={() =>
+            this.setState({ visbleModalForEmail: null })
+          }
         >
           {this.renderModalContentForEmail()}
         </Modal>
@@ -675,7 +699,9 @@ class Dashboard extends React.Component {
         </Modal>
         <Modal
           isVisible={this.state.visibleInviteResident === true}
-          onBackdropPress={() => this.setState({ visibleInviteResident: null })}
+          onBackdropPress={() =>
+            this.setState({ visibleInviteResident: null })
+          }
         >
           {this.renderModalContentForInviteResident()}
         </Modal>
@@ -686,11 +712,11 @@ class Dashboard extends React.Component {
 
 
 const percentageX = (value) => {
-  return width * (value/100); // 340 px my device
+  return height * (value/100); // 340 px my device
 }
 
 const percentageY = (value) => {
-  return height * (value/100); // 640 my device
+  return width * (value / 100); // 640 my device
 }
 
 
@@ -874,9 +900,6 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "column"
   },
-  houseContainer: {
-    flex: 1
-  },
   house: {
     width: percentageX(22),
     height: percentageX(22),
@@ -964,6 +987,14 @@ const styles = StyleSheet.create({
   houseTouchable: {
     position: "absolute",
     zIndex: 9999
+  },
+  profile: { 
+    width: 25, 
+    height: 25,
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    zIndex: 9999999
   }
 });
 
