@@ -533,6 +533,7 @@ class Dashboard extends React.Component {
 
   renderModalContentForInviteResident = () => (
     <View style={styles.modalContent}>
+      <Label>House No: #{this.state.house_no}</Label>
       <Item>
         <Input
           onChangeText={residentEmail => this.setState({ residentEmail })}
@@ -555,12 +556,18 @@ class Dashboard extends React.Component {
 
   renderHouses = () =>
     Houses.map((house, i) => {
+      let h_no = i + 1;
       return (
-        <View key={i}>
+        <View key={i} style={styles.houseContainer}>
           <TouchableOpacity
             activeOpacity={0.5}
-            style={[styles.houseTouchable, styles[`house_${i + 1}`]]}
-            onPress={() => this.setState({ visibleInviteResident: true })}
+            style={[
+              styles.houseTouchable,
+              styles[`house_${i + 1}`] && styles[`house_${i + 1}`]
+            ]}
+            onPress={() =>
+              this.setState({ visibleInviteResident: true, house_no: h_no })
+            }
           >
             <Image source={house} style={styles.house} />
           </TouchableOpacity>
@@ -675,6 +682,15 @@ class Dashboard extends React.Component {
       </Container>
     );
   }
+}
+
+
+const percentageX = (value) => {
+  return width * (value/100); // 340 px my device
+}
+
+const percentageY = (value) => {
+  return height * (value/100); // 640 my device
 }
 
 
@@ -812,7 +828,7 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
     resizeMode: "contain",
-    marginLeft: width / 0.6
+    marginLeft: distance
   },
   settingImgTouch: {
     zIndex: 200,
@@ -822,115 +838,128 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
     resizeMode: "contain",
-    marginLeft: (distance - 160)
+    marginLeft: distance - 180
   },
   numberTwoImg: {
     width: 50,
     height: 50,
     resizeMode: "contain",
-    marginLeft: (distance - 120)
+    marginLeft: distance - 140
   },
   numberThreeImg: {
     width: 50,
     height: 50,
     resizeMode: "contain",
-    marginLeft: (distance - 80)
+    marginLeft: distance - 100
   },
   numberFourImg: {
     width: 50,
     height: 50,
     resizeMode: "contain",
-    marginLeft: (distance - 40)
+    marginLeft: distance - 60
   },
   numberFiveImg: {
     width: 50,
     height: 50,
     resizeMode: "contain",
-    marginLeft: distance 
+    marginLeft: distance - 20
+  },
+  settingImg: {
+    width: 50,
+    height: 50,
+    resizeMode: "contain",
+    marginLeft: distance + 20
   },
   contView: {
     flex: 1,
     flexDirection: "column"
   },
+  houseContainer: {
+    flex: 1
+  },
   house: {
-    width: 80,
-    height: 80
+    width: percentageX(22),
+    height: percentageX(22),
   },
   house_1: {
-    bottom: 0,
-    left: 20
+    bottom: percentageX(0),
+    left: percentageY(2)
+  },
+  house_2: {
+    bottom: percentageX(12),
+    left: percentageY(15)
   },
   house_3: {
-    bottom: 40,
-    left: 170
+    bottom: percentageX(11),
+    left: percentageY(28)
   },
   house_4: {
-    bottom: 45,
-    left: 340
+    bottom: percentageX(12.5),
+    left: percentageY(53)
   },
   house_5: {
-    bottom: 5,
-    left: 410
+    bottom: percentageX(0),
+    left: percentageY(65)
   },
   house_6: {
-    bottom: 5,
-    right: 0
+    bottom: percentageX(2),
+    left: percentageY(88)
   },
   house_7: {
-    bottom: 85,
-    left: 10
+    bottom: percentageX(24),
+    left: percentageY(1)
   },
   house_8: {
-    bottom: 145,
-    left: 70
+    bottom: percentageX(41),
+    left: percentageY(10)
   },
   house_9: {
-    bottom: 105,
-    left: 200
+    bottom: percentageX(30),
+    left: percentageY(30)
   },
   house_10: {
-    bottom: 75,
-    left: 280
+    bottom: percentageX(23),
+    left: percentageY(42)
   },
   house_11: {
-    bottom: 100,
-    right: 170
+    bottom: percentageX(26),
+    left: percentageY(61)
   },
   house_12: {
-    bottom: 130,
-    right: 80
+    bottom: percentageX(36),
+    left: percentageY(74)
   },
   house_13: {
-    bottom: 65,
-    right: 35
+    bottom: percentageX(19),
+    left: percentageY(82)
   },
   house_14: {
-    bottom: 175,
-    left: 0
+    bottom: percentageX(52),
+    left: percentageY(0)
   },
   house_15: {
-    bottom: 230,
-    left: 80
+    bottom: percentageX(62),
+    left: percentageY(14)
   },
   house_16: {
-    bottom: 175,
-    left: 145
+    bottom: percentageX(49),
+    left: percentageY(24)
   },
   house_17: {
-    bottom: 220,
-    left: 315
+    bottom: percentageX(61),
+    left: percentageY(49)
   },
   house_18: {
-    bottom: 190,
-    left: 380
+    bottom: percentageX(53),
+    left: percentageY(60)
   },
   house_19: {
-    bottom: 245,
-    right: 75
+    bottom: percentageX(68),
+    left: percentageY(76)
   },
   house_20: {
-    bottom: 210,
-    right: 5
+    bottom: percentageX(59),
+    left: percentageY(87)
   },
   houseTouchable: {
     position: "absolute",
