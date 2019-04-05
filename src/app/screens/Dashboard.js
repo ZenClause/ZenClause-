@@ -51,6 +51,13 @@ import NumberTwo from "../../../assets/images/number-two.png";
 import NumberThree from "../../../assets/images/number-three.png";
 import NumberFour from "../../../assets/images/number-four.png";
 import NumberFive from "../../../assets/images/number-five.png";
+
+import cNumberOne from "../../../assets/images/number-one_c.png";
+import cNumberTwo from "../../../assets/images/number-two_c.png";
+import cNumberThree from "../../../assets/images/number-three_c.png";
+import cNumberFour from "../../../assets/images/number-four_c.png";
+import cNumberFive from "../../../assets/images/number-five_c.png";
+
 import House from '../../../assets/images/house.png'
 import Profile from '../../../assets/images/profile.png'
 
@@ -87,6 +94,14 @@ import cHouse9 from "../../../assets/images/house_c_9.png";
 import cHouse10 from "../../../assets/images/house_c_10.png";
 import cHouse11 from "../../../assets/images/house_c_11.png";
 import cHouse12 from "../../../assets/images/house_c_12.png";
+import cHouse13 from "../../../assets/images/house_c_13.png";
+import cHouse14 from "../../../assets/images/house_c_14.png";
+import cHouse15 from "../../../assets/images/house_c_15.png";
+import cHouse16 from "../../../assets/images/house_c_16.png";
+import cHouse17 from "../../../assets/images/house_c_17.png";
+import cHouse18 from "../../../assets/images/house_c_18.png";
+import cHouse19 from "../../../assets/images/house_c_19.png";
+import cHouse20 from "../../../assets/images/house_c_20.png";
 
 import { Dropdown } from 'react-native-material-dropdown'
 
@@ -102,7 +117,15 @@ const cHouses = [
   cHouse9,
   cHouse10,
   cHouse11,
-  cHouse12
+  cHouse12,
+  cHouse13,
+  cHouse14, 
+  cHouse15,
+  cHouse16,
+  cHouse17,
+  cHouse18,
+  cHouse19,
+  cHouse20
 ];
 
 const Houses = [
@@ -136,6 +159,14 @@ const settingBtns = [
   NumberThree,
   NumberFour,
   NumberFive
+];
+
+const cSettingBtns = [
+  cNumberOne,
+  cNumberTwo,
+  cNumberThree,
+  cNumberFour,
+  cNumberFive
 ];
 
 
@@ -178,7 +209,8 @@ class Dashboard extends React.Component {
     btnValue: "Vibrate",
     residentEmail: "",
     users: false,
-    neighbors: false
+    neighbors: false,
+    neighborID: 1
   };
 
   componentDidMount() {
@@ -214,13 +246,13 @@ class Dashboard extends React.Component {
     var users = firebase
       .database()
       .ref("/neighborhood/")
-      .once("value")
-      .then(res => {
+      .orderByChild('neighborID')
+      .equalTo(this.state.neighborID)
+      .on("value", snap => {
         this.setState({
-          neighbors: Object.values(res.val())
+          neighbors: snap.val()
         });
       })
-      .catch(console.error);
   };
 
   changeBtn() {
@@ -609,6 +641,23 @@ class Dashboard extends React.Component {
     </View>
   );
 
+  renderPrivacyPolicy = () => (
+    <View style={styles.modalContent}>
+      <Item>
+        <Label style={{fontSize: 18, marginBottom: 5}}>Privacy And Policy</Label>
+      </Item>
+      <View>
+        <Text>Read our Privacy and Policy</Text>
+      </View>
+      {/* <TouchableOpacity onPress={()=>this.changeEmail(this.state.currentPasswordForEmail , this.state.currentPasswordForEmail)}> */}
+      <TouchableOpacity onPress={() => this.setState({privacyModal: null})}>
+        <View style={styles.button}>
+          <Text>Close</Text>
+        </View>
+      </TouchableOpacity>
+    </View>
+  )
+
   renderModalContentForInviteResident = () => (
     <View style={styles.modalContent}>
       <Label>House No: #{this.state.house_no}</Label>
@@ -636,8 +685,13 @@ class Dashboard extends React.Component {
     </View>
   )
 
-  callFun = () => {
-    this.setState({ visibleModal: true });
+  callFun = async (b_no) => {
+    await this.setState({ 
+      visibleModal: b_no === -1 ? true : null, // -1 setting button
+      privacyModal: b_no === 0 ? true : null,
+      neighborID: b_no > 0 ? b_no : this.state.neighborID
+    });
+    this._RefreshHouse();
   };
 
   renderHouses = () =>
@@ -645,11 +699,12 @@ class Dashboard extends React.Component {
       let h_no = i + 1;
       return (
         <RenderHouse
-          key={i}
+          key={Math.random(i).toString(36)}
           h_no={h_no}
           house={house}
           neighbors={this.state.neighbors}
           RefreshHouse={this._RefreshHouse}
+          neighborID={this.state.neighborID}
         />
       );
     });
@@ -657,18 +712,23 @@ class Dashboard extends React.Component {
   renderSettingBtn = () =>
     settingBtns.map((btnImg, j) => {
       let b_no = j;
+
       return (
         <TouchableOpacity
           key={b_no}
           activeOpacity={0.5}
-          onPress={this.callFun}
+          onPress={() => this.callFun(b_no - 1)}
           style={[
             styles.settingImgTouch,
             styles[`settingImgTouch_${b_no}`] &&
             styles[`settingImgTouch_${b_no}`]
           ]}
         >
-          <Image source={btnImg} style={styles.settingImg} />
+          
+          {b_no !== 0 && b_no - 1 === this.state.neighborID
+            ? <Image source={cSettingBtns[this.state.neighborID - 1]} style={styles.settingImg} />
+            : <Image source={btnImg} style={styles.settingImg} />
+          }
         </TouchableOpacity>
       );
     });
@@ -725,6 +785,16 @@ class Dashboard extends React.Component {
         >
           {this.renderModalContentForHeaderText()}
         </Modal>
+
+        <Modal
+          isVisible={this.state.privacyModal === true}
+          onBackdropPress={() =>
+            this.setState({ privacyModal: null })
+          }
+        >
+          {this.renderPrivacyPolicy()}
+        </Modal>
+        
       </Container>
     );
   }
@@ -1020,13 +1090,16 @@ class RenderHouse extends React.Component {
     house_no: "",
     action: "invite",
     inviteEmail: "",
-    searchValue: "misbauddin1994@gmail.com"
+    searchValue: "",
+    neighborInfo: {}
   }
 
-  _onPress = (h_no) => {
+  _onPress = (h_no, neighborID="") => {
+    this._checkUser(neighborID)
     this.setState({
       visibleInviteResident: true,
-      house_no: h_no
+      house_no: h_no,
+      neighborID
     })
   }
 
@@ -1034,10 +1107,35 @@ class RenderHouse extends React.Component {
     this.setState({ action: itemValue })
   }
 
+  _onPressDelete = () => {
+    let userRef = firebase
+      .database()
+      .ref("/neighborhood/" + this.state.neighborID)
+      .remove()
+      .then(() => {
+        this.props.RefreshHouse()
+      }); 
+  }
+
+  _checkUser = (id) => {
+    let userRef = firebase.database().ref("/users/"); 
+    userRef
+      .orderByKey()
+      .equalTo(id)
+      .on('value', snap => {
+        if (snap.val()) {
+          this.setState({
+            neighborInfo: snap.val()[id]
+          })
+        } 
+      })
+  }
+
   _onPressSearch = async (value) => {
     let user = this.state.searchValue; // Searching user mail
     let userRef = firebase.database().ref("/users/");
-
+    let ts = this;
+    let neighborID = this.props.neighborID;
     let uid = await AsyncStorage.getItem("auth");
     userRef
       .orderByChild('mail')
@@ -1047,15 +1145,20 @@ class RenderHouse extends React.Component {
           alert("User not exists")
         } else {
           let keys = Object.keys(snap.val());
-          let neighborID = ''
+          let neighborhoodID = ''
           keys.forEach((objKey) => {
-            if (!neighborID) {
-              neighborID = objKey;
+            if (!neighborhoodID) {
+              neighborhoodID = objKey;
               let obj = {
                 houseID: this.state.house_no,
-                uid
+                uid, 
+                neighborID
               }
-              firebase.database().ref('neighborhood/' + neighborID).set(obj).then((res) => {
+
+              firebase.database().ref('neighborhood/' + neighborhoodID).set(obj).then((res) => {
+                ts.setState({
+                  visibleInviteResident: null
+                })
                 this.props.RefreshHouse();
               })
             }
@@ -1098,7 +1201,7 @@ class RenderHouse extends React.Component {
         </Item>
         <TouchableOpacity onPress={this._onPressSearch}>
           <View style={styles.button}>
-            <Text>Add To Resident </Text>
+            <Text>Add To Resident</Text>
           </View>
         </TouchableOpacity>
       </View>
@@ -1159,7 +1262,7 @@ class RenderHouse extends React.Component {
   renderDeleteResident = () => (
     <View style={{height: 50}}>
       <View style={{flex: 1, flexDirection: 'row'}}>
-        <TouchableOpacity onPress={this._onPressSearch} style={{styles}}>
+        <TouchableOpacity onPress={this._onPressDelete} style={{styles}}>
           <View style={styles.button}>
             <Text>Confirm ?</Text>
           </View>
@@ -1182,7 +1285,13 @@ class RenderHouse extends React.Component {
         }
       >
         <View style={styles.modalContent}>
+          <Text>Neighbor ID: #{this.props.neighborID}</Text>
           <Text>House No.: #{this.state.house_no}</Text>
+          {this.state.neighborInfo.mail 
+            ? <Text>Email: {this.state.neighborInfo.mail}</Text>
+            : <Text>Add New Resident to this home</Text>
+          }
+          
           <Item
             style={{ height: 50, width: '100%' }}
           >
@@ -1209,7 +1318,7 @@ class RenderHouse extends React.Component {
     const { house, h_no, neighbors, ...props } = this.props;
     
     let flag = false;
-
+    let neighborID = '';
     return (
       <View style={styles.houseContainer}>
         {this.renderActionModal()}
@@ -1219,14 +1328,17 @@ class RenderHouse extends React.Component {
             styles.houseTouchable,
             styles[`house_${h_no}`] && styles[`house_${h_no}`]
           ]}
-          onPress={() => this._onPress(h_no)}
+          onPress={() => this._onPress(h_no, neighborID)}
         >
       
-          {neighbors && neighbors.map((info, p) => {
-            if(info.houseID === h_no) flag = true;
+          {neighbors && Object.keys(neighbors).map((id, p) => {
+            if (neighbors[id].houseID === h_no) {
+              flag = true;
+              neighborID = id;
+            }
             return <>
-              {info.houseID === h_no && <Image source={cHouses[h_no - 1]} style={styles.house} />}
-              {info.houseID === h_no && <Image source={Profile} style={styles.profile} />}
+              {neighbors[id].houseID === h_no && <Image source={cHouses[h_no - 1]} style={styles.house} />}
+              {neighbors[id].houseID === h_no && <Image source={Profile} style={styles.profile} />}
             </>
           })}
 
