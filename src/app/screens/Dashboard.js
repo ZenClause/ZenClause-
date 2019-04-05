@@ -31,7 +31,8 @@ import {
   Input,
   Card,
   CardItem,
-  Label
+  Label,
+  Picker
 } from "native-base";
 import Modal from "react-native-modal";
 import email from "react-native-email";
@@ -74,6 +75,36 @@ import House18 from "../../../assets/images/house_18.png";
 import House19 from "../../../assets/images/house_19.png";
 import House20 from '../../../assets/images/house_20.png';
 
+import cHouse1 from "../../../assets/images/house_c_1.png";
+import cHouse2 from "../../../assets/images/house_c_2.png";
+import cHouse3 from "../../../assets/images/house_c_3.png";
+import cHouse4 from "../../../assets/images/house_c_4.png";
+import cHouse5 from "../../../assets/images/house_c_5.png";
+import cHouse6 from "../../../assets/images/house_c_6.png";
+import cHouse7 from "../../../assets/images/house_c_7.png";
+import cHouse8 from "../../../assets/images/house_c_8.png";
+import cHouse9 from "../../../assets/images/house_c_9.png";
+import cHouse10 from "../../../assets/images/house_c_10.png";
+import cHouse11 from "../../../assets/images/house_c_11.png";
+import cHouse12 from "../../../assets/images/house_c_12.png";
+
+import { Dropdown } from 'react-native-material-dropdown'
+
+const cHouses = [
+  cHouse1,
+  cHouse2,
+  cHouse3,
+  cHouse4,
+  cHouse5,
+  cHouse6,
+  cHouse7,
+  cHouse8,
+  cHouse9,
+  cHouse10,
+  cHouse11,
+  cHouse12
+];
+
 const Houses = [
   House1,
   House2,
@@ -96,6 +127,16 @@ const Houses = [
   House19,
   House20
 ]
+
+const settingBtns = [
+  SettingImage,
+  SettingImage,
+  NumberOne,
+  NumberTwo,
+  NumberThree,
+  NumberFour,
+  NumberFive
+];
 
 
 
@@ -136,7 +177,8 @@ class Dashboard extends React.Component {
     image: null,
     btnValue: "Vibrate",
     residentEmail: "",
-    users: false
+    users: false,
+    neighbors: false
   };
 
   componentDidMount() {
@@ -148,17 +190,38 @@ class Dashboard extends React.Component {
   }
 
   componentWillMount() {
-    this.getUsers();
+    this._RefreshHouse();
+  }
+
+  _RefreshHouse = () => {
+    this.getNeighbors();
   }
 
   getUsers = () => {
-    var users = firebase.database().ref('/users/').once('value').then((res) => {
-      this.setState({
-        users: Object.values(res.val())
-      });
-    }).catch(console.error)
+    var users = firebase
+      .database()
+      .ref("/users/")
+      .once("value")
+      .then(res => {
+        this.setState({
+          users: Object.values(res.val())
+        });
+      })
+      .catch(console.error);
+  };
 
-  }
+  getNeighbors = () => {
+    var users = firebase
+      .database()
+      .ref("/neighborhood/")
+      .once("value")
+      .then(res => {
+        this.setState({
+          neighbors: Object.values(res.val())
+        });
+      })
+      .catch(console.error);
+  };
 
   changeBtn() {
     var data = this.state.btnValue;
@@ -204,7 +267,7 @@ class Dashboard extends React.Component {
               visbleModalForPassword: false
             });
             const { navigate } = myThis.props.navigation;
-            setTimeout(function() {
+            setTimeout(function () {
               navigate("SignIn");
             }, 3000);
           })
@@ -288,7 +351,7 @@ class Dashboard extends React.Component {
               visbleModalForEmail: false
             });
             const { navigate } = myThis.props.navigation;
-            setTimeout(function() {
+            setTimeout(function () {
               navigate("SignIn");
             }, 3000);
           })
@@ -562,8 +625,16 @@ class Dashboard extends React.Component {
           <Text>Send Invitation </Text>
         </View>
       </TouchableOpacity>
+      {this.renderUser()}
     </View>
   );
+
+  renderUser = () => (
+    <View style={{ textAlign: 'left' }}>
+      <Text>User full Name</Text>
+      <Text>User Info</Text>
+    </View>
+  )
 
   callFun = () => {
     this.setState({ visibleModal: true });
@@ -573,84 +644,43 @@ class Dashboard extends React.Component {
     Houses.map((house, i) => {
       let h_no = i + 1;
       return (
-        <View key={i} style={styles.houseContainer}>
-          <TouchableOpacity
-            activeOpacity={0.5}
-            style={[
-              styles.houseTouchable,
-              styles[`house_${i + 1}`] && styles[`house_${i + 1}`]
-            ]}
-            onPress={() =>
-              this.setState({
-                visibleInviteResident: true,
-                house_no: h_no
-              })
-            }
-          >
-            <Image source={house} style={styles.house} />
-            {this.state.users[h_no-1] && this.state.users[h_no-1].mail && (
-              <Image source={Profile} style={styles.profile} />
-            )}
-          </TouchableOpacity>
-        </View>
+        <RenderHouse
+          key={i}
+          h_no={h_no}
+          house={house}
+          neighbors={this.state.neighbors}
+          RefreshHouse={this._RefreshHouse}
+        />
+      );
+    });
+
+  renderSettingBtn = () =>
+    settingBtns.map((btnImg, j) => {
+      let b_no = j;
+      return (
+        <TouchableOpacity
+          key={b_no}
+          activeOpacity={0.5}
+          onPress={this.callFun}
+          style={[
+            styles.settingImgTouch,
+            styles[`settingImgTouch_${b_no}`] &&
+            styles[`settingImgTouch_${b_no}`]
+          ]}
+        >
+          <Image source={btnImg} style={styles.settingImg} />
+        </TouchableOpacity>
       );
     });
 
   render() {
-    console.log(this.state.users[0]);
     return (
       <Container style={{ flex: 1 }}>
         <StatusBar hidden={true} />
         {/* </View> */}
         <ImageBackground source={BckImage} style={styles.bckImage} />
         {/* Setting */}
-        <TouchableOpacity
-          activeOpacity={0.5}
-          onPress={this.callFun}
-          style={styles.settingImgTouch}
-        >
-          <Image source={SettingImage} style={styles.settingImg} />
-        </TouchableOpacity>
-        {/* Number 1 */}
-        <TouchableOpacity
-          activeOpacity={0.5}
-          // onPress={this.callFun}
-          style={styles.settingImgTouch}
-        >
-          <Image source={NumberOne} style={styles.numberOneImg} />
-        </TouchableOpacity>
-        {/* Number 2 */}
-        <TouchableOpacity
-          activeOpacity={0.5}
-          // onPress={this.callFun}
-          style={styles.settingImgTouch}
-        >
-          <Image source={NumberTwo} style={styles.numberTwoImg} />
-        </TouchableOpacity>
-        {/* Number 3 */}
-        <TouchableOpacity
-          activeOpacity={0.5}
-          // onPress={this.callFun}
-          style={styles.settingImgTouch}
-        >
-          <Image source={NumberThree} style={styles.numberThreeImg} />
-        </TouchableOpacity>
-        {/* Number 4 */}
-        <TouchableOpacity
-          activeOpacity={0.5}
-          // onPress={this.callFun}
-          style={styles.settingImgTouch}
-        >
-          <Image source={NumberFour} style={styles.numberFourImg} />
-        </TouchableOpacity>
-        {/* Number 5 */}
-        <TouchableOpacity
-          activeOpacity={0.5}
-          onPress={this.callFun}
-          style={styles.settingImgTouch}
-        >
-          <Image source={NumberFive} style={styles.numberFiveImg} />
-        </TouchableOpacity>
+        {this.renderSettingBtn()}
 
         {this.renderHouses()}
 
@@ -663,9 +693,7 @@ class Dashboard extends React.Component {
         {/* /*************************************Modal pass  */}
         <Modal
           isVisible={this.state.visbleModalForEmail === true}
-          onBackdropPress={() =>
-            this.setState({ visbleModalForEmail: null })
-          }
+          onBackdropPress={() => this.setState({ visbleModalForEmail: null })}
         >
           {this.renderModalContentForEmail()}
         </Modal>
@@ -697,14 +725,6 @@ class Dashboard extends React.Component {
         >
           {this.renderModalContentForHeaderText()}
         </Modal>
-        <Modal
-          isVisible={this.state.visibleInviteResident === true}
-          onBackdropPress={() =>
-            this.setState({ visibleInviteResident: null })
-          }
-        >
-          {this.renderModalContentForInviteResident()}
-        </Modal>
       </Container>
     );
   }
@@ -712,20 +732,19 @@ class Dashboard extends React.Component {
 
 
 const percentageX = (value) => {
-  return height * (value/100); // 340 px my device
+  return height * (value / 100); // 340 px my device
 }
 
 const percentageY = (value) => {
   return width * (value / 100); // 640 my device
 }
 
+const settingBtn = value =>
+  value === 0
+    ? width - 60 // Gap between two button should 50. 
+    : width - (50 * (8 - value)) - 10 // First button should 50 so substruct 10 from other button to make balance
 
 const styles = StyleSheet.create({
-  // container: {
-  //   flex: 1,
-  //   justifyContent: 'center',
-
-  // },
   welcome: {
     fontSize: 30,
     textAlign: "center",
@@ -814,6 +833,13 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     borderColor: "rgba(0, 0, 0, 0.1)"
   },
+  modalContentAction: {
+    backgroundColor: "white",
+    padding: 22,
+    width: '50%',
+    borderRadius: 4,
+    borderColor: "rgba(0, 0, 0, 0.1)"
+  },
   bottomModal: {
     justifyContent: "flex-end",
     margin: 0
@@ -852,57 +878,44 @@ const styles = StyleSheet.create({
   },
   settingImg: {
     width: 50,
-    height: 50,
-    resizeMode: "contain",
-    marginLeft: distance
+    height: 50
   },
+
   settingImgTouch: {
-    zIndex: 200,
-    position: "absolute"
+    position: "absolute",
+    zIndex: 9999,
+    top: 0
   },
-  numberOneImg: {
-    width: 50,
-    height: 50,
-    resizeMode: "contain",
-    marginLeft: distance - 180
+
+  settingImgTouch_0: {
+    left: settingBtn(0),
   },
-  numberTwoImg: {
-    width: 50,
-    height: 50,
-    resizeMode: "contain",
-    marginLeft: distance - 140
+  settingImgTouch_1: {
+    // left: settingBtn(1)
   },
-  numberThreeImg: {
-    width: 50,
-    height: 50,
-    resizeMode: "contain",
-    marginLeft: distance - 100
+  settingImgTouch_2: {
+    left: settingBtn(2)
   },
-  numberFourImg: {
-    width: 50,
-    height: 50,
-    resizeMode: "contain",
-    marginLeft: distance - 60
+  settingImgTouch_3: {
+    left: settingBtn(3)
   },
-  numberFiveImg: {
-    width: 50,
-    height: 50,
-    resizeMode: "contain",
-    marginLeft: distance - 20
+  settingImgTouch_4: {
+    left: settingBtn(4)
   },
-  settingImg: {
-    width: 50,
-    height: 50,
-    resizeMode: "contain",
-    marginLeft: distance + 20
+  settingImgTouch_5: {
+    left: settingBtn(5)
   },
+  settingImgTouch_6: {
+    left: settingBtn(6)
+  },
+
   contView: {
     flex: 1,
     flexDirection: "column"
   },
   house: {
     width: percentageX(22),
-    height: percentageX(22),
+    height: percentageX(22)
   },
   house_1: {
     bottom: percentageX(0),
@@ -988,16 +1001,239 @@ const styles = StyleSheet.create({
     position: "absolute",
     zIndex: 9999
   },
-  profile: { 
-    width: 25, 
+  profile: {
+    width: 25,
     height: 25,
-    position: 'absolute',
+    position: "absolute",
     top: 0,
     left: 0,
-    zIndex: 9999999
+    zIndex: 999
   }
 });
 
 export default Dashboard;
 
 
+class RenderHouse extends React.Component {
+  state = {
+    visibleInviteResident: null,
+    house_no: "",
+    action: "invite",
+    inviteEmail: "",
+    searchValue: "misbauddin1994@gmail.com"
+  }
+
+  _onPress = (h_no) => {
+    this.setState({
+      visibleInviteResident: true,
+      house_no: h_no
+    })
+  }
+
+  _onChangeAction = (itemValue, itemIndex) => {
+    this.setState({ action: itemValue })
+  }
+
+  _onPressSearch = async (value) => {
+    let user = this.state.searchValue; // Searching user mail
+    let userRef = firebase.database().ref("/users/");
+
+    let uid = await AsyncStorage.getItem("auth");
+    userRef
+      .orderByChild('mail')
+      .equalTo(user)
+      .on('value', snap => {
+        if (!snap.val()) {
+          alert("User not exists")
+        } else {
+          let keys = Object.keys(snap.val());
+          let neighborID = ''
+          keys.forEach((objKey) => {
+            if (!neighborID) {
+              neighborID = objKey;
+              let obj = {
+                houseID: this.state.house_no,
+                uid
+              }
+              firebase.database().ref('neighborhood/' + neighborID).set(obj).then((res) => {
+                this.props.RefreshHouse();
+              })
+            }
+          })
+        }
+      })
+    
+  }
+
+  _onPressMove = () => {
+
+  }
+
+  _onPressInvite = () => {
+    const to = this.state.inviteEmail; // string or array of email addresses
+    if (validator.isEmail(to)) {
+      email(to, {
+        // Optional additional arguments
+        subject: "Invitation from - ZenClause",
+        body: "Hello, try this app"
+      }).catch(console.error);
+    } else {
+      alert("Email is misformatted");
+    }
+  }
+
+  renderAddNewResident = () => {
+    return (
+      <View>
+        <Item
+          style={{ height: 50, width: '100%' }}
+        >
+          <Input
+            onChangeText={searchValue =>
+              this.setState({ searchValue })
+            }
+            value={this.state.searchValue}
+            placeholder="Type Username... "
+          />
+        </Item>
+        <TouchableOpacity onPress={this._onPressSearch}>
+          <View style={styles.button}>
+            <Text>Add To Resident </Text>
+          </View>
+        </TouchableOpacity>
+      </View>
+    )
+  }
+
+
+
+  renderInviteResident = () => {
+    return (
+      <View>
+        <Item
+          style={{ height: 50, width: '100%' }}
+        >
+          <Input
+            onChangeText={inviteEmail =>
+              this.setState({ inviteEmail })
+            }
+            placeholder="Type Email... "
+          />
+        </Item>
+        <TouchableOpacity onPress={this._onPressInvite}>
+          <View style={styles.button}>
+            <Text>Invite </Text>
+          </View>
+        </TouchableOpacity>
+      </View>
+    )
+  }
+
+  renderMoveResident = () => {
+    let houses = [];
+    for(var i=1;i<=20;i++) {
+      houses.push(<Picker.Item key={i} label={"House-" + i} value={"house_"+i} />)
+    }
+    return (
+      <View>
+        <Item
+          style={{ height: 50, width: '100%' }}
+        >
+          <Picker
+            selectedValue={this.state.action}
+            style={{ height: 50, width: '100%' }}
+            onValueChange={this._onChangeAction}
+          >
+            {houses}
+          </Picker>
+        </Item>
+        <TouchableOpacity onPress={this._onPressMove}>
+          <View style={styles.button}>
+            <Text>Save </Text>
+          </View>
+        </TouchableOpacity>
+      </View>
+    )
+  }
+
+  renderDeleteResident = () => (
+    <View style={{height: 50}}>
+      <View style={{flex: 1, flexDirection: 'row'}}>
+        <TouchableOpacity onPress={this._onPressSearch} style={{styles}}>
+          <View style={styles.button}>
+            <Text>Confirm ?</Text>
+          </View>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={this._onPressSearch}>
+          <View style={styles.button}>
+            <Text>Cancel </Text>
+          </View>
+        </TouchableOpacity>
+      </View>
+    </View>
+  )
+
+  renderActionModal = () => {
+    return (
+      <Modal
+        isVisible={this.state.visibleInviteResident === true}
+        onBackdropPress={() =>
+          this.setState({ visibleInviteResident: null })
+        }
+      >
+        <View style={styles.modalContent}>
+          <Text>House No.: #{this.state.house_no}</Text>
+          <Item
+            style={{ height: 50, width: '100%' }}
+          >
+          <Picker
+            selectedValue={this.state.action}
+            style={{ height: 50, width: '100%' }}
+            onValueChange={this._onChangeAction}>
+            <Picker.Item label="Invite Resident" value="invite" />
+            <Picker.Item label="Move Resident" value="move" />
+            <Picker.Item label="Delete Resident" value="delete" />
+            <Picker.Item label="Add New Resident" value="add" />
+          </Picker>
+          </Item>
+          {this.state.action === 'invite' && this.renderInviteResident()}
+          {this.state.action === 'add' && this.renderAddNewResident()}
+          {this.state.action === 'move' && this.renderMoveResident()}
+          {this.state.action === 'delete' && this.renderDeleteResident()}
+        </View>
+      </Modal>
+    )
+  }
+
+  render() {
+    const { house, h_no, neighbors, ...props } = this.props;
+    
+    let flag = false;
+
+    return (
+      <View style={styles.houseContainer}>
+        {this.renderActionModal()}
+        <TouchableOpacity
+          activeOpacity={0.5}
+          style={[
+            styles.houseTouchable,
+            styles[`house_${h_no}`] && styles[`house_${h_no}`]
+          ]}
+          onPress={() => this._onPress(h_no)}
+        >
+      
+          {neighbors && neighbors.map((info, p) => {
+            if(info.houseID === h_no) flag = true;
+            return <>
+              {info.houseID === h_no && <Image source={cHouses[h_no - 1]} style={styles.house} />}
+              {info.houseID === h_no && <Image source={Profile} style={styles.profile} />}
+            </>
+          })}
+
+          {!flag && <Image source={house} style={styles.house} />}
+          
+        </TouchableOpacity>
+      </View>
+    )
+  }
+}
