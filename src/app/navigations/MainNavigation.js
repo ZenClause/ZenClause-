@@ -14,14 +14,6 @@ var config = {
   messagingSenderId: "284077417988"
 };
 
-// var config = {
-//   apiKey: "AIzaSyAAFoJ2nHcxQB-FwPrr8SmPEYibiyy5L-8",
-//   authDomain: "yumi-project.firebaseapp.com",
-//   databaseURL: "https://yumi-project.firebaseio.com",
-//   projectId: "yumi-project",
-//   storageBucket: "yumi-project.appspot.com",
-//   messagingSenderId: "491868186977"
-// };
 firebase.initializeApp(config);
 
 const App = createStackNavigator({
@@ -37,6 +29,7 @@ const App = createStackNavigator({
 //   Splash: { screen: Splash },
 //   SignUp: { screen: SignUp }
 // });
+
 
 export const MainNavigation = createAppContainer(App);
 
