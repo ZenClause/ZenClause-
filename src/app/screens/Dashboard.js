@@ -358,7 +358,6 @@ class Dashboard extends React.Component {
   };
 
   _pickImage = async () => {
-    console.log("image");
     let result = await ImagePicker.launchImageLibraryAsync({
       allowsEditing: true,
       aspect: [4, 3]
@@ -367,25 +366,21 @@ class Dashboard extends React.Component {
     console.log(result);
 
     if (!result.cancelled) {
-      this.setState({ image: result.uri });
-      var a = this.uploadImage()
-        .then(() => {
-          alert("Success! Your Profile Image is Updated");
-          console.log(a);
-        })
-        .catch(error => {
-          alert(error);
-        });
+      await this.setState({ image: result.uri });
+      try {
+        await this.uploadImage()
+      } catch (e) {
+        console.log(e)
+      }
     }
   };
 
   uploadImage = async () => {
     var uri = this.state.image;
-    console.log(uri);
-    var imageName = "profile";
+    var imageName = "profile-image-" + Math.random(new Date()).toString(36);
     const response = await fetch(uri);
     const blob = await response.blob();
-    var projectNameText = this.state.projectNameText;
+    // var projectNameText = this.state.projectNameText;
     var ref = firebase
       .storage()
       .ref()
