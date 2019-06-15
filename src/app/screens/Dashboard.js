@@ -363,7 +363,10 @@ class Dashboard extends React.Component {
       aspect: [4, 3]
     });
 
-    console.log(result);
+    // console.log(result);
+
+    const response = await fetch(result.uri);
+    const blob = await response.blob();
 
     if (!result.cancelled) {
       await this.setState({ image: result.uri });
@@ -1049,7 +1052,7 @@ const styles = StyleSheet.create({
     left: percentageY(42)
   },
   house_11: {
-    bottom: percentageX(26),
+    bottom: percentageX(28),
     left: percentageY(61)
   },
   house_12: {
@@ -1098,7 +1101,8 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 0,
     left: 0,
-    zIndex: 999
+    zIndex: 9999999999,
+    borderRadius: 100
   }
 });
 
@@ -1372,7 +1376,10 @@ class RenderHouse extends React.Component {
                 
               />
               <Image key={neighbors[id].houseID} source={cHouses[h_no - 1]} style={styles.house} />
-              {/* <Image key={'c_'+neighbors[id].houseID} source={Profile} style={styles.profile} /> */}
+              {neighbors[id].profile
+                ? <Image key={'c_'+neighbors[id].houseID} source={{uri: neighbors[id].profile}} alt="Profile" style={styles.profile} />
+                : <Image key={'c_'+neighbors[id].houseID} source={Profile} style={styles.profile} />
+              }
             </React.Fragment>
           })}
 
