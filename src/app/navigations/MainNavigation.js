@@ -17,8 +17,8 @@ var config = {
 firebase.initializeApp(config);
 
 const App = createStackNavigator({
-  Dashboard: { screen: Dashboard },
   SignIn: { screen: SignIn },
+  Dashboard: { screen: Dashboard },
   Splash: { screen: Splash },
   SignUp: { screen: SignUp }
 });

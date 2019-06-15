@@ -10,7 +10,8 @@ import {
   Image,
   TouchableHighlight,
   TouchableOpacity,
-  AsyncStorage
+  AsyncStorage,
+  AppState
 } from "react-native";
 
 import {
@@ -187,9 +188,9 @@ class Dashboard extends React.Component {
   constructor(props) {
     super(props);
     const { state, navigate } = this.props.navigation;
-    // console.log(state.params);
-    // UserName = state.params.userName || "";
-    // UID = state.params.UID || "";
+    console.log(state.params);
+    UserName = state.params.userName || "";
+    UID = state.params.UID || "";
   }
 
   state = {
@@ -210,19 +211,46 @@ class Dashboard extends React.Component {
     residentEmail: "",
     users: false,
     neighbors: false,
-    neighborID: 1
+    neighborID: 1,
+    appState: AppState.currentState,
   };
 
-  componentDidMount() {
-    const { navigate } = this.props.navigation;
+  async componentDidMount() {
+    // const { navigate } = this.props.navigation;
 
-    var a = this.props.navigation;
-
+    // var a = this.props.navigation;
+    await AppState.addEventListener('change', this._handleAppStateChange);
     ScreenOrientation.allowAsync(ScreenOrientation.Orientation.LANDSCAPE_RIGHT);
+      this._setOnlineStatus(true);
   }
 
-  componentWillMount() {
+  async componentWillMount() {
+    await AppState.removeEventListener('change', this._handleAppStateChange);
     this._RefreshHouse();
+      this._setOnlineStatus(true);
+  }
+
+   _handleAppStateChange = (nextAppState) => {
+    if (
+      this.state.appState.match(/inactive|background/) &&
+      nextAppState === 'active'
+    ) {
+      console.log('App has come to the foreground!');
+      this._setOnlineStatus(true);
+    } else {
+      console.log('App has come to background')
+      this._setOnlineStatus(false);
+    }
+    this.setState({appState: nextAppState});
+  };
+
+  _setOnlineStatus = (status) => {
+    firebase
+        .database()
+        .ref('/neighborhood/' + UID)
+        .update({
+          online: status
+        })
   }
 
   _RefreshHouse = () => {
@@ -694,20 +722,6 @@ class Dashboard extends React.Component {
     this._RefreshHouse();
   };
 
-  renderHouses = () =>
-    Houses.map((house, i) => {
-      let h_no = i + 1;
-      return (
-        <RenderHouse
-          key={Math.random(i).toString(36)}
-          h_no={h_no}
-          house={house}
-          neighbors={this.state.neighbors}
-          RefreshHouse={this._RefreshHouse}
-          neighborID={this.state.neighborID}
-        />
-      );
-    });
 
   renderSettingBtn = () =>
     settingBtns.map((btnImg, j) => {
@@ -742,7 +756,19 @@ class Dashboard extends React.Component {
         {/* Setting */}
         {this.renderSettingBtn()}
 
-        {this.renderHouses()}
+        {Houses.map((house, i) => {
+          let h_no = i + 1;
+          return (
+            <RenderHouse
+              key={Math.random(h_no).toString(36)}
+              h_no={h_no}
+              house={house}
+              neighbors={this.state.neighbors}
+              RefreshHouse={this._RefreshHouse}
+              neighborID={this.state.neighborID}
+            />
+          );
+        })}
 
         <Modal
           isVisible={this.state.visibleModal === true}
@@ -1336,10 +1362,23 @@ class RenderHouse extends React.Component {
               flag = true;
               neighborID = id;
             }
-            return <>
-              {neighbors[id].houseID === h_no && <Image source={cHouses[h_no - 1]} style={styles.house} />}
-              {neighbors[id].houseID === h_no && <Image source={Profile} style={styles.profile} />}
-            </>
+            return neighbors[id].houseID === h_no && <React.Fragment>
+              <Icon 
+                type="FontAwesome" 
+                name="circle" 
+                style={{
+                  color: neighbors[id].online ? "rgb(116, 233, 31)" : "rgb(239, 68, 48)",
+                  fontSize: 12,
+                  position: 'absolute',
+                  top: 10,
+                  right: 6,
+                  zIndex: 9999999
+                }}
+                
+              />
+              <Image key={neighbors[id].houseID} source={cHouses[h_no - 1]} style={styles.house} />
+              {/* <Image key={'c_'+neighbors[id].houseID} source={Profile} style={styles.profile} /> */}
+            </React.Fragment>
           })}
 
           {!flag && <Image source={house} style={styles.house} />}

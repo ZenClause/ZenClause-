@@ -29,10 +29,10 @@ import {
 export default class SignIn extends Component {
   state = {
     loading: true,
-    userEmail: "",
-    userPassword: "",
-    UID: '', 
-    USERNAME: ''
+    userEmail: "misbauddin1994@gmail.com",
+    userPassword: "123456",
+    uid: '', 
+    user: ''
   };
   async componentWillMount() {
     await Font.loadAsync({
@@ -41,6 +41,20 @@ export default class SignIn extends Component {
       Ionicons: require("@expo/vector-icons/fonts/Ionicons.ttf")
     });
     this.setState({ loading: false });
+
+    ScreenOrientation.allowAsync(
+      ScreenOrientation.Orientation
+        .LANDSCAPE_RIGHT
+    );
+
+    const { navigate } = this.props.navigation;
+
+    let uid = await AsyncStorage.getItem("auth");
+    let user = await AsyncStorage.getItem("username")
+    this.setState({
+      uid, user
+    })
+
   }
 
   async componentDidMount() {
@@ -53,10 +67,9 @@ export default class SignIn extends Component {
 
     let uid = await AsyncStorage.getItem("auth");
     let user = await AsyncStorage.getItem("username")
-    navigate("Splash", {
-      userName: user,
-      UID: uid
-    });
+    this.setState({
+      uid, user
+    })
   }
 
   static navigationOptions = {
@@ -114,6 +127,14 @@ export default class SignIn extends Component {
   };
 
   render() {
+    const { uid, user } = this.state;
+    const { navigate } = this.props.navigation
+    if(uid &&  user) {
+      navigate("Splash", {
+        userName: user,
+        UID: uid
+      });
+    }
     if (this.state.loading) {
       return <AppLoading />;
     }
@@ -140,6 +161,7 @@ export default class SignIn extends Component {
                 onChangeText={userEmail =>
                   this.setState({ userEmail })
                 }
+                value={this.state.userEmail}
                 placeholder="Email "
               />
             </Item>
@@ -149,6 +171,7 @@ export default class SignIn extends Component {
                 onChangeText={userPassword =>
                   this.setState({ userPassword })
                 }
+                value={this.state.userPassword}
                 placeholder="Password "
               />
             </Item>
