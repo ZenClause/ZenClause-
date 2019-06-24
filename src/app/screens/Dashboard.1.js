@@ -1110,8 +1110,7 @@ class RenderHouse extends React.Component {
     action: "invite",
     inviteEmail: "",
     searchValue: "",
-    neighborInfo: {},
-    messages: []
+    neighborInfo: {}
   }
 
   _onPress = (h_no, neighborID = "") => {
@@ -1355,14 +1354,10 @@ class RenderHouse extends React.Component {
         <RenderUserPanel
           onCancel={() => this.setState({ visibleUserPanel: false })}
           openIMWindow={() => {
-            if (UID !== neighborID) {
-              this.setState({
-                visibleUserPanel: false,
-                visibleIM: true
-              })
-            } else {
-              alert("Invalid...! This is you")
-            }
+            this.setState({
+              visibleUserPanel: false,
+              visibleIM: true
+            })
           }}
           neighborID={neighborID}
           houseNo={h_no}
@@ -1371,7 +1366,7 @@ class RenderHouse extends React.Component {
     )
   }
 
-  renderIM = (h_no, neighbor, neighborID) => {
+  renderIM = (h_no, neighborID) => {
     return (
       <Modal
         isVisible={this.state.visibleIM}
@@ -1382,21 +1377,20 @@ class RenderHouse extends React.Component {
         style={styles.userPanel}
       >
         <RenderIM
-          onSendIM={() => {
+          onSendIM={(msg) => {
+            alert(neighborID)
             this.setState({ visibleIM: false })
           }}
-          neighbor={neighbor}
           neighborID={neighborID}
-          h_no={h_no}
-          uid={UID}
+          houseNo={h_no}
         />
       </Modal>
     )
   }
 
-
   render() {
     const { house, h_no, neighbors, ...props } = this.props;
+    console.log(neighbors)
     let flag = false;
     let neighborID = '';
     return (
@@ -1442,7 +1436,7 @@ class RenderHouse extends React.Component {
 
         </TouchableOpacity>
         {this.renderUserPanel(h_no, neighborID)}
-        {this.renderIM(h_no, neighbors[neighborID], neighborID)}
+        {this.renderIM(h_no, neighborID)}
       </View>
     )
   }

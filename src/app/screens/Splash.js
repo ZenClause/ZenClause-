@@ -1,29 +1,16 @@
 import React from "react";
 
 import {
-  AppRegistry,
-  View,
   StyleSheet,
   StatusBar,
-  TouchableHighlight,
-  TouchableOpacity,
   Image,
   AsyncStorage
 } from "react-native";
 
 import {
   Container,
-  Header,
-  Title,
-  Content,
   Text,
-  Button,
-  Icon,
-  Left,
   Body,
-  Right,
-  List,
-  ListItem,
   Card,
   CardItem
 } from "native-base";
@@ -31,42 +18,52 @@ import { ScreenOrientation } from 'expo';
 
 import splashImage from '../../../assets/splash/splash.jpg'
 
-var UserName;
-var UID;
-
 class Splash extends React.Component {
   static navigationOptions = {
     header: null
   };
-
-  constructor(props) {
-    super(props);
-    this.state = {
-      userName: ""
-    };
-    const { state, navigate } = this.props.navigation;
-    UserName = state.params.userName;
-    UID = state.params.UID;
-
+  state = {
+    uid: '',
+    user: ''
   }
-  componentDidMount() {
+  async componentDidMount() {
     const {
       navigate
     } = this.props.navigation;
 
-    // var a = this.props.navigation.navigate("Home")
-    var a = this.props.navigation;
     ScreenOrientation.allowAsync(
       ScreenOrientation.Orientation
         .LANDSCAPE_RIGHT
     );
 
-    setTimeout(function () {
-      navigate("Dashboard", {
-        userName: UserName,
-        UID: UID
-      });
-    }, 1000);
+
+    let uid = await AsyncStorage.getItem("auth");
+    let user = await AsyncStorage.getItem("username")
+
+    await this.setState({
+      uid, user
+    })
+
+    navigate("Dashboard", {
+      userName: user,
+      UID: uid
+    });
+  }
+
+  async componentWillMount() {
+    const {
+      navigate
+    } = this.props.navigation;
+    let uid = await AsyncStorage.getItem("auth");
+    let user = await AsyncStorage.getItem("username")
+
+    await this.setState({
+      uid, user
+    })
+    navigate("Dashboard", {
+      userName: this.state.user,
+      UID: this.state.uid
+    });
   }
 
   render() {
@@ -84,7 +81,7 @@ class Splash extends React.Component {
                   fontWeight: "bold"
                 }}
               >
-                Welcome {UserName}
+                Welcome {this.state.user}
               </Text>
             </Body>
           </CardItem>

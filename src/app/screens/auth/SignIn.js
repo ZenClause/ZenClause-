@@ -31,7 +31,7 @@ export default class SignIn extends Component {
     loading: true,
     userEmail: "misbauddin1994@gmail.com",
     userPassword: "123456",
-    uid: '', 
+    uid: '',
     user: ''
   };
   async componentWillMount() {
@@ -51,9 +51,13 @@ export default class SignIn extends Component {
 
     let uid = await AsyncStorage.getItem("auth");
     let user = await AsyncStorage.getItem("username")
-    this.setState({
-      uid, user
-    })
+
+    if (uid && user) {
+      navigate("Dashboard", {
+        userName: user,
+        UID: uid
+      });
+    }
 
   }
 
@@ -67,9 +71,13 @@ export default class SignIn extends Component {
 
     let uid = await AsyncStorage.getItem("auth");
     let user = await AsyncStorage.getItem("username")
-    this.setState({
-      uid, user
-    })
+
+    if (uid && user) {
+      navigate("Splash", {
+        userName: user,
+        UID: uid
+      });
+    }
   }
 
   static navigationOptions = {
@@ -127,14 +135,6 @@ export default class SignIn extends Component {
   };
 
   render() {
-    const { uid, user } = this.state;
-    const { navigate } = this.props.navigation
-    if(uid &&  user) {
-      navigate("Splash", {
-        userName: user,
-        UID: uid
-      });
-    }
     if (this.state.loading) {
       return <AppLoading />;
     }
@@ -221,7 +221,7 @@ const styles = StyleSheet.create({
   },
   content: {
   },
-  form:{
+  form: {
     paddingTop: "10%"
   },
   btn: {
