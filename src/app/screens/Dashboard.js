@@ -48,6 +48,8 @@ import cNumberFour from "../../../assets/images/number-four_c.png";
 import cNumberFive from "../../../assets/images/number-five_c.png";
 
 import House from '../../../assets/images/house.png'
+import blueHouse from '../../../assets/images/house_c_x.png';
+
 import Profile from '../../../assets/images/profile.png'
 
 import House1 from '../../../assets/images/house_1.png';
@@ -95,6 +97,7 @@ import cHouse20 from "../../../assets/images/house_c_20.png";
 import { Dropdown } from 'react-native-material-dropdown'
 import RenderUserPanel from "./dashboard/RenderUserPanel";
 import RenderIM from "./dashboard/RenderIM";
+import { RenderPost } from "./dashboard";
 
 const cHouses = [
   cHouse1,
@@ -700,8 +703,8 @@ class Dashboard extends React.Component {
 
   callFun = async (b_no) => {
     await this.setState({
-      visibleModal: b_no === -1 ? true : null, // -1 setting button
-      privacyModal: b_no === 0 ? true : null,
+      visibleModal: b_no === -1 ? true : false, // -1 setting button
+      privacyModal: b_no === 0 ? true : false,
       neighborID: b_no > 0 ? b_no : this.state.neighborID
     });
     this._RefreshHouse();
@@ -1093,7 +1096,6 @@ const styles = StyleSheet.create({
   },
   userPanel: {
     height: '100%',
-    flex: 1,
   }
 });
 
@@ -1364,6 +1366,13 @@ class RenderHouse extends React.Component {
               alert("Invalid...! This is you")
             }
           }}
+          openPostWindow={() => {
+            this.setState({
+              visibleUserPanel: false,
+              visiblePost: true
+            })
+          }}
+          uid={UID}
           neighborID={neighborID}
           houseNo={h_no}
         />
@@ -1382,16 +1391,51 @@ class RenderHouse extends React.Component {
         style={styles.userPanel}
       >
         <RenderIM
-          onSendIM={() => {
-            this.setState({ visibleIM: false })
+          onSendIM={(status) => {
+            this.setState({ visibleIM: true })
           }}
           neighbor={neighbor}
           neighborID={neighborID}
           h_no={h_no}
           uid={UID}
+        // refresh={this.RefreshHouse}
         />
       </Modal>
     )
+  }
+
+
+  renderPost = (h_no, neighbor, neighborID) => {
+    return (
+      <Modal
+        isVisible={this.state.visiblePost}
+        onBackdropPress={() =>
+          this.setState({ visiblePost: false })
+        }
+        backdropOpacity={0.2}
+        style={styles.userPanel}
+      >
+        <RenderPost
+          onSendPost={(status) => {
+            this.setState({ visiblePost: true })
+          }}
+          neighbor={neighbor}
+          neighborID={neighborID}
+          h_no={h_no}
+          uid={UID}
+        // refresh={this.RefreshHouse}
+        />
+      </Modal>
+    )
+  }
+
+
+  isIMRecieved = (messages = [], neighborID) => {
+    if (messages.length > 0) {
+      return messages.indexOf(neighborID) !== 1;
+    } else {
+      return false
+    }
   }
 
 
@@ -1421,28 +1465,39 @@ class RenderHouse extends React.Component {
                 type="FontAwesome"
                 name="circle"
                 style={{
-                  color: neighbors[id].online ? "rgb(116, 233, 31)" : "rgb(239, 68, 48)",
+                  color: neighbors[id].online ? (id === UID ? "white" : "rgb(116, 233, 31)") : "rgb(239, 68, 48)",
                   fontSize: 12,
                   position: 'absolute',
                   top: 10,
                   right: 6,
                   zIndex: 9999999
                 }}
-
               />
-              <Image source={cHouses[h_no - 1]} style={styles.house} />
-              {neighbors[id].profile
-                ? <Image source={{ uri: neighbors[id].profile }} style={styles.profile} />
-                : <Image source={Profile} style={styles.profile} />
-              }
             </React.Fragment>
           })}
+
+          {flag && (
+            <React.Fragment>
+              {neighborID !== UID && this.isIMRecieved(neighbors[neighborID].messages, neighborID) ?
+                <Image source={blueHouse} style={styles.house} />
+                :
+                <React.Fragment>
+                  <Image source={cHouses[h_no - 1]} style={styles.house} />
+                  {neighbors[neighborID].profile
+                    ? <Image source={{ uri: neighbors[neighborID].profile }} style={styles.profile} />
+                    : <Image source={Profile} style={styles.profile} />
+                  }
+                </React.Fragment>
+              }
+            </React.Fragment>
+          )}
 
           {!flag && <Image source={house} style={styles.house} />}
 
         </TouchableOpacity>
         {this.renderUserPanel(h_no, neighborID)}
         {this.renderIM(h_no, neighbors[neighborID], neighborID)}
+        {this.renderPost(h_no, neighbors[neighborID], neighborID)}
       </View>
     )
   }

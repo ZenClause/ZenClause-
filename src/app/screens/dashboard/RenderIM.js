@@ -20,7 +20,7 @@ class RenderIM extends React.Component {
   }
 
   getMsg = async () => {
-    let { uid, neighborID } = this.props
+    let { uid, neighborID, neighbor } = this.props
     await firebase
       .database()
       .ref('/message-list')
@@ -29,7 +29,6 @@ class RenderIM extends React.Component {
           let value = child.val();
           if (value) {
             if ((value.user1 === uid || value.user2 === uid) && (value.user1 === neighborID || value.user2 === neighborID)) {
-              console.log(value.messages)
               this.setState({
                 msgId: child.key,
                 messages: value.messages || []
@@ -38,6 +37,7 @@ class RenderIM extends React.Component {
           }
         })
       })
+
     await firebase
       .database()
       .ref('/users/' + uid)
@@ -46,6 +46,22 @@ class RenderIM extends React.Component {
           user: snap.val()
         })
       })
+
+    let mssgs = neighbor.messages || []
+
+    if (mssgs.length > 0) {
+      if (mssgs.indexOf(uid) !== -1) {
+        mssgs.splice(mssgs.indexOf(uid), 1)
+        await firebase
+          .database()
+          .ref('/neighborhood/' + neighborID)
+          .update({
+            messages: mssgs
+          })
+      }
+    }
+
+    this.prosp.onSendIM(true)
   }
 
   sendIM = async () => {
@@ -80,15 +96,44 @@ class RenderIM extends React.Component {
       })
       .then(() => {
         ToastAndroid.show('Message sent...!', ToastAndroid.SHORT);
-        this.getMsg()
+        // this.getMsg()
         this.setState({ message: '' })
         // this.props.onSendIM()
+
+        firebase
+          .database()
+          .ref('/neighborhood/' + uid)
+          .once('value', (snap) => {
+            let value = snap.val()
+            if (value) {
+              if (value.message) {
+                if (value.messages.indexOf(neighborID) === -1) {
+                  value.messages.push(neighborID)
+                  firebase
+                    .database()
+                    .ref('/neighborhood/' + uid)
+                    .update({
+                      messages: value.messages
+                    })
+                }
+              } else {
+                firebase
+                  .database()
+                  .ref('/neighborhood/' + uid)
+                  .update({
+                    messages: [neighborID]
+                  })
+              }
+            }
+          })
       }).catch((e) => {
         ToastAndroid.show('Something wrong...!', ToastAndroid.SHORT);
         // this.props.onSendIM()
       })
 
     // this.props.onSendIM(this.state.message)
+
+    this.prosp.onSendIM(true)
   }
 
   render() {

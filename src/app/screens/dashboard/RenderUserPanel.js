@@ -8,6 +8,7 @@ import { styles } from './styles';
 
 class RenderUserPanel extends React.Component {
   render() {
+    let { uid, neighborID } = this.props
     return (
       <View style={[styles.dFlex, styles.modalContent]}>
         <View style={[styles.topBoxContainer]}>
@@ -103,9 +104,15 @@ class RenderUserPanel extends React.Component {
               styles.btnBg('#c42222'),
               styles.next
             ]}
-              onPress={this.props.openIMWindow}
+              onPress={() => {
+                if (uid === neighborID) {
+                  this.props.openPostWindow();
+                } else {
+                  this.props.openIMWindow();
+                }
+              }}
             >
-              <Text style={styles.btnText}>Send IM</Text>
+              <Text style={styles.btnText}>{uid === neighborID ? "New Post" : "Send IM"}</Text>
             </Button>
           </View>
         </Content>

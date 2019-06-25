@@ -48,6 +48,8 @@ import cNumberFour from "../../../assets/images/number-four_c.png";
 import cNumberFive from "../../../assets/images/number-five_c.png";
 
 import House from '../../../assets/images/house.png'
+import blueHouse from '../../../assets/images/house_c_x.png';
+
 import Profile from '../../../assets/images/profile.png'
 
 import House1 from '../../../assets/images/house_1.png';
@@ -172,7 +174,7 @@ var distance = (width / 0.63) - 13;
 
 class Dashboard extends React.Component {
   static navigationOptions = {
-    header: null
+    header: false
   };
 
   constructor(props) {
@@ -195,7 +197,7 @@ class Dashboard extends React.Component {
     currentPasswordForPassword: "",
     newPassword: "",
     headerText: "",
-    image: null,
+    image: false,
     btnValue: "Vibrate",
     residentEmail: "",
     users: false,
@@ -224,10 +226,8 @@ class Dashboard extends React.Component {
       this.state.appState.match(/inactive|background/) &&
       nextAppState === 'active'
     ) {
-      console.log('App has come to the foreground!');
       this._setOnlineStatus(true);
     } else {
-      console.log('App has come to background')
       this._setOnlineStatus(false);
     }
     this.setState({ appState: nextAppState });
@@ -558,7 +558,7 @@ class Dashboard extends React.Component {
               <CardItem
                 button
                 onPress={() => {
-                  this.setState({ visibleModal: null });
+                  this.setState({ visibleModal: false });
                 }}
                 style={{ backgroundColor: "#c32222" }}
               >
@@ -603,7 +603,7 @@ class Dashboard extends React.Component {
           <Text>Change Email </Text>
         </View>
       </TouchableOpacity>
-      {/* {this.renderButton("Close", () => this.setState({ visibleModal: null }))} */}
+      {/* {this.renderButton("Close", () => this.setState({ visibleModal: false }))} */}
     </View>
   );
 
@@ -633,7 +633,7 @@ class Dashboard extends React.Component {
         </View>
       </TouchableOpacity>
 
-      {/* {this.renderButton("Close", () => this.setState({ visibleModal: null }))} */}
+      {/* {this.renderButton("Close", () => this.setState({ visibleModal: false }))} */}
     </View>
   );
   renderModalContentForHeaderText = () => (
@@ -663,7 +663,7 @@ class Dashboard extends React.Component {
         <Text>Read our Privacy and Policy</Text>
       </View>
       {/* <TouchableOpacity onPress={()=>this.changeEmail(this.state.currentPasswordForEmail , this.state.currentPasswordForEmail)}> */}
-      <TouchableOpacity onPress={() => this.setState({ privacyModal: null })}>
+      <TouchableOpacity onPress={() => this.setState({ privacyModal: false })}>
         <View style={styles.button}>
           <Text>Close</Text>
         </View>
@@ -700,8 +700,8 @@ class Dashboard extends React.Component {
 
   callFun = async (b_no) => {
     await this.setState({
-      visibleModal: b_no === -1 ? true : null, // -1 setting button
-      privacyModal: b_no === 0 ? true : null,
+      visibleModal: b_no === -1 ? true : false, // -1 setting button
+      privacyModal: b_no === 0 ? true : false,
       neighborID: b_no > 0 ? b_no : this.state.neighborID
     });
     this._RefreshHouse();
@@ -757,14 +757,14 @@ class Dashboard extends React.Component {
 
         <Modal
           isVisible={this.state.visibleModal === true}
-          onBackdropPress={() => this.setState({ visibleModal: null })}
+          onBackdropPress={() => this.setState({ visibleModal: false })}
         >
           {this.renderModalContent()}
         </Modal>
         {/* /*************************************Modal pass  */}
         <Modal
           isVisible={this.state.visbleModalForEmail === true}
-          onBackdropPress={() => this.setState({ visbleModalForEmail: null })}
+          onBackdropPress={() => this.setState({ visbleModalForEmail: false })}
         >
           {this.renderModalContentForEmail()}
         </Modal>
@@ -772,7 +772,7 @@ class Dashboard extends React.Component {
         <Modal
           isVisible={this.state.visbleModalForPassword === true}
           onBackdropPress={() =>
-            this.setState({ visbleModalForPassword: null })
+            this.setState({ visbleModalForPassword: false })
           }
         >
           {this.renderModalContentForPassword()}
@@ -781,7 +781,7 @@ class Dashboard extends React.Component {
         <Modal
           isVisible={this.state.visbleModalForHeaderText === true}
           onBackdropPress={() =>
-            this.setState({ visbleModalForHeaderText: null })
+            this.setState({ visbleModalForHeaderText: false })
           }
         >
           {this.renderModalContentForHeaderText()}
@@ -791,7 +791,7 @@ class Dashboard extends React.Component {
         <Modal
           isVisible={this.state.visbleModalForImage === true}
           onBackdropPress={() =>
-            this.setState({ visbleModalForHeaderText: null })
+            this.setState({ visbleModalForHeaderText: false })
           }
         >
           {this.renderModalContentForHeaderText()}
@@ -800,7 +800,7 @@ class Dashboard extends React.Component {
         <Modal
           isVisible={this.state.privacyModal === true}
           onBackdropPress={() =>
-            this.setState({ privacyModal: null })
+            this.setState({ privacyModal: false })
           }
         >
           {this.renderPrivacyPolicy()}
@@ -864,7 +864,7 @@ const styles = StyleSheet.create({
   image: {
     flex: 1
     // width : '80%',
-    // height : null
+    // height : false
   },
   bgImageWrapper: {
     position: "absolute",
@@ -1102,15 +1102,17 @@ export default Dashboard;
 
 class RenderHouse extends React.Component {
   state = {
-    visibleInviteResident: null,
+    visibleInviteResident: false,
     visibleUserPanel: false,
     visibleIM: false,
+    visiblePost: false,
     house_no: "",
     neighborID: "",
     action: "invite",
     inviteEmail: "",
     searchValue: "",
-    neighborInfo: {}
+    neighborInfo: {},
+    messages: []
   }
 
   _onPress = (h_no, neighborID = "") => {
@@ -1184,7 +1186,7 @@ class RenderHouse extends React.Component {
 
               firebase.database().ref('neighborhood/' + neighborhoodID).set(obj).then((res) => {
                 ts.setState({
-                  visibleInviteResident: null
+                  visibleInviteResident: false
                 })
                 this.props.RefreshHouse();
               })
@@ -1308,7 +1310,7 @@ class RenderHouse extends React.Component {
       <Modal
         isVisible={this.state.visibleInviteResident === true}
         onBackdropPress={() =>
-          this.setState({ visibleInviteResident: null })
+          this.setState({ visibleInviteResident: false })
         }
       >
         <View style={styles.modalContent}>
@@ -1354,11 +1356,22 @@ class RenderHouse extends React.Component {
         <RenderUserPanel
           onCancel={() => this.setState({ visibleUserPanel: false })}
           openIMWindow={() => {
+            if (UID !== neighborID) {
+              this.setState({
+                visibleUserPanel: false,
+                visibleIM: true
+              })
+            } else {
+              alert("Invalid...! This is you")
+            }
+          }}
+          openPostWindow={() => {
             this.setState({
               visibleUserPanel: false,
-              visibleIM: true
+              visiblePost: true
             })
           }}
+          uid={UID}
           neighborID={neighborID}
           houseNo={h_no}
         />
@@ -1366,7 +1379,7 @@ class RenderHouse extends React.Component {
     )
   }
 
-  renderIM = (h_no, neighborID) => {
+  renderIM = (h_no, neighbor, neighborID) => {
     return (
       <Modal
         isVisible={this.state.visibleIM}
@@ -1377,20 +1390,52 @@ class RenderHouse extends React.Component {
         style={styles.userPanel}
       >
         <RenderIM
-          onSendIM={(msg) => {
-            alert(neighborID)
-            this.setState({ visibleIM: false })
+          onSendIM={(status) => {
+            this.setState({ visibleIM: true })
           }}
+          neighbor={neighbor}
           neighborID={neighborID}
-          houseNo={h_no}
+          h_no={h_no}
+          uid={UID}
         />
       </Modal>
     )
   }
 
+  renderPost = (h_no, neighbor, neighborID) => {
+    return (
+      <Modal
+        isVisible={this.state.visiblePost}
+        onBackdropPress={() =>
+          this.setState({ visiblePost: false })
+        }
+        backdropOpacity={0.2}
+        style={styles.userPanel}
+      >
+        <RenderIM
+          onSendIM={(status) => {
+            this.setState({ visiblePost: true })
+          }}
+          neighbor={neighbor}
+          neighborID={neighborID}
+          h_no={h_no}
+          uid={UID}
+        />
+      </Modal>
+    )
+  }
+
+  isIMRecieved = (messages = [], neighborID) => {
+    if (messages.length > 0) {
+      return messages.indexOf(neighborID) !== 1;
+    } else {
+      return false
+    }
+  }
+
+
   render() {
     const { house, h_no, neighbors, ...props } = this.props;
-    console.log(neighbors)
     let flag = false;
     let neighborID = '';
     return (
@@ -1411,32 +1456,43 @@ class RenderHouse extends React.Component {
               neighborID = id;
             }
             return neighbors[id].houseID === h_no && <React.Fragment key={neighbors[id].houseID}>
-              <Icon
+              {!neighbors[id].newMsg && neighbors[id].online && <Icon
                 type="FontAwesome"
                 name="circle"
                 style={{
-                  color: neighbors[id].online ? "rgb(116, 233, 31)" : "rgb(239, 68, 48)",
+                  color: neighbors[id].online ? (id === UID ? "white" : "rgb(116, 233, 31)") : "rgb(239, 68, 48)",
                   fontSize: 12,
                   position: 'absolute',
                   top: 10,
                   right: 6,
                   zIndex: 9999999
                 }}
-
               />
-              <Image source={cHouses[h_no - 1]} style={styles.house} />
-              {neighbors[id].profile
-                ? <Image source={{ uri: neighbors[id].profile }} style={styles.profile} />
-                : <Image source={Profile} style={styles.profile} />
               }
             </React.Fragment>
           })}
+
+          {flag && (
+            <React.Fragment>
+              {neighborID !== UID && this.isIMRecieved(neighbors[neighborID].messages, neighborID) ?
+                <Image source={blueHouse} style={styles.house} />
+                :
+                <React.Fragment>
+                  <Image source={cHouses[h_no - 1]} style={styles.house} />
+                  {neighbors[neighborID].profile
+                    ? <Image source={{ uri: neighbors[neighborID].profile }} style={styles.profile} />
+                    : <Image source={Profile} style={styles.profile} />
+                  }
+                </React.Fragment>
+              }
+            </React.Fragment>
+          )}
 
           {!flag && <Image source={house} style={styles.house} />}
 
         </TouchableOpacity>
         {this.renderUserPanel(h_no, neighborID)}
-        {this.renderIM(h_no, neighborID)}
+        {this.renderIM(h_no, neighbors[neighborID], neighborID)}
       </View>
     )
   }
