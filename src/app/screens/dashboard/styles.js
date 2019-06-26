@@ -99,11 +99,9 @@ export const styles = StyleSheet.create({
   postContainer: {
     height: 200,
     backgroundColor: '#fff',
-    flexDirection: 'column',
     padding: 10,
   },
   postBox: {
-    height: 100,
     padding: 5,
     borderWidth: 1,
     borderColor: '#eee',

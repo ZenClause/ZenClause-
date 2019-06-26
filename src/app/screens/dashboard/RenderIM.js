@@ -6,6 +6,9 @@ import Profile from '../../../../assets/images/profile.png'
 import { ScrollView } from 'react-native-gesture-handler';
 import { styles } from './styles';
 import firebase from 'firebase'
+import moment from 'moment'
+
+const today = moment().format();
 
 class RenderIM extends React.Component {
   state = {
@@ -69,7 +72,6 @@ class RenderIM extends React.Component {
     let { uid, neighborID } = this.props;
     let msgRef
     const newMsgId = firebase.database().ref('/message-list').push().key;
-    const today = new Date();
 
     if (msgId) {
       msgRef = firebase.database().ref('/message-list/' + msgId)
@@ -81,7 +83,7 @@ class RenderIM extends React.Component {
       updatedAt: today,
       user1: uid,
       user2: neighborID,
-      createdAt: today.setSeconds(today.getSeconds() + 1)
+      createdAt: today
     }).then(() => {
       ToastAndroid.show('Sending message...!', ToastAndroid.SHORT);
     })
@@ -92,7 +94,7 @@ class RenderIM extends React.Component {
         msg: message,
         uid,
         username: user.userName,
-        createdAt: today.setSeconds(today.getSeconds() + 1)
+        createdAt: today
       })
       .then(() => {
         ToastAndroid.show('Message sent...!', ToastAndroid.SHORT);

@@ -1,11 +1,11 @@
 import React from 'react'
-import { Text, View, Image, ToastAndroid } from 'react-native';
-import { Button, Content, Input } from 'native-base';
-import CoverImage from '../../../../assets/images/cover.png'
-import Profile from '../../../../assets/images/profile.png'
-import { ScrollView } from 'react-native-gesture-handler';
+import { Text, View, TextInput, ToastAndroid } from 'react-native';
+import { Button, Toast } from 'native-base';
 import { styles } from './styles';
 import firebase from 'firebase'
+import moment from 'moment'
+
+const today = moment().format();
 
 class RenderPost extends React.Component {
   state = {
@@ -20,20 +20,44 @@ class RenderPost extends React.Component {
 
 
   sendPost = async () => {
-    firebase
-      .database()
-      .ref()
+    const { uid } = this.props;
+    const postId = firebase.database().ref('/post-list').push().key
+    const postRef = firebase.database().ref('/post-list/' + postId);
+    const neiborRef = firebase.database().ref('/neighborhood/' + uid + '/post')
+    await postRef.set({
+      text: this.state.message,
+      createdAt: today,
+      uid
+    }).then(() => {
+      ToastAndroid.show('Post added...!', ToastAndroid.SHORT);
+    }).catch((e) => {
+      ToastAndroid.show('Something error...!', ToastAndroid.SHORT);
+    })
+
+    await neiborRef.set({
+      text: this.state.message,
+      createdAt: today,
+      seen: [uid],
+      postId: postId
+    })
+    this.setState({
+      message: ''
+    })
     this.prosp.onSendPost(true)
   }
 
   render() {
     return (
       <View style={[styles.postContainer]}>
-        <Input
+        <TextInput
           onChangeText={message => this.setState({ message })}
           placeholder="write message... "
           value={this.state.message}
           style={styles.postBox}
+          multiline={true}
+          numberOfLines={4}
+          editable={true}
+          maxLength={40}
         />
 
         <Button style={[

@@ -97,7 +97,7 @@ import cHouse20 from "../../../assets/images/house_c_20.png";
 import { Dropdown } from 'react-native-material-dropdown'
 import RenderUserPanel from "./dashboard/RenderUserPanel";
 import RenderIM from "./dashboard/RenderIM";
-import { RenderPost } from "./dashboard";
+import { RenderPost, RenderViewPost } from "./dashboard";
 
 const cHouses = [
   cHouse1,
@@ -1095,7 +1095,6 @@ const styles = StyleSheet.create({
     borderRadius: 100
   },
   userPanel: {
-    height: '100%',
   }
 });
 
@@ -1107,6 +1106,7 @@ class RenderHouse extends React.Component {
     visibleInviteResident: null,
     visibleUserPanel: false,
     visibleIM: false,
+    visibleSeePost: false,
     house_no: "",
     neighborID: "",
     action: "invite",
@@ -1372,6 +1372,12 @@ class RenderHouse extends React.Component {
               visiblePost: true
             })
           }}
+          seePost={() => {
+            this.setState({
+              visibleUserPanel: false,
+              visibleSeePost: true
+            })
+          }}
           uid={UID}
           neighborID={neighborID}
           houseNo={h_no}
@@ -1413,7 +1419,6 @@ class RenderHouse extends React.Component {
           this.setState({ visiblePost: false })
         }
         backdropOpacity={0.2}
-        style={styles.userPanel}
       >
         <RenderPost
           onSendPost={(status) => {
@@ -1436,6 +1441,29 @@ class RenderHouse extends React.Component {
     } else {
       return false
     }
+  }
+
+  seePost = (h_no, neighbor, neighborID) => {
+    return (
+
+      <Modal
+        isVisible={this.state.visibleSeePost}
+        onBackdropPress={() =>
+          this.setState({ visibleSeePost: false })
+        }
+        backdropOpacity={0.2}
+      >
+        <RenderViewPost
+          neighbor={neighbor}
+          neighborID={neighborID}
+          h_no={h_no}
+          uid={UID}
+          refreshView={async () => {
+            await this.setState({ visibleSeePost: true })
+          }}
+        />
+      </Modal>
+    )
   }
 
 
@@ -1479,15 +1507,39 @@ class RenderHouse extends React.Component {
           {flag && (
             <React.Fragment>
               {neighborID !== UID && this.isIMRecieved(neighbors[neighborID].messages, neighborID) ?
-                <Image source={blueHouse} style={styles.house} />
-                :
                 <React.Fragment>
-                  <Image source={cHouses[h_no - 1]} style={styles.house} />
+                  <Image source={blueHouse} style={styles.house} />
                   {neighbors[neighborID].profile
                     ? <Image source={{ uri: neighbors[neighborID].profile }} style={styles.profile} />
                     : <Image source={Profile} style={styles.profile} />
                   }
                 </React.Fragment>
+                :
+                (neighbors[neighborID].post && neighbors[neighborID].post.seen && neighbors[neighborID].post.seen.indexOf(UID) === -1)
+                  ?
+                  <React.Fragment>
+                    <Image source={House} style={styles.house} />
+                    {neighbors[neighborID].profile
+                      ? <Image source={{ uri: neighbors[neighborID].profile }} style={styles.profile} />
+                      : <Image source={Profile} style={styles.profile} />
+                    }
+                  </React.Fragment>
+                  :
+                  neighbors[neighborID].post && !neighbors[neighborID].post.seen
+                    ? <React.Fragment>
+                      <Image source={House} style={styles.house} />
+                      {neighbors[neighborID].profile
+                        ? <Image source={{ uri: neighbors[neighborID].profile }} style={styles.profile} />
+                        : <Image source={Profile} style={styles.profile} />
+                      }
+                    </React.Fragment>
+                    : <React.Fragment>
+                      <Image source={cHouses[h_no - 1]} style={styles.house} />
+                      {neighbors[neighborID].profile
+                        ? <Image source={{ uri: neighbors[neighborID].profile }} style={styles.profile} />
+                        : <Image source={Profile} style={styles.profile} />
+                      }
+                    </React.Fragment>
               }
             </React.Fragment>
           )}
@@ -1498,6 +1550,7 @@ class RenderHouse extends React.Component {
         {this.renderUserPanel(h_no, neighborID)}
         {this.renderIM(h_no, neighbors[neighborID], neighborID)}
         {this.renderPost(h_no, neighbors[neighborID], neighborID)}
+        {this.seePost(h_no, neighbors[neighborID], neighborID)}
       </View>
     )
   }

@@ -95,8 +95,12 @@ class RenderUserPanel extends React.Component {
               styles.btn,
               styles.btnBg('#f9622d'),
               styles.add
-            ]}>
-              <Text style={styles.btnText} >Add</Text>
+            ]}
+              onPress={() => {
+                this.props.seePost();
+              }}
+            >
+              <Text style={styles.btnText} >View Post</Text>
             </Button>
             <Button style={[
               styles.width('50%'),
