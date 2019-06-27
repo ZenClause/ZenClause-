@@ -202,7 +202,7 @@ class Dashboard extends React.Component {
     btnValue: "Vibrate",
     residentEmail: "",
     users: false,
-    neighbors: false,
+    neighbors: [],
     neighborID: 1,
     appState: AppState.currentState,
   };
@@ -237,11 +237,18 @@ class Dashboard extends React.Component {
   };
 
   _setOnlineStatus = (status) => {
-    return firebase
+    firebase
       .database()
       .ref('/neighborhood/' + UID)
-      .update({
-        online: status
+      .once('value', snap => {
+        if (snap.val()) {
+          return firebase
+            .database()
+            .ref('/neighborhood/' + UID)
+            .update({
+              online: status
+            })
+        }
       })
   }
 
@@ -736,6 +743,7 @@ class Dashboard extends React.Component {
     });
 
   render() {
+    console.log(this.state.neighbors)
     return (
       <Container style={{ flex: 1 }}>
         <StatusBar hidden={true} />
@@ -1116,7 +1124,8 @@ class RenderHouse extends React.Component {
     messages: []
   }
 
-  _onPress = (h_no, neighborID = "") => {
+  _onPress = (h_no, neighborID) => {
+    console.log(neighborID)
     if (neighborID) {
       this.setState({
         visibleUserPanel: true,
@@ -1387,6 +1396,7 @@ class RenderHouse extends React.Component {
   }
 
   renderIM = (h_no, neighbor, neighborID) => {
+    console.log(neighbor)
     return (
       <Modal
         isVisible={this.state.visibleIM}
@@ -1471,6 +1481,7 @@ class RenderHouse extends React.Component {
     const { house, h_no, neighbors, ...props } = this.props;
     let flag = false;
     let neighborID = '';
+
     return (
       <View style={styles.houseContainer}>
         {this.renderActionModal()}
@@ -1484,11 +1495,13 @@ class RenderHouse extends React.Component {
         >
 
           {neighbors && Object.keys(neighbors).map((id, p) => {
+
             if (neighbors[id].houseID === h_no) {
               flag = true;
               neighborID = id;
             }
-            return neighbors[id].houseID === h_no && <React.Fragment key={neighbors[id].houseID}>
+
+            return neighbors && neighbors[id].houseID === h_no && <React.Fragment key={neighbors[id].houseID}>
               <Icon
                 type="FontAwesome"
                 name="circle"
@@ -1501,56 +1514,63 @@ class RenderHouse extends React.Component {
                   zIndex: 9999999
                 }}
               />
+
+
+              {flag && (
+                <React.Fragment>
+                  {(neighbors && id !== UID && this.isIMRecieved(neighbors[id].messages, id)) ?
+                    <React.Fragment>
+                      <Image source={blueHouse} style={styles.house} />
+                      {neighbors[id] && neighbors[id].profile
+                        ? <Image source={{ uri: neighbors[id].profile }} style={styles.profile} />
+                        : <Image source={Profile} style={styles.profile} />
+                      }
+                    </React.Fragment>
+                    :
+                    (neighbors && neighbors[id].post && neighbors[id].post.seen && neighbors[id].post.seen.indexOf(UID) === -1)
+                      ?
+                      <React.Fragment>
+                        <Image source={House} style={styles.house} />
+                        {neighbors[id].profile
+                          ? <Image source={{ uri: neighbors[id].profile }} style={styles.profile} />
+                          : <Image source={Profile} style={styles.profile} />
+                        }
+                      </React.Fragment>
+                      :
+                      (neighbors && neighbors[id].post && !neighbors[id].post.seen)
+                        ? <React.Fragment>
+                          <Image source={House} style={styles.house} />
+                          {neighbors[id].profile
+                            ? <Image source={{ uri: neighbors[id].profile }} style={styles.profile} />
+                            : <Image source={Profile} style={styles.profile} />
+                          }
+                        </React.Fragment>
+                        : neighbors && (<React.Fragment>
+                          <Image source={cHouses[h_no - 1]} style={styles.house} />
+                          {neighbors[id].profile
+                            ? <Image source={{ uri: neighbors[id].profile }} style={styles.profile} />
+                            : <Image source={Profile} style={styles.profile} />
+                          }
+                        </React.Fragment>)
+                  }
+                </React.Fragment>
+              )}
+
             </React.Fragment>
           })}
 
-          {flag && (
+          {this.renderUserPanel(h_no, neighborID)}
+          {flag &&
             <React.Fragment>
-              {neighborID !== UID && this.isIMRecieved(neighbors[neighborID].messages, neighborID) ?
-                <React.Fragment>
-                  <Image source={blueHouse} style={styles.house} />
-                  {neighbors[neighborID].profile
-                    ? <Image source={{ uri: neighbors[neighborID].profile }} style={styles.profile} />
-                    : <Image source={Profile} style={styles.profile} />
-                  }
-                </React.Fragment>
-                :
-                (neighbors[neighborID].post && neighbors[neighborID].post.seen && neighbors[neighborID].post.seen.indexOf(UID) === -1)
-                  ?
-                  <React.Fragment>
-                    <Image source={House} style={styles.house} />
-                    {neighbors[neighborID].profile
-                      ? <Image source={{ uri: neighbors[neighborID].profile }} style={styles.profile} />
-                      : <Image source={Profile} style={styles.profile} />
-                    }
-                  </React.Fragment>
-                  :
-                  neighbors[neighborID].post && !neighbors[neighborID].post.seen
-                    ? <React.Fragment>
-                      <Image source={House} style={styles.house} />
-                      {neighbors[neighborID].profile
-                        ? <Image source={{ uri: neighbors[neighborID].profile }} style={styles.profile} />
-                        : <Image source={Profile} style={styles.profile} />
-                      }
-                    </React.Fragment>
-                    : <React.Fragment>
-                      <Image source={cHouses[h_no - 1]} style={styles.house} />
-                      {neighbors[neighborID].profile
-                        ? <Image source={{ uri: neighbors[neighborID].profile }} style={styles.profile} />
-                        : <Image source={Profile} style={styles.profile} />
-                      }
-                    </React.Fragment>
-              }
+              {this.renderIM(h_no, neighbors[neighborID], neighborID)}
+              {this.renderPost(h_no, neighbors[neighborID], neighborID)}
+              {this.seePost(h_no, neighbors[neighborID], neighborID)}
             </React.Fragment>
-          )}
+          }
 
           {!flag && <Image source={house} style={styles.house} />}
 
         </TouchableOpacity>
-        {this.renderUserPanel(h_no, neighborID)}
-        {this.renderIM(h_no, neighbors[neighborID], neighborID)}
-        {this.renderPost(h_no, neighbors[neighborID], neighborID)}
-        {this.seePost(h_no, neighbors[neighborID], neighborID)}
       </View>
     )
   }
