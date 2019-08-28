@@ -36,7 +36,7 @@ import {
 } from "native-base";
 import Modal from "react-native-modal";
 import email from "react-native-email";
-import validator from 'validator';
+import validator from "validator";
 // import RadioForm, {
 //   RadioButton,
 //   RadioButtonInput,
@@ -58,10 +58,10 @@ import cNumberThree from "../../../assets/images/number-three_c.png";
 import cNumberFour from "../../../assets/images/number-four_c.png";
 import cNumberFive from "../../../assets/images/number-five_c.png";
 
-import House from '../../../assets/images/house.png'
-import Profile from '../../../assets/images/profile.png'
+import House from "../../../assets/images/house.png";
+import Profile from "../../../assets/images/profile.png";
 
-import House1 from '../../../assets/images/house_1.png';
+import House1 from "../../../assets/images/house_1.png";
 import House2 from "../../../assets/images/house_2.png";
 import House3 from "../../../assets/images/house_3.png";
 import House4 from "../../../assets/images/house_4.png";
@@ -80,7 +80,7 @@ import House16 from "../../../assets/images/house_16.png";
 import House17 from "../../../assets/images/house_17.png";
 import House18 from "../../../assets/images/house_18.png";
 import House19 from "../../../assets/images/house_19.png";
-import House20 from '../../../assets/images/house_20.png';
+import House20 from "../../../assets/images/house_20.png";
 
 import cHouse1 from "../../../assets/images/house_c_1.png";
 import cHouse2 from "../../../assets/images/house_c_2.png";
@@ -103,7 +103,7 @@ import cHouse18 from "../../../assets/images/house_c_18.png";
 import cHouse19 from "../../../assets/images/house_c_19.png";
 import cHouse20 from "../../../assets/images/house_c_20.png";
 
-import { Dropdown } from 'react-native-material-dropdown'
+import { Dropdown } from "react-native-material-dropdown";
 
 const cHouses = [
   cHouse1,
@@ -119,7 +119,7 @@ const cHouses = [
   cHouse11,
   cHouse12,
   cHouse13,
-  cHouse14, 
+  cHouse14,
   cHouse15,
   cHouse16,
   cHouse17,
@@ -149,7 +149,7 @@ const Houses = [
   House18,
   House19,
   House20
-]
+];
 
 const settingBtns = [
   SettingImage,
@@ -169,16 +169,13 @@ const cSettingBtns = [
   cNumberFive
 ];
 
-
-
 var UserName;
 var UID = "";
 
 var width = Dimensions.get("window").width;
 var height = Dimensions.get("window").height;
 
-var distance = (width / 0.63) - 13;
-
+var distance = width / 0.63 - 13;
 
 class RenderHouse extends React.Component {
   state = {
@@ -188,20 +185,20 @@ class RenderHouse extends React.Component {
     inviteEmail: "",
     searchValue: "",
     neighborInfo: {}
-  }
+  };
 
-  _onPress = (h_no, neighborID="") => {
-    this._checkUser(neighborID)
+  _onPress = (h_no, neighborID = "") => {
+    this._checkUser(neighborID);
     this.setState({
       visibleInviteResident: true,
       house_no: h_no,
       neighborID
-    })
-  }
+    });
+  };
 
   _onChangeAction = (itemValue, itemIndex) => {
-    this.setState({ action: itemValue })
-  }
+    this.setState({ action: itemValue });
+  };
 
   _onPressDelete = () => {
     let userRef = firebase
@@ -209,64 +206,65 @@ class RenderHouse extends React.Component {
       .ref("/neighborhood/" + this.state.neighborID)
       .remove()
       .then(() => {
-        this.props.RefreshHouse()
-      }); 
-  }
+        this.props.RefreshHouse();
+      });
+  };
 
-  _checkUser = (id) => {
-    let userRef = firebase.database().ref("/users/"); 
+  _checkUser = id => {
+    let userRef = firebase.database().ref("/users/");
     userRef
       .orderByKey()
       .equalTo(id)
-      .on('value', snap => {
+      .on("value", snap => {
         if (snap.val()) {
           this.setState({
             neighborInfo: snap.val()[id]
-          })
-        } 
-      })
-  }
+          });
+        }
+      });
+  };
 
-  _onPressSearch = async (value) => {
+  _onPressSearch = async value => {
     let user = this.state.searchValue; // Searching user mail
     let userRef = firebase.database().ref("/users/");
     let ts = this;
     let neighborID = this.props.neighborID;
     let uid = await AsyncStorage.getItem("auth");
     userRef
-      .orderByChild('mail')
+      .orderByChild("mail")
       .equalTo(user)
-      .on('value', snap => {
+      .on("value", snap => {
         if (!snap.val()) {
-          alert("User not exists")
+          alert("User not exists");
         } else {
           let keys = Object.keys(snap.val());
-          let neighborhoodID = ''
-          keys.forEach((objKey) => {
+          let neighborhoodID = "";
+          keys.forEach(objKey => {
             if (!neighborhoodID) {
               neighborhoodID = objKey;
               let obj = {
                 houseID: this.state.house_no,
-                uid, 
+                uid,
                 neighborID
-              }
+              };
 
-              firebase.database().ref('neighborhood/' + neighborhoodID).set(obj).then((res) => {
-                ts.setState({
-                  visibleInviteResident: null
-                })
-                this.props.RefreshHouse();
-              })
+              firebase
+                .database()
+                .ref("neighborhood/" + neighborhoodID)
+                .set(obj)
+                .then(res => {
+                  ts.setState({
+                    visibleInviteResident: null
+                  });
+                  this.props.RefreshHouse();
+                });
             }
-          })
+          });
         }
-      })
-    
-  }
+      });
+  };
 
-  _onPressMove = () => {
-
-  }
+  _onPressMove = () => {};
 
   _onPressInvite = () => {
     const to = this.state.inviteEmail; // string or array of email addresses
@@ -279,18 +277,14 @@ class RenderHouse extends React.Component {
     } else {
       alert("Email is misformatted");
     }
-  }
+  };
 
   renderAddNewResident = () => {
     return (
       <View>
-        <Item
-          style={{ height: 50, width: '100%' }}
-        >
+        <Item style={{ height: 50, width: "100%" }}>
           <Input
-            onChangeText={searchValue =>
-              this.setState({ searchValue })
-            }
+            onChangeText={searchValue => this.setState({ searchValue })}
             value={this.state.searchValue}
             placeholder="Type Username... "
           />
@@ -301,21 +295,15 @@ class RenderHouse extends React.Component {
           </View>
         </TouchableOpacity>
       </View>
-    )
-  }
-
-
+    );
+  };
 
   renderInviteResident = () => {
     return (
       <View>
-        <Item
-          style={{ height: 50, width: '100%' }}
-        >
+        <Item style={{ height: 50, width: "100%" }}>
           <Input
-            onChangeText={inviteEmail =>
-              this.setState({ inviteEmail })
-            }
+            onChangeText={inviteEmail => this.setState({ inviteEmail })}
             placeholder="Type Email... "
           />
         </Item>
@@ -325,22 +313,22 @@ class RenderHouse extends React.Component {
           </View>
         </TouchableOpacity>
       </View>
-    )
-  }
+    );
+  };
 
   renderMoveResident = () => {
     let houses = [];
-    for(var i=1;i<=20;i++) {
-      houses.push(<Picker.Item key={i} label={"House-" + i} value={"house_"+i} />)
+    for (var i = 1; i <= 20; i++) {
+      houses.push(
+        <Picker.Item key={i} label={"House-" + i} value={"house_" + i} />
+      );
     }
     return (
       <View>
-        <Item
-          style={{ height: 50, width: '100%' }}
-        >
+        <Item style={{ height: 50, width: "100%" }}>
           <Picker
             selectedValue={this.state.action}
-            style={{ height: 50, width: '100%' }}
+            style={{ height: 50, width: "100%" }}
             onValueChange={this._onChangeAction}
           >
             {houses}
@@ -352,13 +340,13 @@ class RenderHouse extends React.Component {
           </View>
         </TouchableOpacity>
       </View>
-    )
-  }
+    );
+  };
 
   renderDeleteResident = () => (
-    <View style={{height: 50}}>
-      <View style={{flex: 1, flexDirection: 'row'}}>
-        <TouchableOpacity onPress={this._onPressDelete} style={{styles}}>
+    <View style={{ height: 50 }}>
+      <View style={{ flex: 1, flexDirection: "row" }}>
+        <TouchableOpacity onPress={this._onPressDelete} style={{ styles }}>
           <View style={styles.button}>
             <Text>Confirm ?</Text>
           </View>
@@ -370,51 +358,49 @@ class RenderHouse extends React.Component {
         </TouchableOpacity>
       </View>
     </View>
-  )
+  );
 
   renderActionModal = () => {
     return (
       <Modal
         isVisible={this.state.visibleInviteResident === true}
-        onBackdropPress={() =>
-          this.setState({ visibleInviteResident: null })
-        }
+        onBackdropPress={() => this.setState({ visibleInviteResident: null })}
       >
         <View style={styles.modalContent}>
           <Text>Neighbor ID: #{this.props.neighborID}</Text>
           <Text>House No.: #{this.state.house_no}</Text>
-          {this.state.neighborInfo.mail 
-            ? <Text>Email: {this.state.neighborInfo.mail}</Text>
-            : <Text>Add New Resident to this home</Text>
-          }
-          
-          <Item
-            style={{ height: 50, width: '100%' }}
-          >
-          <Picker
-            selectedValue={this.state.action}
-            style={{ height: 50, width: '100%' }}
-            onValueChange={this._onChangeAction}>
-            <Picker.Item label="Invite Resident" value="invite" />
-            <Picker.Item label="Move Resident" value="move" />
-            <Picker.Item label="Delete Resident" value="delete" />
-            <Picker.Item label="Add New Resident" value="add" />
-          </Picker>
+          {this.state.neighborInfo.mail ? (
+            <Text>Email: {this.state.neighborInfo.mail}</Text>
+          ) : (
+            <Text>Add New Resident to this home</Text>
+          )}
+
+          <Item style={{ height: 50, width: "100%" }}>
+            <Picker
+              selectedValue={this.state.action}
+              style={{ height: 50, width: "100%" }}
+              onValueChange={this._onChangeAction}
+            >
+              <Picker.Item label="Invite Resident" value="invite" />
+              <Picker.Item label="Move Resident" value="move" />
+              <Picker.Item label="Delete Resident" value="delete" />
+              <Picker.Item label="Add New Resident" value="add" />
+            </Picker>
           </Item>
-          {this.state.action === 'invite' && this.renderInviteResident()}
-          {this.state.action === 'add' && this.renderAddNewResident()}
-          {this.state.action === 'move' && this.renderMoveResident()}
-          {this.state.action === 'delete' && this.renderDeleteResident()}
+          {this.state.action === "invite" && this.renderInviteResident()}
+          {this.state.action === "add" && this.renderAddNewResident()}
+          {this.state.action === "move" && this.renderMoveResident()}
+          {this.state.action === "delete" && this.renderDeleteResident()}
         </View>
       </Modal>
-    )
-  }
+    );
+  };
 
   render() {
     const { house, h_no, neighbors, ...props } = this.props;
-    
+
     let flag = false;
-    let neighborID = '';
+    let neighborID = "";
     return (
       <View style={styles.houseContainer}>
         {this.renderActionModal()}
@@ -426,42 +412,45 @@ class RenderHouse extends React.Component {
           ]}
           onPress={() => this._onPress(h_no, neighborID)}
         >
-      
-          {neighbors && Object.keys(neighbors).map((id, p) => {
-            if (neighbors[id].houseID === h_no) {
-              flag = true;
-              neighborID = id;
-            }
-            return <>
-              {neighbors[id].houseID === h_no && <Image source={cHouses[h_no - 1]} style={styles.house} />}
-              {neighbors[id].houseID === h_no && <Image source={Profile} style={styles.profile} />}
-            </>
-          })}
+          {neighbors &&
+            Object.keys(neighbors).map((id, p) => {
+              if (neighbors[id].houseID === h_no) {
+                flag = true;
+                neighborID = id;
+              }
+              return (
+                <>
+                  {neighbors[id].houseID === h_no && (
+                    <Image source={cHouses[h_no - 1]} style={styles.house} />
+                  )}
+                  {neighbors[id].houseID === h_no && (
+                    <Image source={Profile} style={styles.profile} />
+                  )}
+                </>
+              );
+            })}
 
           {!flag && <Image source={house} style={styles.house} />}
-          
         </TouchableOpacity>
       </View>
-    )
+    );
   }
 }
 
 export default RenderHouse;
 
-
-
-const percentageX = (value) => {
+const percentageX = value => {
   return height * (value / 100); // 340 px my device
-}
+};
 
-const percentageY = (value) => {
+const percentageY = value => {
   return width * (value / 100); // 640 my device
-}
+};
 
 const settingBtn = value =>
   value === 0
-    ? width - 60 // Gap between two button should 50. 
-    : width - (50 * (8 - value)) - 10 // First button should 50 so substruct 10 from other button to make balance
+    ? width - 60 // Gap between two button should 50.
+    : width - 50 * (8 - value) - 10; // First button should 50 so substruct 10 from other button to make balance
 
 const styles = StyleSheet.create({
   welcome: {
@@ -555,7 +544,7 @@ const styles = StyleSheet.create({
   modalContentAction: {
     backgroundColor: "white",
     padding: 22,
-    width: '50%',
+    width: "50%",
     borderRadius: 4,
     borderColor: "rgba(0, 0, 0, 0.1)"
   },
@@ -607,7 +596,7 @@ const styles = StyleSheet.create({
   },
 
   settingImgTouch_0: {
-    left: settingBtn(0),
+    left: settingBtn(0)
   },
   settingImgTouch_1: {
     // left: settingBtn(1)

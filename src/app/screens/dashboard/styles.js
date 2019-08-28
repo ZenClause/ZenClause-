@@ -1,80 +1,80 @@
-
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Dimensions } from "react-native";
 
 export const styles = StyleSheet.create({
+  deviceWidth: Dimensions.get("window").width,
+  deviceHeight: Dimensions.get("window").height,
   dFlex: {
     flex: 1
   },
-  width: (v) => ({
+  width: v => ({
     width: v
   }),
-  height: (v) => ({
+  height: v => ({
     height: v
   }),
-  fontSize: (v) => ({
+  fontSize: v => ({
     fontSize: v
   }),
   userName: {
     fontSize: 12,
-    fontWeight: 'bold'
+    fontWeight: "bold"
   },
   modalContent: {
     backgroundColor: "#817c8b",
     padding: 10,
     borderRadius: 4,
     borderColor: "rgba(0, 0, 0, 0.1)",
-    width: '60%',
+    width: "60%",
     height: 400
   },
   topBoxContainer: {
-    backgroundColor: '#222222',
-    height: '60%',
+    backgroundColor: "#222222",
+    height: "60%",
     padding: 5
   },
   IMtopBoxContainer: {
-    backgroundColor: '#222222',
-    height: '75%',
+    backgroundColor: "#222222",
+    height: "75%",
     padding: 5
   },
   topBox: {
-    flexDirection: 'row',
+    flexDirection: "row"
   },
   bottomBox: {
-    flexDirection: 'column',
+    flexDirection: "column",
     marginTop: 10
   },
-  coverContainer: {
-  },
+  coverContainer: {},
   cover: {
     width: 140,
-    height: 140,
+    height: 140
   },
   messages: {
     padding: 5,
-    flexDirection: 'column'
+    flexDirection: "column"
   },
   message: {
-    backgroundColor: 'red',
+    backgroundColor: "red",
     padding: 5
   },
   msgItem: {
-    flexDirection: 'row',
+    flexDirection: "row",
     marginBottom: 10
   },
   firstButtons: {
-    flexDirection: 'row'
+    flexDirection: "row"
   },
   secondButtons: {
-    flexDirection: 'row',
+    flexDirection: "row",
     marginTop: 2
   },
   btn: {
     padding: 20,
     paddingTop: 20,
-    paddingBottom: 20,
+    paddingBottom: 20
   },
   btnText: {},
-  btnBg: (color) => ({
+  btnBg: color => ({
     backgroundColor: color
   }),
   like: {
@@ -98,18 +98,41 @@ export const styles = StyleSheet.create({
 
   postContainer: {
     height: 200,
-    backgroundColor: '#fff',
-    padding: 10,
+    backgroundColor: "#fff",
+    padding: 10
   },
   postBox: {
     padding: 5,
     borderWidth: 1,
-    borderColor: '#eee',
-    width: '100%',
-    marginBottom: 10,
+    borderColor: "#eee",
+    width: "100%",
+    marginBottom: 10
   },
   postSendBtn: {
     padding: 10,
-    width: 100,
-  }
-})
+    width: 100
+  },
+  flexDirection: direction => ({
+    flexDirection: direction
+  }),
+  borderConfig: (width, color, radius) => ({
+    borderWidth: width,
+    borderColor: color,
+    borderRadius: radius
+  }),
+  bthLabelConfig: (size, weight, color) => ({
+    fontWeight: size,
+    fontWeight: weight,
+    color: color
+  }),
+  btnPaddingConfig: (vertical, horizontal) => ({
+    paddingVertical: vertical,
+    paddingHorizontal: horizontal
+  }),
+  btnShadowConfig: (offset, opacity, radius, color) => ({
+    shadowOffset: offset,
+    shadowOpacity: opacity,
+    shadowRadius: radius,
+    shadowCOlor: color
+  })
+});

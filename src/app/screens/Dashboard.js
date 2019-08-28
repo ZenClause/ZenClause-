@@ -25,7 +25,7 @@ import {
 } from "native-base";
 import Modal from "react-native-modal";
 import email from "react-native-email";
-import validator from 'validator';
+import validator from "validator";
 // import RadioForm, {
 //   RadioButton,
 //   RadioButtonInput,
@@ -47,12 +47,12 @@ import cNumberThree from "../../../assets/images/number-three_c.png";
 import cNumberFour from "../../../assets/images/number-four_c.png";
 import cNumberFive from "../../../assets/images/number-five_c.png";
 
-import House from '../../../assets/images/house.png'
-import blueHouse from '../../../assets/images/house_c_x.png';
+import House from "../../../assets/images/house.png";
+import blueHouse from "../../../assets/images/house_c_x.png";
 
-import Profile from '../../../assets/images/profile.png'
+import Profile from "../../../assets/images/user.png";
 
-import House1 from '../../../assets/images/house_1.png';
+import House1 from "../../../assets/images/house_1.png";
 import House2 from "../../../assets/images/house_2.png";
 import House3 from "../../../assets/images/house_3.png";
 import House4 from "../../../assets/images/house_4.png";
@@ -71,7 +71,7 @@ import House16 from "../../../assets/images/house_16.png";
 import House17 from "../../../assets/images/house_17.png";
 import House18 from "../../../assets/images/house_18.png";
 import House19 from "../../../assets/images/house_19.png";
-import House20 from '../../../assets/images/house_20.png';
+import House20 from "../../../assets/images/house_20.png";
 
 import cHouse1 from "../../../assets/images/house_c_1.png";
 import cHouse2 from "../../../assets/images/house_c_2.png";
@@ -94,10 +94,16 @@ import cHouse18 from "../../../assets/images/house_c_18.png";
 import cHouse19 from "../../../assets/images/house_c_19.png";
 import cHouse20 from "../../../assets/images/house_c_20.png";
 
-import { Dropdown } from 'react-native-material-dropdown'
+import { Dropdown } from "react-native-material-dropdown";
 import RenderUserPanel from "./dashboard/RenderUserPanel";
 import RenderIM from "./dashboard/RenderIM";
 import { RenderPost, RenderViewPost } from "./dashboard";
+
+import HouseMenu from "./menus/HouseMenu";
+import PMMenu from "./menus/PMMenu";
+import CustomButton from "./menus/CustomButton";
+
+import { IMMenu } from "./dashboard/";
 
 const cHouses = [
   cHouse1,
@@ -143,7 +149,7 @@ const Houses = [
   House18,
   House19,
   House20
-]
+];
 
 const settingBtns = [
   SettingImage,
@@ -171,7 +177,7 @@ var UID = "";
 var width = Dimensions.get("window").width;
 var height = Dimensions.get("window").height;
 
-var distance = (width / 0.63) - 13;
+var distance = width / 0.63 - 13;
 
 class Dashboard extends React.Component {
   static navigationOptions = {
@@ -204,57 +210,62 @@ class Dashboard extends React.Component {
     users: false,
     neighbors: [],
     neighborID: 1,
-    appState: AppState.currentState,
+    appState: AppState.currentState
   };
 
   async componentDidMount() {
     // const { navigate } = this.props.navigation;
 
     // var a = this.props.navigation;
-    await AppState.addEventListener('change', this._handleAppStateChange);
+    await AppState.addEventListener("change", this._handleAppStateChange);
     ScreenOrientation.allowAsync(ScreenOrientation.Orientation.LANDSCAPE_RIGHT);
     this._setOnlineStatus(true);
   }
 
   async componentWillMount() {
-    await AppState.removeEventListener('change', this._handleAppStateChange);
+    // await Font.loadAsync({
+    //   Roboto: require("native-base/Fonts/Roboto.ttf"),
+    //   Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf"),
+    //   Ionicons: require("@expo/vector-icons/fonts/Ionicons.ttf")
+    // });
+    await AppState.removeEventListener("change", this._handleAppStateChange);
     this._RefreshHouse();
     this._setOnlineStatus(true);
   }
 
-  _handleAppStateChange = (nextAppState) => {
+  _handleAppStateChange = nextAppState => {
     if (
       this.state.appState.match(/inactive|background/) &&
-      nextAppState === 'active'
+      nextAppState === "active"
     ) {
-      console.log('App has come to the foreground!');
+      console.log("App has come to the foreground!");
       this._setOnlineStatus(true);
     } else {
-      console.log('App has come to background')
+      console.log("App has come to background");
       this._setOnlineStatus(false);
     }
     this.setState({ appState: nextAppState });
   };
 
-  _setOnlineStatus = (status) => {
+  _setOnlineStatus = status => {
     firebase
       .database()
-      .ref('/neighborhood/' + UID)
-      .once('value', snap => {
+      .ref("/neighborhood/" + UID)
+      .once("value", snap => {
         if (snap.val()) {
           return firebase
             .database()
-            .ref('/neighborhood/' + UID)
+            .ref("/neighborhood/" + UID)
             .update({
               online: status
-            })
+            });
         }
-      })
-  }
+      });
+  };
 
   _RefreshHouse = () => {
     this.getNeighbors();
-  }
+  };
 
   getUsers = () => {
     var users = firebase
@@ -273,13 +284,13 @@ class Dashboard extends React.Component {
     var users = firebase
       .database()
       .ref("/neighborhood/")
-      .orderByChild('neighborID')
+      .orderByChild("neighborID")
       .equalTo(this.state.neighborID)
       .on("value", snap => {
         this.setState({
           neighbors: snap.val()
         });
-      })
+      });
   };
 
   changeBtn() {
@@ -326,7 +337,7 @@ class Dashboard extends React.Component {
               visbleModalForPassword: false
             });
             const { navigate } = myThis.props.navigation;
-            setTimeout(function () {
+            setTimeout(function() {
               navigate("SignIn");
             }, 3000);
           })
@@ -368,9 +379,9 @@ class Dashboard extends React.Component {
     if (!result.cancelled) {
       await this.setState({ image: result.uri });
       try {
-        await this.uploadImage()
+        await this.uploadImage();
       } catch (e) {
-        console.log(e)
+        console.log(e);
       }
     }
   };
@@ -406,7 +417,7 @@ class Dashboard extends React.Component {
               visbleModalForEmail: false
             });
             const { navigate } = myThis.props.navigation;
-            setTimeout(function () {
+            setTimeout(function() {
               navigate("SignIn");
             }, 3000);
           })
@@ -437,144 +448,102 @@ class Dashboard extends React.Component {
       <View style={styles.contView}>
         <View style={{ flexDirection: "row", flex: 1 }}>
           <View style={{ flex: 1 }}>
-            <Card
-              style={{
-                backgroundColor: "#1fbbd4",
-                justifyContent: "center",
-                alignItems: "center",
-                flex: 1
+            <CustomButton
+              fontSize={18}
+              label="Change Email"
+              topColor="#39bcd6"
+              bottomColor="#005fa6"
+              bgColor="#0c8fd6"
+              height="100%"
+              width="100%"
+              onPress={() => {
+                this.setState({
+                  visbleModalForEmail: true,
+                  visibleModal: false
+                });
               }}
-            >
-              <CardItem
-                button
-                onPress={() => {
-                  this.setState({
-                    visbleModalForEmail: true,
-                    visibleModal: false
-                  });
-                }}
-                style={{ backgroundColor: "#1fbbd4" }}
-              >
-                <Text style={{ backgroundColor: "#1fbbd4" }}>Change Email</Text>
-              </CardItem>
-            </Card>
+            />
           </View>
           <View style={{ flex: 1 }}>
-            <Card
-              style={{
-                backgroundColor: "#66bcff",
-                justifyContent: "center",
-                alignItems: "center",
-                flex: 1
+            <CustomButton
+              fontSize={18}
+              label="Change Banner Text"
+              topColor="#6cb2e2"
+              bottomColor="#15397c"
+              bgColor="#185fe2"
+              height="100%"
+              width="100%"
+              onPress={() => {
+                this.setState({
+                  visbleModalForHeaderText: true,
+                  visibleModal: false
+                });
               }}
-            >
-              <CardItem
-                button
-                onPress={() => {
-                  this.setState({
-                    visbleModalForHeaderText: true,
-                    visibleModal: false
-                  });
-                }}
-                style={{ backgroundColor: "#66bcff" }}
-              >
-                <Text style={{ backgroundColor: "#66bcff" }}>
-                  Change Banner Text
-                </Text>
-              </CardItem>
-            </Card>
+            />
           </View>
         </View>
         <View style={{ flexDirection: "row", flex: 1 }}>
           <View style={{ flex: 1 }}>
-            <Card
-              style={{
-                backgroundColor: "#a1b223",
-                justifyContent: "center",
-                alignItems: "center",
-                flex: 1
+            <CustomButton
+              fontSize={18}
+              label="Change Image"
+              topColor="#7dc836"
+              bottomColor="#045000"
+              bgColor="#499301"
+              height="100%"
+              width="100%"
+              onPress={() => {
+                this._pickImage();
               }}
-            >
-              <CardItem
-                button
-                onPress={() => {
-                  this._pickImage();
-                }}
-                style={{ backgroundColor: "#a1b223" }}
-              >
-                <Text style={{ backgroundColor: "#a1b223" }}>Change Image</Text>
-              </CardItem>
-            </Card>
+            />
           </View>
           <View style={{ flex: 1 }}>
-            <Card
-              style={{
-                backgroundColor: "#f9622d",
-                justifyContent: "center",
-                alignItems: "center",
-                flex: 1
+            <CustomButton
+              fontSize={18}
+              label="Change Password"
+              topColor="#e6a34b"
+              bottomColor="#803d1a"
+              bgColor="#e63e00"
+              height="100%"
+              width="100%"
+              onPress={() => {
+                this.setState({
+                  visbleModalForPassword: true,
+                  visibleModal: false
+                });
               }}
-            >
-              <CardItem
-                button
-                onPress={() => {
-                  this.setState({
-                    visbleModalForPassword: true,
-                    visibleModal: false
-                  });
-                }}
-                style={{ backgroundColor: "#f9622d" }}
-              >
-                <Text style={{ backgroundColor: "#f9622d" }}>
-                  Change Password
-                </Text>
-              </CardItem>
-            </Card>
+            />
           </View>
         </View>
         <View style={{ flexDirection: "row", flex: 1 }}>
           <View style={{ flex: 1 }}>
-            <Card
-              style={{
-                backgroundColor: "#fcbc2f",
-                justifyContent: "center",
-                alignItems: "center",
-                flex: 1
+            <CustomButton
+              fontSize={18}
+              label={this.state.btnValue}
+              topColor="#ffdc37"
+              bottomColor="#997533"
+              bgColor="#ffa400"
+              height="100%"
+              width="100%"
+              onPress={() => {
+                this.changeBtn();
               }}
-            >
-              <CardItem
-                button
-                onPress={() => {
-                  this.changeBtn();
-                }}
-                style={{ backgroundColor: "#fcbc2f" }}
-              >
-                <Text style={{ backgroundColor: "#fcbc2f" }}>
-                  {this.state.btnValue}
-                </Text>
-              </CardItem>
-            </Card>
+            />
           </View>
 
           <View style={{ flex: 1 }}>
-            <Card
-              style={{
-                backgroundColor: "#c32222",
-                justifyContent: "center",
-                alignItems: "center",
-                flex: 1
+            <CustomButton
+              fontSize={18}
+              label="Cancel"
+              topColor="#ff9999"
+              bottomColor="#df0000"
+              bgColor="#f90f18"
+              height="100%"
+              width="100%"
+              onPress={() => {
+                this.setState({ visibleModal: null });
               }}
-            >
-              <CardItem
-                button
-                onPress={() => {
-                  this.setState({ visibleModal: null });
-                }}
-                style={{ backgroundColor: "#c32222" }}
-              >
-                <Text style={{ backgroundColor: "#c32222" }}>Cancel</Text>
-              </CardItem>
-            </Card>
+            />
           </View>
         </View>
       </View>
@@ -667,7 +636,9 @@ class Dashboard extends React.Component {
   renderPrivacyPolicy = () => (
     <View style={styles.modalContent}>
       <Item>
-        <Label style={{ fontSize: 18, marginBottom: 5 }}>Privacy And Policy</Label>
+        <Label style={{ fontSize: 18, marginBottom: 5 }}>
+          Privacy And Policy
+        </Label>
       </Item>
       <View>
         <Text>Read our Privacy and Policy</Text>
@@ -679,7 +650,7 @@ class Dashboard extends React.Component {
         </View>
       </TouchableOpacity>
     </View>
-  )
+  );
 
   renderModalContentForInviteResident = () => (
     <View style={styles.modalContent}>
@@ -702,13 +673,13 @@ class Dashboard extends React.Component {
   );
 
   renderUser = () => (
-    <View style={{ textAlign: 'left' }}>
+    <View style={{ textAlign: "left" }}>
       <Text>User full Name</Text>
       <Text>User Info</Text>
     </View>
-  )
+  );
 
-  callFun = async (b_no) => {
+  callFun = async b_no => {
     await this.setState({
       visibleModal: b_no === -1 ? true : false, // -1 setting button
       privacyModal: b_no === 0 ? true : false,
@@ -716,7 +687,6 @@ class Dashboard extends React.Component {
     });
     this._RefreshHouse();
   };
-
 
   renderSettingBtn = () =>
     settingBtns.map((btnImg, j) => {
@@ -730,20 +700,23 @@ class Dashboard extends React.Component {
           style={[
             styles.settingImgTouch,
             styles[`settingImgTouch_${b_no}`] &&
-            styles[`settingImgTouch_${b_no}`]
+              styles[`settingImgTouch_${b_no}`]
           ]}
         >
-
-          {b_no !== 0 && b_no - 1 === this.state.neighborID
-            ? <Image source={cSettingBtns[this.state.neighborID - 1]} style={styles.settingImg} />
-            : <Image source={btnImg} style={styles.settingImg} />
-          }
+          {b_no !== 0 && b_no - 1 === this.state.neighborID ? (
+            <Image
+              source={cSettingBtns[this.state.neighborID - 1]}
+              style={styles.settingImg}
+            />
+          ) : (
+            <Image source={btnImg} style={styles.settingImg} />
+          )}
         </TouchableOpacity>
       );
     });
 
   render() {
-    console.log(this.state.neighbors)
+    console.log(this.state.neighbors);
     return (
       <Container style={{ flex: 1 }}>
         <StatusBar hidden={true} />
@@ -810,33 +783,31 @@ class Dashboard extends React.Component {
 
         <Modal
           isVisible={this.state.privacyModal === true}
-          onBackdropPress={() =>
-            this.setState({ privacyModal: null })
-          }
+          onBackdropPress={() => this.setState({ privacyModal: null })}
         >
           {this.renderPrivacyPolicy()}
         </Modal>
-
       </Container>
     );
   }
 }
 
-
-const percentageX = (value) => {
+const percentageX = value => {
   return height * (value / 100); // 340 px my device
-}
+};
 
-const percentageY = (value) => {
+const percentageY = value => {
   return width * (value / 100); // 640 my device
-}
+};
 
 const settingBtn = value =>
   value === 0
-    ? width - 60 // Gap between two button should 50. 
-    : width - (50 * (8 - value)) - 10 // First button should 50 so substruct 10 from other button to make balance
+    ? width - 60 // Gap between two button should 50.
+    : width - 50 * (8 - value) - 10; // First button should 50 so substruct 10 from other button to make balance
 
 const styles = StyleSheet.create({
+  deviceWidth: Dimensions.get("window").width,
+  deviceHeight: Dimensions.get("window").height,
   welcome: {
     fontSize: 30,
     textAlign: "center",
@@ -928,7 +899,7 @@ const styles = StyleSheet.create({
   modalContentAction: {
     backgroundColor: "white",
     padding: 22,
-    width: '50%',
+    width: "50%",
     borderRadius: 4,
     borderColor: "rgba(0, 0, 0, 0.1)"
   },
@@ -980,7 +951,7 @@ const styles = StyleSheet.create({
   },
 
   settingImgTouch_0: {
-    left: settingBtn(0),
+    left: settingBtn(0)
   },
   settingImgTouch_1: {
     // left: settingBtn(1)
@@ -1102,17 +1073,22 @@ const styles = StyleSheet.create({
     zIndex: 9999999999,
     borderRadius: 100
   },
-  userPanel: {
+  userPanel: {},
+  testProfile: {
+    borderBottomWidth: 5,
+    borderBottomColor: "red"
   }
 });
 
 export default Dashboard;
 
-
 class RenderHouse extends React.Component {
   state = {
+    visibleHouseMenu: false,
+    visibleIMMenu: false,
     visibleInviteResident: null,
     visibleUserPanel: false,
+    visiblePMMenu: false,
     visibleIM: false,
     visibleSeePost: false,
     house_no: "",
@@ -1121,30 +1097,44 @@ class RenderHouse extends React.Component {
     inviteEmail: "",
     searchValue: "",
     neighborInfo: {},
-    messages: []
-  }
+    messages: [],
+    housePressCount: 0
+  };
 
+  clickTimeout = null;
   _onPress = (h_no, neighborID) => {
-    console.log(neighborID)
     if (neighborID) {
-      this.setState({
-        visibleUserPanel: true,
-        house_no: h_no,
-        neighborID
-      })
+      if (this.clickTimeout !== null) {
+        this.setState({
+          visibleHouseMenu: true
+        });
+        clearTimeout(this.clickTimeout);
+        this.clickTimeout = null;
+      } else {
+        this.clickTimeout = setTimeout(() => {
+          this.setState({
+            visiblePMMenu: true,
+            house_no: h_no,
+            neighborID
+          });
+          clearTimeout(this.clickTimeout);
+          this.clickTimeout = null;
+        }, 1200);
+      }
     } else {
       this.setState({
         visibleInviteResident: true,
+        visibleHouseMenu: true,
         house_no: h_no,
         neighborID
-      })
+      });
     }
-    this._checkUser(neighborID)
-  }
+    this._checkUser(neighborID);
+  };
 
   _onChangeAction = (itemValue, itemIndex) => {
-    this.setState({ action: itemValue })
-  }
+    this.setState({ action: itemValue });
+  };
 
   _onPressDelete = () => {
     let userRef = firebase
@@ -1152,64 +1142,65 @@ class RenderHouse extends React.Component {
       .ref("/neighborhood/" + this.state.neighborID)
       .remove()
       .then(() => {
-        this.props.RefreshHouse()
+        this.props.RefreshHouse();
       });
-  }
+  };
 
-  _checkUser = (id) => {
+  _checkUser = id => {
     let userRef = firebase.database().ref("/users/");
     userRef
       .orderByKey()
       .equalTo(id)
-      .on('value', snap => {
+      .on("value", snap => {
         if (snap.val()) {
           this.setState({
             neighborInfo: snap.val()[id]
-          })
+          });
         }
-      })
-  }
+      });
+  };
 
-  _onPressSearch = async (value) => {
+  _onPressSearch = async value => {
     let user = this.state.searchValue; // Searching user mail
     let userRef = firebase.database().ref("/users/");
     let ts = this;
     let neighborID = this.props.neighborID;
     let uid = await AsyncStorage.getItem("auth");
     userRef
-      .orderByChild('mail')
+      .orderByChild("mail")
       .equalTo(user)
-      .on('value', snap => {
+      .on("value", snap => {
         if (!snap.val()) {
-          alert("User not exists")
+          alert("User not exists");
         } else {
           let keys = Object.keys(snap.val());
-          let neighborhoodID = ''
-          keys.forEach((objKey) => {
+          let neighborhoodID = "";
+          keys.forEach(objKey => {
             if (!neighborhoodID) {
               neighborhoodID = objKey;
               let obj = {
                 houseID: this.state.house_no,
                 uid,
                 neighborID
-              }
+              };
 
-              firebase.database().ref('neighborhood/' + neighborhoodID).set(obj).then((res) => {
-                ts.setState({
-                  visibleInviteResident: null
-                })
-                this.props.RefreshHouse();
-              })
+              firebase
+                .database()
+                .ref("neighborhood/" + neighborhoodID)
+                .set(obj)
+                .then(res => {
+                  ts.setState({
+                    visibleInviteResident: null
+                  });
+                  this.props.RefreshHouse();
+                });
             }
-          })
+          });
         }
-      })
+      });
+  };
 
-  }
-
-  _onPressMove = () => {
-
-  }
+  _onPressMove = () => {};
 
   _onPressInvite = () => {
     const to = this.state.inviteEmail; // string or array of email addresses
@@ -1222,18 +1213,14 @@ class RenderHouse extends React.Component {
     } else {
       alert("Email is misformatted");
     }
-  }
+  };
 
   renderAddNewResident = () => {
     return (
       <View>
-        <Item
-          style={{ height: 50, width: '100%' }}
-        >
+        <Item style={{ height: 50, width: "100%" }}>
           <Input
-            onChangeText={searchValue =>
-              this.setState({ searchValue })
-            }
+            onChangeText={searchValue => this.setState({ searchValue })}
             value={this.state.searchValue}
             placeholder="Type Username... "
           />
@@ -1244,21 +1231,15 @@ class RenderHouse extends React.Component {
           </View>
         </TouchableOpacity>
       </View>
-    )
-  }
-
-
+    );
+  };
 
   renderInviteResident = () => {
     return (
       <View>
-        <Item
-          style={{ height: 50, width: '100%' }}
-        >
+        <Item style={{ height: 50, width: "100%" }}>
           <Input
-            onChangeText={inviteEmail =>
-              this.setState({ inviteEmail })
-            }
+            onChangeText={inviteEmail => this.setState({ inviteEmail })}
             placeholder="Type Email... "
           />
         </Item>
@@ -1268,22 +1249,22 @@ class RenderHouse extends React.Component {
           </View>
         </TouchableOpacity>
       </View>
-    )
-  }
+    );
+  };
 
   renderMoveResident = () => {
     let houses = [];
     for (var i = 1; i <= 20; i++) {
-      houses.push(<Picker.Item key={i} label={"House-" + i} value={"house_" + i} />)
+      houses.push(
+        <Picker.Item key={i} label={"House-" + i} value={"house_" + i} />
+      );
     }
     return (
       <View>
-        <Item
-          style={{ height: 50, width: '100%' }}
-        >
+        <Item style={{ height: 50, width: "100%" }}>
           <Picker
-            selectedValue={'house_' + this.state.action}
-            style={{ height: 50, width: '100%' }}
+            selectedValue={"house_" + this.state.action}
+            style={{ height: 50, width: "100%" }}
             onValueChange={this._onChangeAction}
           >
             {houses}
@@ -1295,12 +1276,12 @@ class RenderHouse extends React.Component {
           </View>
         </TouchableOpacity>
       </View>
-    )
-  }
+    );
+  };
 
   renderDeleteResident = () => (
     <View style={{ height: 50 }}>
-      <View style={{ flex: 1, flexDirection: 'row' }}>
+      <View style={{ flex: 1, flexDirection: "row" }}>
         <TouchableOpacity onPress={this._onPressDelete} style={{ styles }}>
           <View style={styles.button}>
             <Text>Confirm ?</Text>
@@ -1313,53 +1294,50 @@ class RenderHouse extends React.Component {
         </TouchableOpacity>
       </View>
     </View>
-  )
+  );
 
   renderActionModal = () => {
     return (
       <Modal
-        isVisible={this.state.visibleInviteResident === true}
-        onBackdropPress={() =>
-          this.setState({ visibleInviteResident: null })
-        }
+        // isVisible={this.state.visibleInviteResident === true}
+        isVisible={false}
+        onBackdropPress={() => this.setState({ visibleInviteResident: null })}
       >
         <View style={styles.modalContent}>
           <Text>Neighbor ID: #{this.props.neighborID}</Text>
           <Text>House No.: #{this.state.house_no}</Text>
-          {this.state.neighborInfo.mail
-            ? <Text>Email: {this.state.neighborInfo.mail}</Text>
-            : <Text>Add New Resident to this home</Text>
-          }
+          {this.state.neighborInfo.mail ? (
+            <Text>Email: {this.state.neighborInfo.mail}</Text>
+          ) : (
+            <Text>Add New Resident to this home</Text>
+          )}
 
-          <Item
-            style={{ height: 50, width: '100%' }}
-          >
+          <Item style={{ height: 50, width: "100%" }}>
             <Picker
               selectedValue={this.state.action}
-              style={{ height: 50, width: '100%' }}
-              onValueChange={this._onChangeAction}>
+              style={{ height: 50, width: "100%" }}
+              onValueChange={this._onChangeAction}
+            >
               <Picker.Item label="Invite Resident" value="invite" />
               <Picker.Item label="Move Resident" value="move" />
               <Picker.Item label="Delete Resident" value="delete" />
               <Picker.Item label="Add New Resident" value="add" />
             </Picker>
           </Item>
-          {this.state.action === 'invite' && this.renderInviteResident()}
-          {this.state.action === 'add' && this.renderAddNewResident()}
-          {this.state.action === 'move' && this.renderMoveResident()}
-          {this.state.action === 'delete' && this.renderDeleteResident()}
+          {this.state.action === "invite" && this.renderInviteResident()}
+          {this.state.action === "add" && this.renderAddNewResident()}
+          {this.state.action === "move" && this.renderMoveResident()}
+          {this.state.action === "delete" && this.renderDeleteResident()}
         </View>
       </Modal>
-    )
-  }
+    );
+  };
 
   renderUserPanel = (h_no, neighborID) => {
     return (
       <Modal
         isVisible={this.state.visibleUserPanel}
-        onBackdropPress={() =>
-          this.setState({ visibleUserPanel: false })
-        }
+        onBackdropPress={() => this.setState({ visibleUserPanel: false })}
         backdropOpacity={0.2}
         style={styles.userPanel}
       >
@@ -1370,97 +1348,238 @@ class RenderHouse extends React.Component {
               this.setState({
                 visibleUserPanel: false,
                 visibleIM: true
-              })
+              });
             } else {
-              alert("Invalid...! This is you")
+              alert("Invalid...! This is you");
             }
           }}
           openPostWindow={() => {
             this.setState({
               visibleUserPanel: false,
               visiblePost: true
-            })
+            });
           }}
           seePost={() => {
             this.setState({
               visibleUserPanel: false,
               visibleSeePost: true
-            })
+            });
           }}
           uid={UID}
           neighborID={neighborID}
           houseNo={h_no}
         />
       </Modal>
-    )
-  }
+    );
+  };
+  getPost = neighborID => {
+    const { neighbors } = this.props;
+
+    for (var id in neighbors) {
+      if (id === neighborID) {
+        const postID = neighbors[id]["postID"];
+        firebase
+          .database()
+          .ref("/post-list/" + postID)
+          .once("value", snap => {
+            let value = snap.val();
+
+            this.setState({
+              chatInfo: value.comments,
+              title: value.title,
+              picture: value.picture,
+              headerName: value.userName,
+              date: value.date,
+              headerOnlineStatus: value.onlineStatus,
+              userPic: value.userPic
+            });
+          });
+      }
+    }
+  };
+
+  renderPMMenu = neighborID => {
+    const {
+      chatInfo,
+      headerName,
+      title,
+      picture,
+      date,
+      userPic,
+      headerOnlineStatus
+    } = this.state;
+    this.getPost(neighborID);
+
+    return (
+      <Modal
+        isVisible={this.state.visiblePMMenu}
+        onBackdropPress={() => this.setState({ visiblePMMenu: false })}
+        backdropOpacity={0.2}
+        style={styles.userPanel}
+      >
+        <PMMenu
+          chatInfo={chatInfo}
+          headerName={headerName}
+          userPic={userPic}
+          picture={picture}
+          headerOnlineStatus={headerOnlineStatus}
+          headerDate={date}
+          headerAddress={title}
+        />
+      </Modal>
+    );
+  };
+
+  getMessages = neighborID => {
+    firebase
+      .database()
+      .ref("/message-list/" + neighborID)
+      .once("value", snap => {
+        let value = snap.val();
+        this.setState({ imChatInfo: value.messages });
+      });
+  };
+
+  renderIMMenu = neighborID => {
+    const { imChatInfo } = this.state;
+    this.getMessages(neighborID);
+    return (
+      <Modal
+        isVisible={this.state.visibleIMMenu}
+        onBackdropPress={() => this.setState({ visibleIMMenu: false })}
+        backdropOpacity={0.2}
+        style={{ marginTop: styles.deviceHeight / 20 }}
+      >
+        <IMMenu
+          chatInfo={imChatInfo}
+          // onSendIM={status => {
+          //   this.setState({ visibleIMMenu: true });
+          // }}
+          // neighbor={neighbor}
+
+          // refresh={this.RefreshHouse}
+        />
+      </Modal>
+    );
+  };
+
+  renderHouseMenu = (h_no, neighborID) => {
+    return (
+      <Modal
+        isVisible={this.state.visibleHouseMenu}
+        onBackdropPress={() => this.setState({ visibleHouseMenu: false })}
+        backdropOpacity={0.2}
+        style={{ marginTop: "5%" }}
+      >
+        <HouseMenu
+          onCancel={() => this.setState({ visibleHouseMenu: false })}
+          onPress={output => {
+            if (UID !== neighborID) {
+              switch (output) {
+                case "invite":
+                  this.renderInviteResident();
+                  break;
+                case "move":
+                  this.renderMoveResident();
+                  break;
+                case "delete":
+                  this.renderDeleteResident();
+                  break;
+                case "add":
+                  this.renderAddNewResident();
+                  break;
+                case "cancel":
+                  this.setState({
+                    visibleHouseMenu: false
+                  });
+                  break;
+                default:
+                  this.setState({
+                    visibleHouseMenu: false
+                  });
+                  break;
+              }
+            } else {
+              alert("Invalid...! This is you");
+            }
+          }}
+          openPostWindow={() => {
+            this.setState({
+              visibleHouseMenu: false,
+              visiblePost: true
+            });
+          }}
+          seePost={() => {
+            this.setState({
+              visibleHouseMenu: false,
+              visibleSeePost: true
+            });
+          }}
+          uid={UID}
+          neighborID={neighborID}
+          houseNo={h_no}
+        />
+      </Modal>
+    );
+  };
 
   renderIM = (h_no, neighbor, neighborID) => {
-    console.log(neighbor)
+    console.log(neighbor);
     return (
       <Modal
         isVisible={this.state.visibleIM}
-        onBackdropPress={() =>
-          this.setState({ visibleIM: false })
-        }
+        onBackdropPress={() => this.setState({ visibleIM: false })}
         backdropOpacity={0.2}
         style={styles.userPanel}
       >
         <RenderIM
-          onSendIM={(status) => {
-            this.setState({ visibleIM: true })
+          onSendIM={status => {
+            this.setState({ visibleIM: true });
           }}
           neighbor={neighbor}
           neighborID={neighborID}
           h_no={h_no}
           uid={UID}
-        // refresh={this.RefreshHouse}
+          // refresh={this.RefreshHouse}
         />
       </Modal>
-    )
-  }
-
+    );
+  };
 
   renderPost = (h_no, neighbor, neighborID) => {
     return (
       <Modal
         isVisible={this.state.visiblePost}
-        onBackdropPress={() =>
-          this.setState({ visiblePost: false })
-        }
+        onBackdropPress={() => this.setState({ visiblePost: false })}
         backdropOpacity={0.2}
       >
         <RenderPost
-          onSendPost={(status) => {
-            this.setState({ visiblePost: true })
+          onSendPost={status => {
+            this.setState({ visiblePost: true });
           }}
           neighbor={neighbor}
           neighborID={neighborID}
           h_no={h_no}
           uid={UID}
-        // refresh={this.RefreshHouse}
+          // refresh={this.RefreshHouse}
         />
       </Modal>
-    )
-  }
-
+    );
+  };
 
   isIMRecieved = (messages = [], neighborID) => {
     if (messages.length > 0) {
       return messages.indexOf(neighborID) !== 1;
     } else {
-      return false
+      return false;
     }
-  }
+  };
 
   seePost = (h_no, neighbor, neighborID) => {
     return (
-
       <Modal
         isVisible={this.state.visibleSeePost}
-        onBackdropPress={() =>
-          this.setState({ visibleSeePost: false })
-        }
+        onBackdropPress={() => this.setState({ visibleSeePost: false })}
         backdropOpacity={0.2}
       >
         <RenderViewPost
@@ -1469,18 +1588,21 @@ class RenderHouse extends React.Component {
           h_no={h_no}
           uid={UID}
           refreshView={async () => {
-            await this.setState({ visibleSeePost: true })
+            await this.setState({ visibleSeePost: true });
           }}
         />
       </Modal>
-    )
-  }
+    );
+  };
 
+  openIMMenu = () => {
+    this.setState({ visibleIMMenu: true });
+  };
 
   render() {
     const { house, h_no, neighbors, ...props } = this.props;
     let flag = false;
-    let neighborID = '';
+    let neighborID = "";
 
     return (
       <View style={styles.houseContainer}>
@@ -1493,85 +1615,124 @@ class RenderHouse extends React.Component {
           ]}
           onPress={() => this._onPress(h_no, neighborID)}
         >
+          {neighbors &&
+            Object.keys(neighbors).map((id, p) => {
+              if (neighbors[id].houseID === h_no) {
+                flag = true;
+                neighborID = id;
+              }
 
-          {neighbors && Object.keys(neighbors).map((id, p) => {
+              return (
+                neighbors &&
+                neighbors[id].houseID === h_no && (
+                  <React.Fragment key={neighbors[id].houseID}>
+                    <Icon
+                      type="FontAwesome"
+                      name="circle"
+                      style={{
+                        color: neighbors[id].online
+                          ? id === UID
+                            ? "white"
+                            : "rgb(116, 233, 31)"
+                          : "rgb(239, 68, 48)",
+                        fontSize: 12,
+                        position: "absolute",
+                        top: 10,
+                        right: 6,
+                        zIndex: 9999999
+                      }}
+                    />
 
-            if (neighbors[id].houseID === h_no) {
-              flag = true;
-              neighborID = id;
-            }
-
-            return neighbors && neighbors[id].houseID === h_no && <React.Fragment key={neighbors[id].houseID}>
-              <Icon
-                type="FontAwesome"
-                name="circle"
-                style={{
-                  color: neighbors[id].online ? (id === UID ? "white" : "rgb(116, 233, 31)") : "rgb(239, 68, 48)",
-                  fontSize: 12,
-                  position: 'absolute',
-                  top: 10,
-                  right: 6,
-                  zIndex: 9999999
-                }}
-              />
-
-
-              {flag && (
-                <React.Fragment>
-                  {(neighbors && id !== UID && this.isIMRecieved(neighbors[id].messages, id)) ?
-                    <React.Fragment>
-                      <Image source={blueHouse} style={styles.house} />
-                      {neighbors[id] && neighbors[id].profile
-                        ? <Image source={{ uri: neighbors[id].profile }} style={styles.profile} />
-                        : <Image source={Profile} style={styles.profile} />
-                      }
-                    </React.Fragment>
-                    :
-                    (neighbors && neighbors[id].post && neighbors[id].post.seen && neighbors[id].post.seen.indexOf(UID) === -1)
-                      ?
+                    {flag && (
                       <React.Fragment>
-                        <Image source={House} style={styles.house} />
-                        {neighbors[id].profile
-                          ? <Image source={{ uri: neighbors[id].profile }} style={styles.profile} />
-                          : <Image source={Profile} style={styles.profile} />
-                        }
+                        {neighbors &&
+                        id !== UID &&
+                        this.isIMRecieved(neighbors[id].messages, id) ? (
+                          <React.Fragment>
+                            <Image source={blueHouse} style={styles.house} />
+                            {neighbors[id] && neighbors[id].profile ? (
+                              <Image source={{ uri: neighbors[id].profile }} />
+                            ) : (
+                              <Image source={Profile} style={styles.profile} />
+                            )}
+                          </React.Fragment>
+                        ) : neighbors &&
+                          neighbors[id].post &&
+                          neighbors[id].post.seen &&
+                          neighbors[id].post.seen.indexOf(UID) === -1 ? (
+                          <React.Fragment>
+                            <Image source={House} style={styles.house} />
+                            {neighbors[id].profile ? (
+                              <Image
+                                source={{ uri: neighbors[id].profile }}
+                                style={styles.profile}
+                              />
+                            ) : (
+                              <Image source={Profile} style={styles.profile} />
+                            )}
+                          </React.Fragment>
+                        ) : neighbors &&
+                          neighbors[id].post &&
+                          !neighbors[id].post.seen ? (
+                          <React.Fragment>
+                            <Image source={House} style={styles.house} />
+                            {neighbors[id].profile ? (
+                              <Image
+                                source={{ uri: neighbors[id].profile }}
+                                style={styles.profile}
+                              />
+                            ) : (
+                              <Image source={Profile} style={styles.profile} />
+                            )}
+                          </React.Fragment>
+                        ) : (
+                          neighbors && (
+                            <React.Fragment>
+                              <Image
+                                source={cHouses[h_no - 1]}
+                                style={styles.house}
+                              />
+                              {neighbors[id].profile ? (
+                                <Image
+                                  source={{ uri: neighbors[id].profile }}
+                                  style={styles.profile}
+                                />
+                              ) : (
+                                <TouchableOpacity
+                                  onPress={this.openIMMenu}
+                                  style={styles.profile}
+                                >
+                                  <Image
+                                    source={Profile}
+                                    style={styles.profile}
+                                  />
+                                </TouchableOpacity>
+                              )}
+                            </React.Fragment>
+                          )
+                        )}
                       </React.Fragment>
-                      :
-                      (neighbors && neighbors[id].post && !neighbors[id].post.seen)
-                        ? <React.Fragment>
-                          <Image source={House} style={styles.house} />
-                          {neighbors[id].profile
-                            ? <Image source={{ uri: neighbors[id].profile }} style={styles.profile} />
-                            : <Image source={Profile} style={styles.profile} />
-                          }
-                        </React.Fragment>
-                        : neighbors && (<React.Fragment>
-                          <Image source={cHouses[h_no - 1]} style={styles.house} />
-                          {neighbors[id].profile
-                            ? <Image source={{ uri: neighbors[id].profile }} style={styles.profile} />
-                            : <Image source={Profile} style={styles.profile} />
-                          }
-                        </React.Fragment>)
-                  }
-                </React.Fragment>
-              )}
+                    )}
+                  </React.Fragment>
+                )
+              );
+            })}
 
-            </React.Fragment>
-          })}
-
-          {this.renderUserPanel(h_no, neighborID)}
-          {flag &&
+          {/* {this.renderUserPanel(h_no, neighborID)} */}
+          {this.renderPMMenu(neighborID)}
+          {flag && (
             <React.Fragment>
-              {this.renderIM(h_no, neighbors[neighborID], neighborID)}
+              {/* {this.renderIM(h_no, neighbors[neighborID], neighborID)} */}
+              {this.renderIMMenu(neighborID)}
               {this.renderPost(h_no, neighbors[neighborID], neighborID)}
               {this.seePost(h_no, neighbors[neighborID], neighborID)}
             </React.Fragment>
-          }
+          )}
 
           {!flag && <Image source={house} style={styles.house} />}
-
+          {this.renderHouseMenu(h_no, neighborID)}
         </TouchableOpacity>
       </View>
-    )
+    );
   }
 }
