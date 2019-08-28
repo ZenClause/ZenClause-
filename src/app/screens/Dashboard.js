@@ -169,8 +169,6 @@ const cSettingBtns = [
   cNumberFive
 ];
 
-
-
 var UserName;
 var UID = "";
 
@@ -1098,7 +1096,8 @@ class RenderHouse extends React.Component {
     searchValue: "",
     neighborInfo: {},
     messages: [],
-    housePressCount: 0
+    housePressCount: 0,
+    dataFlag:false
   };
 
   clickTimeout = null;
@@ -1399,6 +1398,7 @@ class RenderHouse extends React.Component {
   };
 
   renderPMMenu = neighborID => {
+    this.getPost(neighborID);
     const {
       chatInfo,
       headerName,
@@ -1408,7 +1408,6 @@ class RenderHouse extends React.Component {
       userPic,
       headerOnlineStatus
     } = this.state;
-    this.getPost(neighborID);
 
     return (
       <Modal
@@ -1425,6 +1424,7 @@ class RenderHouse extends React.Component {
           headerOnlineStatus={headerOnlineStatus}
           headerDate={date}
           headerAddress={title}
+          onPress={() => alert("Functionality Will be added Soon")}
         />
       </Modal>
     );
@@ -1436,13 +1436,18 @@ class RenderHouse extends React.Component {
       .ref("/message-list/" + neighborID)
       .once("value", snap => {
         let value = snap.val();
-        this.setState({ imChatInfo: value.messages });
+        this.setState({ imChatInfo: value.messages, dataFlag:true });
       });
   };
 
   renderIMMenu = neighborID => {
-    const { imChatInfo } = this.state;
+    
+    if(!this.state.dataFlag){
     this.getMessages(neighborID);
+    }
+    const { imChatInfo } = this.state;
+
+
     return (
       <Modal
         isVisible={this.state.visibleIMMenu}
@@ -1452,6 +1457,7 @@ class RenderHouse extends React.Component {
       >
         <IMMenu
           chatInfo={imChatInfo}
+          onPress={() => alert("Functionality Will be added Soon")}
           // onSendIM={status => {
           //   this.setState({ visibleIMMenu: true });
           // }}
