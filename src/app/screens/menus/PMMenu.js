@@ -63,7 +63,7 @@ class PMMenu extends Component {
               bgColor="#0c8fd6"
               height="100%"
               width="29%"
-              onPress={() => this.props.onPress()}
+              onPress={this.props.onPress}
             />
             <CustomButton
               fontSize={17}
@@ -73,7 +73,7 @@ class PMMenu extends Component {
               bgColor="#185fe2"
               height="100%"
               width="29%"
-              onPress={() => this.props.onPress()}
+              onPress={this.props.onPress}
             />
             <CustomButton
               fontSize={17}
@@ -83,7 +83,7 @@ class PMMenu extends Component {
               bgColor="#ffa400"
               height="100%"
               width="39%"
-              onPress={() => this.props.onPress()}
+              onPress={this.props.onPress}
             />
           </View>
           <View
@@ -102,7 +102,7 @@ class PMMenu extends Component {
               bgColor="#499301"
               height="100%"
               width="29%"
-              onPress={() => this.props.onPress()}
+              onPress={this.props.onPress}
             />
             <CustomButton
               fontSize={17}
@@ -112,7 +112,7 @@ class PMMenu extends Component {
               bgColor="#e63e00"
               height="100%"
               width="29%"
-              onPress={() => this.props.onPress()}
+              onPress={this.props.onPress}
             />
             <CustomButton
               fontSize={17}
@@ -122,7 +122,7 @@ class PMMenu extends Component {
               bgColor="#f90f18"
               height="100%"
               width="39%"
-              onPress={() => this.props.onPress()}
+              onPress={this.props.onPress}
             />
           </View>
         </View>

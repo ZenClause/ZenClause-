@@ -39,7 +39,7 @@ class IMMenu extends Component {
               bgColor="#0c8fd6"
               height="100%"
               width="31%"
-              onPress={() => this.props.onPress()}
+              onPress={this.props.onPress}
             />
             <CustomButton
               fontSize={14}
@@ -49,7 +49,7 @@ class IMMenu extends Component {
               bgColor="#185fe2"
               height="100%"
               width="31%"
-              onPress={() => this.props.onPress()}
+              onPress={this.props.onPress}
             />
             <CustomButton
               fontSize={14}
@@ -59,7 +59,7 @@ class IMMenu extends Component {
               bgColor="#ffa400"
               height="100%"
               width="37%"
-              onPress={() => this.props.onPress()}
+              onPress={this.props.onPress}
             />
           </View>
           <View
@@ -78,7 +78,7 @@ class IMMenu extends Component {
               bgColor="#499301"
               height="100%"
               width="31%"
-              onPress={() => this.props.onPress()}
+              onPress={this.props.onPress}
             />
             <CustomButton
               fontSize={14}
@@ -88,7 +88,7 @@ class IMMenu extends Component {
               bgColor="#e63e00"
               height="100%"
               width="31%"
-              onPress={() => this.props.onPress()}
+              onPress={this.props.onPress}
             />
             <CustomButton
               fontSize={14}
@@ -98,7 +98,7 @@ class IMMenu extends Component {
               bgColor="#f90f18"
               height="100%"
               width="37%"
-              onPress={() => this.props.onPress()}
+              onPress={this.props.onPress}
             />
           </View>
         </View>
