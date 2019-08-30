@@ -26,7 +26,7 @@ class HouseMenu extends Component {
             }}
           >
             <CustomButton
-              fontSize={18}
+              fontSize={deviceWidth / 40}
               label="Invite"
               topColor="#39bcd6"
               bottomColor="#005fa6"
@@ -35,7 +35,7 @@ class HouseMenu extends Component {
               onPress={this.props.onPress}
             />
             <CustomButton
-              fontSize={18}
+              fontSize={deviceWidth / 40}
               label="Move"
               topColor="#6cb2e2"
               bottomColor="#15397c"
@@ -53,7 +53,7 @@ class HouseMenu extends Component {
             }}
           >
             <CustomButton
-              fontSize={18}
+              fontSize={deviceWidth / 40}
               label="Delete"
               topColor="#7dc836"
               bottomColor="#045000"
@@ -62,7 +62,7 @@ class HouseMenu extends Component {
               onPress={this.props.onPress}
             />
             <CustomButton
-              fontSize={18}
+              fontSize={deviceWidth / 40}
               label="Add"
               topColor="#e6a34b"
               bottomColor="#803d1a"
@@ -72,14 +72,14 @@ class HouseMenu extends Component {
             />
           </View>
         </View>
-        <View style={{ flex: 0.35, marginTop: "2%" }}>
+        <View style={{ flex: 0.35, marginTop: "2%", marginBottom: "1.5%" }}>
           <View
             style={{
               flex: 0.5
             }}
           >
             <CustomButton
-              fontSize={18}
+              fontSize={deviceWidth / 40}
               label="Cancel"
               topColor="#ffdc37"
               bottomColor="#997533"
@@ -91,7 +91,7 @@ class HouseMenu extends Component {
           </View>
           <View style={{ marginTop: "2%", flex: 0.5 }}>
             <CustomButton
-              fontSize={18}
+              fontSize={deviceWidth / 40}
               label="Next"
               topColor="#ff9999"
               bottomColor="#df0000"

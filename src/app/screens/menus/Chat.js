@@ -1,6 +1,8 @@
 import React, { Component } from "react";
-import { View, Text, FlatList, TextInput, Image } from "react-native";
+import { View, Text, FlatList, TextInput, Dimensions } from "react-native";
 import { Thumbnail, Icon } from "native-base";
+
+const deviceWidth = Dimensions.get("window").width;
 
 class Chat extends Component {
   getMessageItemColor(index) {
@@ -27,6 +29,7 @@ class Chat extends Component {
           borderRadius: 10,
           flex: 1,
           padding: 4,
+          paddingHorizontal: 8,
           justifyContent: "space-between"
         }}
       >
@@ -44,10 +47,13 @@ class Chat extends Component {
                 }}
               >
                 <View style={{ flex: 0.15, marginRight: "2%" }}>
-                  <Image
-                    style={{ width: 30, height: 30, borderRadius: 15 }}
-                    resizeMode="contain"
-                    source={require("../../../../assets/images/profile.png")}
+                  <Thumbnail
+                    small
+                    source={{ uri: item.image }}
+                    style={{
+                      width: deviceWidth / 23,
+                      height: deviceWidth / 23
+                    }}
                   />
                 </View>
                 <View
@@ -76,7 +82,7 @@ class Chat extends Component {
                     >
                       <Text
                         style={{
-                          fontSize: 14,
+                          fontSize: deviceWidth / 65,
                           fontWeight: "bold",
                           flex: 0.8
                         }}
@@ -88,7 +94,7 @@ class Chat extends Component {
                         name="circle"
                         style={{
                           color: item.onlineStatus ? "#39ff14" : "#b92e34",
-                          fontSize: 10,
+                          fontSize: deviceWidth / 75,
                           flex: 0.2,
                           textAlign: "right",
                           marginHorizontal: 2
@@ -99,7 +105,7 @@ class Chat extends Component {
                       style={{
                         paddingHorizontal: 6,
                         paddingBottom: 2,
-                        fontSize: 9,
+                        fontSize: deviceWidth / 79,
                         fontWeight: "bold",
                         flex: 0.55
                       }}
@@ -117,7 +123,8 @@ class Chat extends Component {
           style={{
             flex: 0.2,
             flexDirection: "row",
-            justifyContent: "space-between"
+            justifyContent: "space-between",
+            paddingBottom: 4
           }}
         >
           <View
@@ -126,10 +133,13 @@ class Chat extends Component {
               marginRight: "2%"
             }}
           >
-            <Image
-              style={{ width: 30, height: 30, borderRadius: 15 }}
-              resizeMode="contain"
-              source={require("../../../../assets/images/profile.png")}
+            <Thumbnail
+              small
+              source={{
+                uri:
+                  "https://content-static.upwork.com/uploads/2014/10/02123010/profilephoto_goodcrop.jpg"
+              }}
+              style={{ width: deviceWidth / 23, height: deviceWidth / 23 }}
             />
           </View>
           <TextInput
@@ -141,8 +151,11 @@ class Chat extends Component {
               borderRadius: 6,
               backgroundColor: this.getMessageItemColor(
                 this.props.chatInfo.length
-              )
+              ),
+              paddingHorizontal: 6
             }}
+            multiline={true}
+            numberOfLines={3}
           />
         </View>
       </View>

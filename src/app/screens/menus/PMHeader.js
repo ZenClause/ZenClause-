@@ -1,6 +1,8 @@
 import React, { Component } from "react";
-import { View, Text } from "react-native";
+import { View, Text, Dimensions } from "react-native";
 import { Thumbnail, Icon } from "native-base";
+
+const deviceWidth = Dimensions.get("window").width;
 
 class PMHeader extends Component {
   render() {
@@ -19,14 +21,18 @@ class PMHeader extends Component {
             marginRight: "2%"
           }}
         >
-          <Thumbnail small source={{ uri: this.props.image }} />
+          <Thumbnail
+            small
+            source={{ uri: this.props.image }}
+            style={{ width: deviceWidth / 20, height: deviceWidth / 20 }}
+          />
         </View>
 
         <View
           style={{
             flex: 0.75,
             borderWidth: 2,
-            borderRadius: 10,
+            borderRadius: 4,
             backgroundColor: "#fcbc30"
           }}
         >
@@ -37,12 +43,12 @@ class PMHeader extends Component {
               alignItems: "center",
               paddingHorizontal: 6,
               padddingTop: 4,
-              flexGrow: 0.45
+              flexGrow: 0.3
             }}
           >
             <Text
               style={{
-                fontSize: 16,
+                fontSize: deviceWidth / 59,
                 fontWeight: "bold",
                 flex: 0.8
               }}
@@ -54,7 +60,7 @@ class PMHeader extends Component {
               name="circle"
               style={{
                 color: this.props.onlineStatus ? "#39ff14" : "#b92e34",
-                fontSize: 14,
+                fontSize: deviceWidth / 67,
                 flex: 0.2,
                 textAlign: "right",
                 marginHorizontal: 2
@@ -63,15 +69,15 @@ class PMHeader extends Component {
           </View>
           <View
             style={{
-              paddingLeft: 8,
-              flexGrow: 0.55,
-              borderBottomEndRadius: 10
+              paddingLeft: 6,
+              flexGrow: 0.7,
+              borderBottomEndRadius: 4
             }}
           >
             <Text
               style={{
-                paddingBottom: 2,
-                fontSize: 10,
+                paddingBottom: 1,
+                fontSize: deviceWidth / 81,
                 fontWeight: "bold"
               }}
             >
@@ -79,7 +85,7 @@ class PMHeader extends Component {
             </Text>
             <Text
               style={{
-                fontSize: 10,
+                fontSize: deviceWidth / 81,
                 fontWeight: "bold"
               }}
             >

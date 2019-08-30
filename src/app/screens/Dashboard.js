@@ -447,7 +447,7 @@ class Dashboard extends React.Component {
         <View style={{ flexDirection: "row", flex: 1 }}>
           <View style={{ flex: 1 }}>
             <CustomButton
-              fontSize={18}
+              fontSize={styles.deviceWidth / 41}
               label="Change Email"
               topColor="#39bcd6"
               bottomColor="#005fa6"
@@ -464,7 +464,7 @@ class Dashboard extends React.Component {
           </View>
           <View style={{ flex: 1 }}>
             <CustomButton
-              fontSize={18}
+              fontSize={styles.deviceWidth / 41}
               label="Change Banner Text"
               topColor="#6cb2e2"
               bottomColor="#15397c"
@@ -483,7 +483,7 @@ class Dashboard extends React.Component {
         <View style={{ flexDirection: "row", flex: 1 }}>
           <View style={{ flex: 1 }}>
             <CustomButton
-              fontSize={18}
+              fontSize={styles.deviceWidth / 41}
               label="Change Image"
               topColor="#7dc836"
               bottomColor="#045000"
@@ -497,7 +497,7 @@ class Dashboard extends React.Component {
           </View>
           <View style={{ flex: 1 }}>
             <CustomButton
-              fontSize={18}
+              fontSize={styles.deviceWidth / 41}
               label="Change Password"
               topColor="#e6a34b"
               bottomColor="#803d1a"
@@ -516,7 +516,7 @@ class Dashboard extends React.Component {
         <View style={{ flexDirection: "row", flex: 1 }}>
           <View style={{ flex: 1 }}>
             <CustomButton
-              fontSize={18}
+              fontSize={styles.deviceWidth / 41}
               label={this.state.btnValue}
               topColor="#ffdc37"
               bottomColor="#997533"
@@ -531,7 +531,7 @@ class Dashboard extends React.Component {
 
           <View style={{ flex: 1 }}>
             <CustomButton
-              fontSize={18}
+              fontSize={styles.deviceWidth / 41}
               label="Cancel"
               topColor="#ff9999"
               bottomColor="#df0000"
@@ -1063,8 +1063,8 @@ const styles = StyleSheet.create({
     zIndex: 9999
   },
   profile: {
-    width: 25,
-    height: 25,
+    width: Dimensions.get("window").width / 25,
+    height: Dimensions.get("window").width / 25,
     position: "absolute",
     top: 0,
     left: 0,
@@ -1084,6 +1084,7 @@ class RenderHouse extends React.Component {
   state = {
     visibleHouseMenu: false,
     visibleIMMenu: false,
+    showActionModal: false,
     visibleInviteResident: null,
     visibleUserPanel: false,
     visiblePMMenu: false,
@@ -1097,7 +1098,7 @@ class RenderHouse extends React.Component {
     neighborInfo: {},
     messages: [],
     housePressCount: 0,
-    dataFlag:false
+    dataFlag: false
   };
 
   clickTimeout = null;
@@ -1118,11 +1119,12 @@ class RenderHouse extends React.Component {
           });
           clearTimeout(this.clickTimeout);
           this.clickTimeout = null;
-        }, 1200);
+        }, 500);
       }
     } else {
       this.setState({
-        visibleInviteResident: true,
+        // visibleInviteResident: true,
+        //showActionModal: true,
         visibleHouseMenu: true,
         house_no: h_no,
         neighborID
@@ -1299,8 +1301,9 @@ class RenderHouse extends React.Component {
     return (
       <Modal
         // isVisible={this.state.visibleInviteResident === true}
-        isVisible={false}
-        onBackdropPress={() => this.setState({ visibleInviteResident: null })}
+        isVisible={this.state.showActionModal}
+        onBackdropPress={() => this.setState({ showActionModal: false })}
+        backdropOpacity={0.2}
       >
         <View style={styles.modalContent}>
           <Text>Neighbor ID: #{this.props.neighborID}</Text>
@@ -1323,6 +1326,7 @@ class RenderHouse extends React.Component {
               <Picker.Item label="Add New Resident" value="add" />
             </Picker>
           </Item>
+
           {this.state.action === "invite" && this.renderInviteResident()}
           {this.state.action === "add" && this.renderAddNewResident()}
           {this.state.action === "move" && this.renderMoveResident()}
@@ -1436,17 +1440,15 @@ class RenderHouse extends React.Component {
       .ref("/message-list/" + neighborID)
       .once("value", snap => {
         let value = snap.val();
-        this.setState({ imChatInfo: value.messages, dataFlag:true });
+        this.setState({ imChatInfo: value.messages, dataFlag: true });
       });
   };
 
   renderIMMenu = neighborID => {
-    
-    if(!this.state.dataFlag){
-    this.getMessages(neighborID);
+    if (!this.state.dataFlag) {
+      this.getMessages(neighborID);
     }
     const { imChatInfo } = this.state;
-
 
     return (
       <Modal
@@ -1480,30 +1482,18 @@ class RenderHouse extends React.Component {
         <HouseMenu
           onCancel={() => this.setState({ visibleHouseMenu: false })}
           onPress={output => {
+            debugger;
             if (UID !== neighborID) {
-              switch (output) {
-                case "invite":
-                  this.renderInviteResident();
-                  break;
-                case "move":
-                  this.renderMoveResident();
-                  break;
-                case "delete":
-                  this.renderDeleteResident();
-                  break;
-                case "add":
-                  this.renderAddNewResident();
-                  break;
-                case "cancel":
-                  this.setState({
-                    visibleHouseMenu: false
-                  });
-                  break;
-                default:
-                  this.setState({
-                    visibleHouseMenu: false
-                  });
-                  break;
+              if (output == "cancel" || output == "next") {
+                this.setState({
+                  visibleHouseMenu: false
+                });
+              } else {
+                this.setState({
+                  showActionModal: true,
+                  visibleHouseMenu: false,
+                  action: output
+                });
               }
             } else {
               alert("Invalid...! This is you");
@@ -1641,7 +1631,7 @@ class RenderHouse extends React.Component {
                             ? "white"
                             : "rgb(116, 233, 31)"
                           : "rgb(239, 68, 48)",
-                        fontSize: 12,
+                        fontSize: styles.deviceWidth / 51,
                         position: "absolute",
                         top: 10,
                         right: 6,

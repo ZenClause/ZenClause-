@@ -12,9 +12,10 @@ class IMMenu extends Component {
       <View
         style={{
           padding: 5,
+          paddingVertical: 6,
           backgroundColor: "#818181",
           borderWidth: 2,
-          borderRadius: 6,
+          borderRadius: 13,
           width: deviceWidth / 2.3,
           height: deviceWidth / 2.4
         }}
@@ -32,7 +33,7 @@ class IMMenu extends Component {
             }}
           >
             <CustomButton
-              fontSize={14}
+              fontSize={deviceWidth / 51}
               label="Send"
               topColor="#39bcd6"
               bottomColor="#005fa6"
@@ -42,7 +43,7 @@ class IMMenu extends Component {
               onPress={this.props.onPress}
             />
             <CustomButton
-              fontSize={14}
+              fontSize={deviceWidth / 51}
               label="Username"
               topColor="#6cb2e2"
               bottomColor="#15397c"
@@ -52,7 +53,7 @@ class IMMenu extends Component {
               onPress={this.props.onPress}
             />
             <CustomButton
-              fontSize={14}
+              fontSize={deviceWidth / 51}
               label="Cancel"
               topColor="#ffdc37"
               bottomColor="#997533"
@@ -67,11 +68,12 @@ class IMMenu extends Component {
               flex: 0.5,
               flexDirection: "row",
               marginTop: "2%",
+              marginBottom: "2%",
               justifyContent: "space-between"
             }}
           >
             <CustomButton
-              fontSize={14}
+              fontSize={deviceWidth / 51}
               label="Reply"
               topColor="#7dc836"
               bottomColor="#045000"
@@ -81,7 +83,7 @@ class IMMenu extends Component {
               onPress={this.props.onPress}
             />
             <CustomButton
-              fontSize={14}
+              fontSize={deviceWidth / 51}
               label="ZenMoji"
               topColor="#e6a34b"
               bottomColor="#803d1a"
@@ -91,7 +93,7 @@ class IMMenu extends Component {
               onPress={this.props.onPress}
             />
             <CustomButton
-              fontSize={14}
+              fontSize={deviceWidth / 51}
               label="Next"
               topColor="#ff9999"
               bottomColor="#df0000"

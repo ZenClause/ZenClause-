@@ -1,6 +1,8 @@
 import React, { Component } from "react";
-import { View, Text, FlatList } from "react-native";
+import { View, Text, FlatList, Dimensions } from "react-native";
 import { Thumbnail, Icon } from "native-base";
+
+const deviceWidth = Dimensions.get("window").width;
 
 class PMChat extends Component {
   getMessageItemColor(index) {
@@ -43,7 +45,11 @@ class PMChat extends Component {
                   marginRight: "2%"
                 }}
               >
-                <Thumbnail small source={{ uri: item.image }} />
+                <Thumbnail
+                  small
+                  source={{ uri: item.image }}
+                  style={{ width: deviceWidth / 20, height: deviceWidth / 20 }}
+                />
               </View>
               <View
                 style={{
@@ -53,12 +59,12 @@ class PMChat extends Component {
                 <View
                   style={{
                     backgroundColor: this.getMessageItemColor(index),
-                    borderTopLeftRadius: index ? 0 : 10,
-                    borderTopRightRadius: index ? 0 : 10,
+                    borderTopLeftRadius: index ? 0 : 5,
+                    borderTopRightRadius: index ? 0 : 5,
                     borderBottomLeftRadius:
-                      index === this.props.chatInfo.length - 1 ? 10 : 0,
+                      index === this.props.chatInfo.length - 1 ? 5 : 0,
                     borderBottomRightRadius:
-                      index === this.props.chatInfo.length - 1 ? 10 : 0,
+                      index === this.props.chatInfo.length - 1 ? 5 : 0,
                     borderTopWidth: index ? 0 : 2,
                     borderBottomWidth:
                       index === this.props.chatInfo.length - 1 ? 2 : 1,
@@ -78,7 +84,7 @@ class PMChat extends Component {
                   >
                     <Text
                       style={{
-                        fontSize: 14,
+                        fontSize: deviceWidth / 65,
                         fontWeight: "bold",
                         flex: 0.8
                       }}
@@ -90,7 +96,7 @@ class PMChat extends Component {
                       name="circle"
                       style={{
                         color: item.onlineStatus ? "#39ff14" : "#b92e34",
-                        fontSize: 10,
+                        fontSize: deviceWidth / 71,
                         flex: 0.2,
                         textAlign: "right",
                         marginHorizontal: 2
@@ -101,7 +107,7 @@ class PMChat extends Component {
                     style={{
                       paddingHorizontal: 6,
                       paddingBottom: 2,
-                      fontSize: 9,
+                      fontSize: deviceWidth / 85,
                       fontWeight: "bold",
                       flex: 0.55
                     }}
