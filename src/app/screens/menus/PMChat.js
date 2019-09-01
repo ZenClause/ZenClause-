@@ -23,7 +23,6 @@ class PMChat extends Component {
     return (
       <View
         style={{
-          height: this.props.height,
           flex: 1,
           paddingLeft: 4
         }}

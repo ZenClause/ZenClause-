@@ -33,64 +33,63 @@ class PMHeader extends Component {
             flex: 0.75,
             borderWidth: 2,
             borderRadius: 4,
-            backgroundColor: "#fcbc30"
+            backgroundColor: "#fcbc30",
+            paddingTop: 2
           }}
         >
           <View
             style={{
               flexDirection: "row",
               justifyContent: "space-between",
-              alignItems: "center",
-              paddingHorizontal: 6,
-              padddingTop: 4,
-              flexGrow: 0.3
+              alignItems: "flex-start",
+              paddingRight: 6,
+              paddingLeft: 4
             }}
           >
-            <Text
+            <View
               style={{
-                fontSize: deviceWidth / 59,
-                fontWeight: "bold",
+                flexDirection: "column",
                 flex: 0.8
               }}
             >
-              {this.props.name}
-            </Text>
+              <Text
+                style={{
+                  fontSize: deviceWidth / 59,
+                  fontWeight: "bold"
+                }}
+              >
+                {this.props.name}
+              </Text>
+              <Text
+                style={{
+                  fontSize: deviceWidth / 99,
+                  fontWeight: "bold",
+                  lineHeight: deviceWidth / 99
+                }}
+              >
+                {this.props.date}
+              </Text>
+              <Text
+                style={{
+                  fontSize: deviceWidth / 85,
+                  fontWeight: "bold",
+                  lineHeight: deviceWidth / 90
+                }}
+              >
+                {this.props.address}
+              </Text>
+            </View>
             <Icon
               type="FontAwesome"
               name="circle"
               style={{
                 color: this.props.onlineStatus ? "#39ff14" : "#b92e34",
-                fontSize: deviceWidth / 67,
+                fontSize: deviceWidth / 63,
                 flex: 0.2,
                 textAlign: "right",
                 marginHorizontal: 2
               }}
             />
-          </View>
-          <View
-            style={{
-              paddingLeft: 6,
-              flexGrow: 0.7,
-              borderBottomEndRadius: 4
-            }}
-          >
-            <Text
-              style={{
-                paddingBottom: 1,
-                fontSize: deviceWidth / 81,
-                fontWeight: "bold"
-              }}
-            >
-              {this.props.date}
-            </Text>
-            <Text
-              style={{
-                fontSize: deviceWidth / 81,
-                fontWeight: "bold"
-              }}
-            >
-              {this.props.address}
-            </Text>
           </View>
         </View>
       </View>

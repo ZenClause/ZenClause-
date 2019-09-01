@@ -37,8 +37,19 @@ class PMMenu extends Component {
           >
             <PMMenuImage url={this.props.picture} />
           </View>
-          <View style={{ flexDirection: "column", flex: 0.45 }}>
-            <View style={{ flex: 0.28, marginBottom: 4 }}>
+          <View
+            style={{
+              flexDirection: "column",
+              flex: 0.45,
+              justifyContent: "space-between"
+            }}
+          >
+            <View
+              style={{
+                flex: 0.23,
+                marginBottom: 2
+              }}
+            >
               <PMHeader
                 name={this.props.headerName}
                 date={this.props.headerDate}
@@ -47,11 +58,12 @@ class PMMenu extends Component {
                 image={this.props.userPic}
               />
             </View>
-            <View style={{ flex: 0.73 }}>
-              <PMChat
-                chatInfo={this.props.chatInfo}
-                height={deviceWidth / 1.9}
-              />
+            <View
+              style={{
+                flex: 0.75
+              }}
+            >
+              <PMChat chatInfo={this.props.chatInfo} />
             </View>
           </View>
         </View>
