@@ -150,7 +150,7 @@ class Chat extends Component {
               borderWidth: 2,
               borderRadius: 6,
               backgroundColor: this.getMessageItemColor(
-                this.props.chatInfo.length
+                this.props.chatInfo ? this.props.chatInfo.length : 0
               ),
               paddingHorizontal: 6
             }}
