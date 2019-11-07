@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import {
   Container,
-  Left,
   Header,
   Content,
   Body,
@@ -10,16 +9,12 @@ import {
   Form,
   Item,
   Input,
-  Label,
   Button,
-  Text,
-  Icon
+  Text
 } from "native-base";
-import firebase, { database } from "firebase";
+import firebase from "firebase";
 import { AppLoading, ScreenOrientation, Font } from "expo";
 import {
-  View,
-  ScrollView,
   StyleSheet,
   TouchableOpacity,
   StatusBar,
@@ -29,10 +24,10 @@ import {
 export default class SignIn extends Component {
   state = {
     loading: true,
-    userEmail: "misbauddin1994@gmail.com",
-    userPassword: "123456",
-    uid: '',
-    user: ''
+    userEmail: "",
+    userPassword: "",
+    uid: "",
+    user: ""
   };
   async componentWillMount() {
     await Font.loadAsync({
@@ -42,15 +37,12 @@ export default class SignIn extends Component {
     });
     this.setState({ loading: false });
 
-    ScreenOrientation.allowAsync(
-      ScreenOrientation.Orientation
-        .LANDSCAPE_RIGHT
-    );
+    ScreenOrientation.allowAsync(ScreenOrientation.Orientation.LANDSCAPE_RIGHT);
 
     const { navigate } = this.props.navigation;
 
     let uid = await AsyncStorage.getItem("auth");
-    let user = await AsyncStorage.getItem("username")
+    let user = await AsyncStorage.getItem("username");
 
     if (uid && user) {
       navigate("Dashboard", {
@@ -58,19 +50,15 @@ export default class SignIn extends Component {
         UID: uid
       });
     }
-
   }
 
   async componentDidMount() {
-    ScreenOrientation.allowAsync(
-      ScreenOrientation.Orientation
-        .LANDSCAPE_RIGHT
-    );
+    ScreenOrientation.allowAsync(ScreenOrientation.Orientation.LANDSCAPE_LEFT);
 
     const { navigate } = this.props.navigation;
 
     let uid = await AsyncStorage.getItem("auth");
-    let user = await AsyncStorage.getItem("username")
+    let user = await AsyncStorage.getItem("username");
 
     if (uid && user) {
       navigate("Splash", {
@@ -100,7 +88,7 @@ export default class SignIn extends Component {
           .database()
           .ref("users/" + signedinUser.user.uid + "/")
           .once("value")
-          .then((snapshot) => {
+          .then(snapshot => {
             var user = fb.currentUser;
             emailVerified = user.emailVerified;
 
@@ -108,14 +96,14 @@ export default class SignIn extends Component {
               var checkForUser = snapshot.val();
               var checking = checkForUser.userName;
               var UID = signedinUser.user.uid;
-              AsyncStorage.setItem('auth', UID).then(() => {
-                AsyncStorage.setItem('username', checking).then(() => {
+              AsyncStorage.setItem("auth", UID).then(() => {
+                AsyncStorage.setItem("username", checking).then(() => {
                   navigate("Splash", {
                     userName: checking,
                     UID: UID
                   });
-                })
-              })
+                });
+              });
             } else {
               alert("email not verified ");
             }
@@ -158,9 +146,7 @@ export default class SignIn extends Component {
           <Form style={styles.form}>
             <Item last style={styles.inputField}>
               <Input
-                onChangeText={userEmail =>
-                  this.setState({ userEmail })
-                }
+                onChangeText={userEmail => this.setState({ userEmail })}
                 value={this.state.userEmail}
                 placeholder="Email "
               />
@@ -168,9 +154,7 @@ export default class SignIn extends Component {
             <Item last style={styles.inputField}>
               <Input
                 secureTextEntry={true}
-                onChangeText={userPassword =>
-                  this.setState({ userPassword })
-                }
+                onChangeText={userPassword => this.setState({ userPassword })}
                 value={this.state.userPassword}
                 placeholder="Password "
               />
@@ -181,28 +165,22 @@ export default class SignIn extends Component {
               style={styles.Login}
               onPress={() => this.signinAction()}
             >
-              <Text style={{ marginBottom: 7 }}>
-                Login
-                             </Text>
+              <Text style={{ marginBottom: 7 }}>Login</Text>
             </Button>
           </Form>
-          <Text
-            style={styles.textOfaccountChange}
-          >
-            Don't Have An Account
-          </Text>
+          <Text style={styles.textOfaccountChange}>Don't Have An Account</Text>
           <TouchableOpacity>
             <Text
               onPress={this.moveToSignUp}
               style={{
                 color: "black",
                 marginLeft: "3%",
-                fontSize: 15,
+                fontSize: 18,
                 textDecorationLine: "underline",
                 paddingBottom: 10
               }}
             >
-              Sign Up Now
+              Sign up now
             </Text>
           </TouchableOpacity>
         </Content>
@@ -219,8 +197,7 @@ const styles = StyleSheet.create({
     fontSize: 15,
     marginLeft: "3%"
   },
-  content: {
-  },
+  content: {},
   form: {
     paddingTop: "10%"
   },
