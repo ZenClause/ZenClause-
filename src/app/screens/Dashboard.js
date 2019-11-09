@@ -1244,7 +1244,7 @@ class RenderHouse extends React.Component {
     let neighborID = this.props.neighborID;
     let uid = await AsyncStorage.getItem("auth");
     userRef
-      .orderByChild("mail")
+      .orderByChild("userName")
       .equalTo(user)
       .on("value", snap => {
         if (!snap.val()) {
