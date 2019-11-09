@@ -236,7 +236,10 @@ class Dashboard extends React.Component {
 
       const keys = Object.keys(val);
       const options = keys.map(key => {
-        return { key: val[key].userName, label: val[key].userName };
+        return {
+          key: val[key].userName,
+          label: val[key].userName
+        };
       });
 
       this.setState({ userNameOptions: options });
