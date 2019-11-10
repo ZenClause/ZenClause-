@@ -1551,7 +1551,11 @@ class RenderHouse extends React.Component {
       }
     }
   };
-
+  handlePMVisibility = () => {
+    this.setState({
+      visiblePMMenu: false
+    });
+  };
   renderPMMenu = neighborID => {
     this.getPost(neighborID);
     const {
@@ -1579,6 +1583,7 @@ class RenderHouse extends React.Component {
           headerOnlineStatus={headerOnlineStatus}
           headerDate={date}
           headerAddress={title}
+          handlePMVisibility={this.handlePMVisibility}
           onPress={() => alert("Functionality Will be added Soon")}
         />
       </Modal>

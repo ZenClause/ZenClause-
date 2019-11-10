@@ -104,7 +104,7 @@ class PMMenu extends Component {
               bgColor="#ffa400"
               height="100%"
               width="39%"
-              onPress={this.props.onPress}
+              onPress={this.props.handlePMVisibility}
             />
           </View>
           <View
