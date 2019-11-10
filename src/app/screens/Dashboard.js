@@ -1599,7 +1599,11 @@ class RenderHouse extends React.Component {
         this.setState({ imChatInfo: value.messages, dataFlag: true });
       });
   };
-
+  handleIMVisibility = () => {
+    this.setState({
+      visibleIMMenu: false
+    });
+  };
   renderIMMenu = neighborID => {
     if (!this.state.dataFlag) {
       this.getMessages(neighborID);
@@ -1615,6 +1619,7 @@ class RenderHouse extends React.Component {
       >
         <IMMenu
           chatInfo={imChatInfo}
+          handleIMVisibility={this.handleIMVisibility}
           onPress={() => alert("Functionality Will be added Soon")}
           // onSendIM={status => {
           //   this.setState({ visibleIMMenu: true });

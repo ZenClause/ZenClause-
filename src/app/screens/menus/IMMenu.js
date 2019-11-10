@@ -60,7 +60,7 @@ class IMMenu extends Component {
               bgColor="#ffa400"
               height="100%"
               width="37%"
-              onPress={this.props.onPress}
+              onPress={this.props.handleIMVisibility}
             />
           </View>
           <View
