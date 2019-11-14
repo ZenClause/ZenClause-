@@ -4916,9 +4916,9 @@ js-tokens@^3.0.2:
   integrity sha1-mGbfOVECEw449/mWvOtlRDIJwls=
 
 js-yaml@^3.9.0:
-  version "3.12.2"
-  resolved "https://registry.yarnpkg.com/js-yaml/-/js-yaml-3.12.2.tgz#ef1d067c5a9d9cb65bd72f285b5d8105c77f14fc"
-  integrity sha512-QHn/Lh/7HhZ/Twc7vJYQTkjuCa0kaCcDcjK5Zlk2rvnUpy7DxMJ23+Jc2dcyvltwQVg1nygAVlB2oRDFHoRS5Q==
+  version "3.13.1"
+  resolved "https://registry.yarnpkg.com/js-yaml/-/js-yaml-3.13.1.tgz#aff151b30bfdfa8e49e05da22e7415e9dfa37847"
+  integrity sha512-YfbcO7jXDdyj0DGxYVSlSeQNHbD7XPWvrVWeVUujrQEoZzWJIRrCPoyk6kL6IAjAG2IolMK4T0hNUe0HOUs5Jw==
   dependencies:
     argparse "^1.0.7"
     esprima "^4.0.0"
@@ -6808,6 +6808,11 @@ react-native-animatable@^1.2.4:
   dependencies:
     prop-types "^15.5.10"
 
+react-native-autocomplete-input@^4.1.0:
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/react-native-autocomplete-input/-/react-native-autocomplete-input-4.1.0.tgz#979ece28d891b245ecb967b6d31f1f924445b8ab"
+  integrity sha512-Yn4GulZ9F6tde74UUGZHdVFeYWVuL7+EbUZy6kt+QHrzMc5B4OuRop1FT4RyWLpvbySW/vvqYgj9LAmlzkuEqA==
+
 react-native-branch@2.2.5:
   version "2.2.5"
   resolved "https://registry.yarnpkg.com/react-native-branch/-/react-native-branch-2.2.5.tgz#4074dd63b4973e6397d9ce50e97b57c77a518e9d"
@@ -6919,6 +6924,11 @@ react-native-material-textfield@^0.12.0:
   integrity sha1-P7oZ12q4n2cFLIHgghUvwkPYKj8=
   dependencies:
     prop-types "^15.5.9"
+
+react-native-modal-filter-picker@^1.3.4:
+  version "1.3.4"
+  resolved "https://registry.yarnpkg.com/react-native-modal-filter-picker/-/react-native-modal-filter-picker-1.3.4.tgz#c33ae2ca7b0b5adae8671a6b417a6f5d263d9813"
+  integrity sha512-+Pe8Y3s6lh9mNupRRpjL8bSj1C0/vxUTRYjMenLHh2XBz4fSfMsa11MsY5T35V9n8Q7evns7hsmoYoGvXsJAVg==
 
 react-native-modal@^9.0.0:
   version "9.0.0"
