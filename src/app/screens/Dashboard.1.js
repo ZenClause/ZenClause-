@@ -209,7 +209,7 @@ class Dashboard extends React.Component {
 
     // var a = this.props.navigation;
     await AppState.addEventListener("change", this._handleAppStateChange);
-    ScreenOrientation.lockAsync(ScreenOrientation.Orientation.LANDSCAPE_RIGHT);
+    ScreenOrientation.allowAsync(ScreenOrientation.Orientation.LANDSCAPE_RIGHT);
     this._setOnlineStatus(true);
   }
 

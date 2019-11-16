@@ -566,7 +566,7 @@ class Dashboard extends React.Component {
             />
           </View>
 
-          <View style={{ flex: 1 }}>
+          <View style={{ flex: 1, flexDirection: "row" }}>
             <CustomButton
               fontSize={styles.deviceWidth / 41}
               label="Cancel"
@@ -574,7 +574,19 @@ class Dashboard extends React.Component {
               bottomColor="#df0000"
               bgColor="#f90f18"
               height="100%"
-              width="100%"
+              width="49%"
+              onPress={() => {
+                this.setState({ visibleModal: null });
+              }}
+            />
+            <CustomButton
+              fontSize={styles.deviceWidth / 41}
+              label="Logout"
+              topColor="#ff9999"
+              bottomColor="#df0000"
+              bgColor="#f90f18"
+              height="100%"
+              width="49%"
               onPress={() => {
                 this.setState({ visibleModal: null });
               }}
