@@ -18,7 +18,7 @@ class Splash extends React.Component {
   async componentDidMount() {
     const { navigate } = this.props.navigation;
 
-    ScreenOrientation.allowAsync(ScreenOrientation.Orientation.LANDSCAPE_RIGHT);
+    ScreenOrientation.lockAsync(ScreenOrientation.Orientation.LANDSCAPE_RIGHT);
 
     let uid = await AsyncStorage.getItem("auth");
     let user = await AsyncStorage.getItem("username");

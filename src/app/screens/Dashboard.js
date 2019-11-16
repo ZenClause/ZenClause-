@@ -221,7 +221,7 @@ class Dashboard extends React.Component {
 
     // var a = this.props.navigation;
     await AppState.addEventListener("change", this._handleAppStateChange);
-    ScreenOrientation.allowAsync(ScreenOrientation.Orientation.LANDSCAPE_RIGHT);
+    ScreenOrientation.lockAsync(ScreenOrientation.Orientation.LANDSCAPE_RIGHT);
     this._setOnlineStatus(true);
 
     this._loadEmailOptions();
@@ -1559,7 +1559,9 @@ class RenderHouse extends React.Component {
           headerOnlineStatus={headerOnlineStatus}
           headerDate={date}
           headerAddress={title}
-          onPress={() => alert("Functionality Will be added Soon")}
+          onPress={() =>
+            this.setState({ visiblePMMenu: !this.state.visiblePMMenu })
+          }
         />
       </Modal>
     );
@@ -1595,7 +1597,9 @@ class RenderHouse extends React.Component {
       >
         <IMMenu
           chatInfo={imChatInfo}
-          onPress={() => alert("Functionality Will be added Soon")}
+          onPress={() =>
+            this.setState({ visibleIMMenu: !this.state.visibleIMMenu })
+          }
           // onSendIM={status => {
           //   this.setState({ visibleIMMenu: true });
           // }}

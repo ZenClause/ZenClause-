@@ -42,7 +42,7 @@ export default class SignIn extends Component {
     });
     this.setState({ loading: false });
 
-    ScreenOrientation.allowAsync(ScreenOrientation.Orientation.LANDSCAPE_RIGHT);
+    ScreenOrientation.lockAsync(ScreenOrientation.Orientation.LANDSCAPE_RIGHT);
 
     const { navigate } = this.props.navigation;
 
@@ -58,7 +58,7 @@ export default class SignIn extends Component {
   }
 
   async componentDidMount() {
-    ScreenOrientation.allowAsync(ScreenOrientation.Orientation.LANDSCAPE_RIGHT);
+    ScreenOrientation.lockAsync(ScreenOrientation.Orientation.LANDSCAPE_RIGHT);
 
     const { navigate } = this.props.navigation;
 

@@ -121,7 +121,7 @@ export default class SignUp extends Component {
   }
 
   componentDidMount() {
-    ScreenOrientation.allowAsync(ScreenOrientation.Orientation.LANDSCAPE_RIGHT);
+    ScreenOrientation.lockAsync(ScreenOrientation.Orientation.LANDSCAPE_RIGHT);
   }
 
   static navigationOptions = {
