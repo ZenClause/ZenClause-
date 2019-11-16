@@ -3,11 +3,8 @@
     "name": "Zen Clause",
     "slug": "zen-clause",
     "privacy": "public",
-    "sdkVersion": "32.0.0",
-    "platforms": [
-      "ios",
-      "android"
-    ],
+    "sdkVersion": "33.0.0",
+    "platforms": ["ios", "android"],
     "android": {
       "package": "com.zenclause.zenclause",
       "versionCode": 2,
@@ -23,9 +20,7 @@
       "fallbackToCacheTimeout": 0
     },
     "orientation": "landscape",
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true
     }

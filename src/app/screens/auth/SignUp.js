@@ -16,7 +16,8 @@ import {
   Icon
 } from "native-base";
 import firebase, { database } from "firebase";
-import { AppLoading, ScreenOrientation, Font } from "expo";
+import { AppLoading, ScreenOrientation } from "expo";
+import * as Font from "expo-font";
 import {
   View,
   ScrollView,
@@ -113,9 +114,8 @@ export default class SignUp extends Component {
 
   async componentWillMount() {
     await Font.loadAsync({
-      Roboto: require("native-base/Fonts/Roboto.ttf"),
-      Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf"),
-      Ionicons: require("@expo/vector-icons/fonts/Ionicons.ttf")
+      Roboto: require("../../../../assets/fonts/Roboto-Regular.ttf"),
+      Roboto_medium: require("../../../../assets/fonts/Roboto-Medium.ttf")
     });
     this.setState({ loading: false });
   }

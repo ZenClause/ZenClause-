@@ -5,7 +5,7 @@ import firebase from "firebase";
 import { createStackNavigator, createAppContainer } from "react-navigation";
 import { SignIn, Dashboard, Splash, SignUp } from "../screens";
 
-var config = {
+const config = {
   apiKey: "AIzaSyDTO_VW8KigcpywWHw8q10DCQBRz0uBW54",
   authDomain: "zenclause.firebaseapp.com",
   databaseURL: "https://zenclause.firebaseio.com",
@@ -29,7 +29,6 @@ const App = createStackNavigator({
 //   Splash: { screen: Splash },
 //   SignUp: { screen: SignUp }
 // });
-
 
 export const MainNavigation = createAppContainer(App);
 

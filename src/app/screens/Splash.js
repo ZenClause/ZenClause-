@@ -1,48 +1,32 @@
 import React from "react";
 
-import {
-  StyleSheet,
-  StatusBar,
-  Image,
-  AsyncStorage
-} from "react-native";
+import { StyleSheet, StatusBar, Image, AsyncStorage } from "react-native";
 
-import {
-  Container,
-  Text,
-  Body,
-  Card,
-  CardItem
-} from "native-base";
-import { ScreenOrientation } from 'expo';
+import { Container, Text, Body, Card, CardItem } from "native-base";
+import { ScreenOrientation } from "expo";
 
-import splashImage from '../../../assets/splash/splash.jpg'
+import splashImage from "../../../assets/splash/splash.jpg";
 
 class Splash extends React.Component {
   static navigationOptions = {
     header: null
   };
   state = {
-    uid: '',
-    user: ''
-  }
+    uid: "",
+    user: ""
+  };
   async componentDidMount() {
-    const {
-      navigate
-    } = this.props.navigation;
+    const { navigate } = this.props.navigation;
 
-    ScreenOrientation.allowAsync(
-      ScreenOrientation.Orientation
-        .LANDSCAPE_RIGHT
-    );
-
+    ScreenOrientation.allowAsync(ScreenOrientation.Orientation.LANDSCAPE_RIGHT);
 
     let uid = await AsyncStorage.getItem("auth");
-    let user = await AsyncStorage.getItem("username")
+    let user = await AsyncStorage.getItem("username");
 
     await this.setState({
-      uid, user
-    })
+      uid,
+      user
+    });
 
     navigate("Dashboard", {
       userName: user,
@@ -51,15 +35,14 @@ class Splash extends React.Component {
   }
 
   async componentWillMount() {
-    const {
-      navigate
-    } = this.props.navigation;
+    const { navigate } = this.props.navigation;
     let uid = await AsyncStorage.getItem("auth");
-    let user = await AsyncStorage.getItem("username")
+    let user = await AsyncStorage.getItem("username");
 
     await this.setState({
-      uid, user
-    })
+      uid,
+      user
+    });
     navigate("Dashboard", {
       userName: this.state.user,
       UID: this.state.uid
