@@ -30,8 +30,8 @@ import {
 export default class SignIn extends Component {
   state = {
     loading: true,
-    userEmail: "misbauddin1994@gmail.com",
-    userPassword: "123456",
+    userEmail: "",
+    userPassword: "",
     uid: "",
     user: ""
   };
