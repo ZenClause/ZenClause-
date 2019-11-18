@@ -121,7 +121,7 @@ export default class SignUp extends Component {
   }
 
   componentDidMount() {
-    ScreenOrientation.lockAsync(ScreenOrientation.Orientation.LANDSCAPE_RIGHT);
+    ScreenOrientation.lockAsync(ScreenOrientation.Orientation.LANDSCAPE);
   }
 
   static navigationOptions = {
@@ -129,11 +129,8 @@ export default class SignUp extends Component {
   };
 
   moveToSignIn = () => {
-    console.log(this.props);
     const { state, navigate } = this.props.navigation;
     navigate("SignIn");
-    console.log("navigate");
-    console.log(navigate);
   };
 
   render() {
@@ -150,7 +147,7 @@ export default class SignUp extends Component {
                 marginLeft: "13%"
               }}
             >
-              ZenClause Sign Up{" "}
+              ZenClause Sign Up
             </Title>
           </Body>
           <Right />
@@ -200,7 +197,7 @@ export default class SignUp extends Component {
               style={{
                 color: "black",
                 marginLeft: "3%",
-                fontSize: 15,
+                fontSize: 17,
                 textDecorationLine: "underline",
                 paddingBottom: 10
               }}
@@ -219,7 +216,7 @@ const styles = StyleSheet.create({
     marginTop: "3%",
     color: "black",
     opacity: 0.7,
-    fontSize: 15,
+    fontSize: 17,
     marginLeft: "3%"
   },
   btn: {

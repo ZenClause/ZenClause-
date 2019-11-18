@@ -18,7 +18,7 @@ class Splash extends React.Component {
   async componentDidMount() {
     const { navigate } = this.props.navigation;
 
-    ScreenOrientation.lockAsync(ScreenOrientation.Orientation.LANDSCAPE_RIGHT);
+    ScreenOrientation.lockAsync(ScreenOrientation.Orientation.LANDSCAPE);
 
     let uid = await AsyncStorage.getItem("auth");
     let user = await AsyncStorage.getItem("username");
@@ -52,29 +52,26 @@ class Splash extends React.Component {
   render() {
     return (
       <Container style={styles.container}>
-        <Card>
-          <StatusBar hidden={true} />
-          <CardItem>
-            <Body>
-              <Text
-                style={{
-                  marginLeft: "32%",
-                  marginTop: "1%",
-                  fontSize: 25,
-                  fontWeight: "bold"
-                }}
-              >
-                Welcome {this.state.user}
-              </Text>
-            </Body>
-          </CardItem>
-          <CardItem>
-            <Image
-              source={splashImage}
-              style={{ height: 300, width: null, flex: 1 }}
-            />
-          </CardItem>
-        </Card>
+        <StatusBar hidden={true} />
+        <Text
+          style={{
+            marginTop: "1%",
+            fontSize: 25,
+            fontWeight: "bold",
+            textAlign: "center",
+            width: "100%",
+            zIndex: 999,
+            top: 0,
+            position: "absolute"
+          }}
+        >
+          Welcome {this.state.user}
+        </Text>
+        <Image
+          source={splashImage}
+          style={{ height: 300, width: null, flex: 1 }}
+          resizeMode="cover"
+        />
       </Container>
     );
   }

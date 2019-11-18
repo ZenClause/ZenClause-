@@ -23,13 +23,6 @@ const App = createStackNavigator({
   SignUp: { screen: SignUp }
 });
 
-// const App = createStackNavigator({
-//   SignIn: { screen: SignIn },
-//   Dashboard: { screen: Dashboard },
-//   Splash: { screen: Splash },
-//   SignUp: { screen: SignUp }
-// });
-
 export const MainNavigation = createAppContainer(App);
 
 console.disableYellowBox = true;

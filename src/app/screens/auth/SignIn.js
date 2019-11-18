@@ -42,7 +42,7 @@ export default class SignIn extends Component {
     });
     this.setState({ loading: false });
 
-    ScreenOrientation.lockAsync(ScreenOrientation.Orientation.LANDSCAPE_RIGHT);
+    ScreenOrientation.lockAsync(ScreenOrientation.Orientation.LANDSCAPE);
 
     const { navigate } = this.props.navigation;
 
@@ -58,7 +58,7 @@ export default class SignIn extends Component {
   }
 
   async componentDidMount() {
-    ScreenOrientation.lockAsync(ScreenOrientation.Orientation.LANDSCAPE_RIGHT);
+    ScreenOrientation.lockAsync(ScreenOrientation.Orientation.LANDSCAPE);
 
     const { navigate } = this.props.navigation;
 
@@ -103,6 +103,10 @@ export default class SignIn extends Component {
               var UID = signedinUser.user.uid;
               AsyncStorage.setItem("auth", UID).then(() => {
                 AsyncStorage.setItem("username", checking).then(() => {
+                  this.setState({
+                    userEmail: "",
+                    userPassword: ""
+                  });
                   navigate("Splash", {
                     userName: checking,
                     UID: UID
@@ -180,7 +184,7 @@ export default class SignIn extends Component {
               style={{
                 color: "black",
                 marginLeft: "3%",
-                fontSize: 15,
+                fontSize: 17,
                 textDecorationLine: "underline",
                 paddingBottom: 10
               }}
@@ -199,7 +203,7 @@ const styles = StyleSheet.create({
     marginTop: "3%",
     color: "black",
     opacity: 0.7,
-    fontSize: 15,
+    fontSize: 17,
     marginLeft: "3%"
   },
   content: {},

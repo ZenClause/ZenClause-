@@ -4,22 +4,25 @@
     "start": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
+    "web": "expo start --web",
     "eject": "expo eject"
   },
   "dependencies": {
     "@expo/vector-icons": "^10.0.6",
-    "expo": "^33.0.0",
-    "expo-font": "~5.0.1",
+    "expo": "^35.0.0",
+    "expo-font": "~7.0.0",
     "firebase": "^5.9.1",
     "haul": "^1.0.0-rc.13",
     "moment": "^2.24.0",
     "native-base": "^2.13.8",
     "react": "16.8.3",
-    "react-native": "https://github.com/expo/react-native/archive/sdk-33.0.1.tar.gz",
+    "react-dom": "16.8.3",
+    "react-native": "https://github.com/expo/react-native/archive/sdk-35.0.0.tar.gz",
     "react-native-autocomplete-input": "^4.1.0",
     "react-native-camera": "^1.12.0",
     "react-native-elements": "^1.1.0",
     "react-native-email": "^1.0.2",
+    "react-native-gesture-handler": "^1.5.0",
     "react-native-material-dropdown": "^0.11.1",
     "react-native-modal": "^9.0.0",
     "react-native-modal-filter-picker": "^1.3.4",
@@ -29,12 +32,12 @@
     "react-native-swiper-flatlist": "^1.0.9",
     "react-native-vector-icons": "^6.3.0",
     "react-native-viewpager": "^0.2.13",
+    "react-native-web": "^0.11.7",
     "react-navigation": "^3.3.2",
     "validator": "^10.11.0"
   },
   "devDependencies": {
-    "babel-preset-expo": "^5.0.0"
+    "babel-preset-expo": "^7.1.0"
   },
-  "private": true,
-  "version": "0.0.0"
+  "private": true
 }

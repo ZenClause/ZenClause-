@@ -221,7 +221,7 @@ class Dashboard extends React.Component {
 
     // var a = this.props.navigation;
     await AppState.addEventListener("change", this._handleAppStateChange);
-    ScreenOrientation.lockAsync(ScreenOrientation.Orientation.LANDSCAPE_RIGHT);
+    ScreenOrientation.lockAsync(ScreenOrientation.Orientation.LANDSCAPE);
     this._setOnlineStatus(true);
 
     this._loadEmailOptions();
@@ -245,7 +245,7 @@ class Dashboard extends React.Component {
 
       const keys = Object.keys(val);
       const options = keys.map(key => {
-        return { key: val[key].mail, label: val[key].mail };
+        return { key: val[key].userName, label: val[key].userName };
       });
 
       this.setState({ emailOptions: options });
@@ -478,6 +478,16 @@ class Dashboard extends React.Component {
     }
   };
 
+  handleLogout = () => {
+    console.log("logout");
+    AsyncStorage.multiRemove(["auth", "username"], err => {
+      this.setState({
+        visibleModal: !this.state.visibleModal
+      });
+      this.props.navigation.navigate("SignIn");
+    });
+  };
+
   renderModalContent = () => (
     <Container style={{ backgroundColor: "transparent" }}>
       <View style={styles.contView}>
@@ -587,9 +597,7 @@ class Dashboard extends React.Component {
               bgColor="#f90f18"
               height="100%"
               width="49%"
-              onPress={() => {
-                this.setState({ visibleModal: null });
-              }}
+              onPress={this.handleLogout}
             />
           </View>
         </View>
@@ -1337,15 +1345,8 @@ class RenderHouse extends React.Component {
     return (
       <View>
         <Item style={{ height: 50, width: "100%" }}>
-          {/* <Input
-            onChangeText={searchValue => this.setState({ searchValue })}
-            value={this.state.searchValue}
-            placeholder="Type Username... "
-          /> */}
           <TouchableOpacity onPress={this._onShow}>
-            <Text>
-              {this.state.searchValue ? this.state.searchValue : "Select Email"}
-            </Text>
+            <Text>Select a user from the dropdown</Text>
           </TouchableOpacity>
           <ModalFilterPicker
             visible={visible}
@@ -1370,7 +1371,7 @@ class RenderHouse extends React.Component {
         <Item style={{ height: 50, width: "100%" }}>
           <Input
             onChangeText={inviteEmail => this.setState({ inviteEmail })}
-            placeholder="Type Email... "
+            placeholder="Enter an Email address to send an invite to ZenClause!"
           />
         </Item>
         <TouchableOpacity onPress={this._onPressInvite}>
