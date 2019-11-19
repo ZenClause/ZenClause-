@@ -26,74 +26,27 @@ import {
 } from "native-base";
 import Modal from "react-native-modal";
 import email from "react-native-email";
+import Autocomplete from "react-native-autocomplete-input";
+import ModalFilterPicker from "react-native-modal-filter-picker";
 import validator from "validator";
-// import RadioForm, {
-//   RadioButton,
-//   RadioButtonInput,
-//   RadioButtonLabel
-// } from "react-native-simple-radio-button";
+
 import firebase from "firebase";
 import { ScreenOrientation, ImagePicker } from "expo";
+
+import {
+  houses,
+  housesActived,
+  numbers,
+  numbersActived
+} from "../../utils/images";
+
 import BckImage from "../../../assets/images/bg.png";
 import SettingImage from "../../../assets/images/setting-icon.png";
-import NumberOne from "../../../assets/images/number-one.png";
-import NumberTwo from "../../../assets/images/number-two.png";
-import NumberThree from "../../../assets/images/number-three.png";
-import NumberFour from "../../../assets/images/number-four.png";
-import NumberFive from "../../../assets/images/number-five.png";
-
-import cNumberOne from "../../../assets/images/number-one_c.png";
-import cNumberTwo from "../../../assets/images/number-two_c.png";
-import cNumberThree from "../../../assets/images/number-three_c.png";
-import cNumberFour from "../../../assets/images/number-four_c.png";
-import cNumberFive from "../../../assets/images/number-five_c.png";
 
 import House from "../../../assets/images/house.png";
 import blueHouse from "../../../assets/images/house_c_x.png";
 
 import Profile from "../../../assets/images/user.png";
-
-import House1 from "../../../assets/images/house_1.png";
-import House2 from "../../../assets/images/house_2.png";
-import House3 from "../../../assets/images/house_3.png";
-import House4 from "../../../assets/images/house_4.png";
-import House5 from "../../../assets/images/house_5.png";
-import House6 from "../../../assets/images/house_6.png";
-import House7 from "../../../assets/images/house_7.png";
-import House8 from "../../../assets/images/house_8.png";
-import House9 from "../../../assets/images/house_9.png";
-import House10 from "../../../assets/images/house_10.png";
-import House11 from "../../../assets/images/house_11.png";
-import House12 from "../../../assets/images/house_12.png";
-import House13 from "../../../assets/images/house_13.png";
-import House14 from "../../../assets/images/house_14.png";
-import House15 from "../../../assets/images/house_15.png";
-import House16 from "../../../assets/images/house_16.png";
-import House17 from "../../../assets/images/house_17.png";
-import House18 from "../../../assets/images/house_18.png";
-import House19 from "../../../assets/images/house_19.png";
-import House20 from "../../../assets/images/house_20.png";
-
-import cHouse1 from "../../../assets/images/house_c_1.png";
-import cHouse2 from "../../../assets/images/house_c_2.png";
-import cHouse3 from "../../../assets/images/house_c_3.png";
-import cHouse4 from "../../../assets/images/house_c_4.png";
-import cHouse5 from "../../../assets/images/house_c_5.png";
-import cHouse6 from "../../../assets/images/house_c_6.png";
-import cHouse7 from "../../../assets/images/house_c_7.png";
-import cHouse8 from "../../../assets/images/house_c_8.png";
-import cHouse9 from "../../../assets/images/house_c_9.png";
-import cHouse10 from "../../../assets/images/house_c_10.png";
-import cHouse11 from "../../../assets/images/house_c_11.png";
-import cHouse12 from "../../../assets/images/house_c_12.png";
-import cHouse13 from "../../../assets/images/house_c_13.png";
-import cHouse14 from "../../../assets/images/house_c_14.png";
-import cHouse15 from "../../../assets/images/house_c_15.png";
-import cHouse16 from "../../../assets/images/house_c_16.png";
-import cHouse17 from "../../../assets/images/house_c_17.png";
-import cHouse18 from "../../../assets/images/house_c_18.png";
-import cHouse19 from "../../../assets/images/house_c_19.png";
-import cHouse20 from "../../../assets/images/house_c_20.png";
 
 import { Dropdown } from "react-native-material-dropdown";
 import RenderUserPanel from "./dashboard/RenderUserPanel";
@@ -106,80 +59,24 @@ import CustomButton from "./menus/CustomButton";
 
 import { IMMenu } from "./dashboard/";
 
-import Autocomplete from "react-native-autocomplete-input";
-import ModalFilterPicker from "react-native-modal-filter-picker";
+const housesImages = Object.keys(houses).map(cH => houses[cH]);
+const housesActivedImages = Object.keys(housesActived).map(
+  h => housesActived[h]
+);
 
-const cHouses = [
-  cHouse1,
-  cHouse2,
-  cHouse3,
-  cHouse4,
-  cHouse5,
-  cHouse6,
-  cHouse7,
-  cHouse8,
-  cHouse9,
-  cHouse10,
-  cHouse11,
-  cHouse12,
-  cHouse13,
-  cHouse14,
-  cHouse15,
-  cHouse16,
-  cHouse17,
-  cHouse18,
-  cHouse19,
-  cHouse20
-];
+const numbersImages = Object.keys(numbers).map(n => numbers[n]);
+const numbersActivedImages = Object.keys(numbersActived).map(
+  h => numbersActived[h]
+);
 
-const Houses = [
-  House1,
-  House2,
-  House3,
-  House4,
-  House5,
-  House6,
-  House7,
-  House8,
-  House9,
-  House10,
-  House11,
-  House12,
-  House13,
-  House14,
-  House15,
-  House16,
-  House17,
-  House18,
-  House19,
-  House20
-];
+const settingBtns = [SettingImage, SettingImage, ...numbersImages];
 
-const settingBtns = [
-  SettingImage,
-  SettingImage,
-  NumberOne,
-  NumberTwo,
-  NumberThree,
-  NumberFour,
-  NumberFive
-];
+const cSettingBtns = numbersImages;
 
-const cSettingBtns = [
-  cNumberOne,
-  cNumberTwo,
-  cNumberThree,
-  cNumberFour,
-  cNumberFive
-];
-
-var UserName;
 var UID = "";
 
 var width = Dimensions.get("window").width;
 var height = Dimensions.get("window").height;
-
-var distance = width / 0.63 - 13;
 
 class Dashboard extends React.Component {
   static navigationOptions = {
@@ -780,7 +677,7 @@ class Dashboard extends React.Component {
         {/* Setting */}
         {this.renderSettingBtn()}
 
-        {Houses.map((house, i) => {
+        {housesImages.map((house, i) => {
           let h_no = i + 1;
           return (
             <RenderHouse
@@ -1839,7 +1736,7 @@ class RenderHouse extends React.Component {
                           neighbors && (
                             <React.Fragment>
                               <Image
-                                source={cHouses[h_no - 1]}
+                                source={housesActivedImages[h_no - 1]}
                                 style={styles.house}
                               />
                               {neighbors[id].profile ? (

@@ -3,8 +3,15 @@ import { Image, Dimensions, View } from "react-native";
 
 const deviceWidth = Dimensions.get("window").width;
 
+import { images } from "../../../utils/images";
+
 class PMMenuImage extends Component {
   render() {
+    const image =
+      this.props.url !== undefined
+        ? { uri: this.props.url }
+        : images.default_picture;
+
     return (
       <View
         style={{
@@ -20,7 +27,7 @@ class PMMenuImage extends Component {
             width: "100%",
             borderRadius: 10
           }}
-          source={{ uri: this.props.url }}
+          source={image}
           resizeMode="cover"
         />
       </View>
