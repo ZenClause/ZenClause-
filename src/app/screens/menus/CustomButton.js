@@ -25,6 +25,7 @@ class CustomButton extends Component {
   }
 
   render() {
+    const customStyle = this.props.style ? this.props.style : {};
     return (
       <TouchableWithoutFeedback
         onPressIn={() => this.handlePressIn()}
@@ -33,6 +34,7 @@ class CustomButton extends Component {
       >
         <View
           style={{
+            ...customStyle,
             width: this.props.width,
             height: this.props.height,
             backgroundColor: this.props.bgColor,

@@ -494,6 +494,7 @@ class Dashboard extends React.Component {
               bgColor="#f90f18"
               height="100%"
               width="49%"
+              style={{ marginLeft: "1%" }}
               onPress={this.handleLogout}
             />
           </View>
