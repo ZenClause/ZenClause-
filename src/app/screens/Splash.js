@@ -8,13 +8,16 @@ import { ScreenOrientation } from "expo";
 import splashImage from "../../../assets/splash/splash.jpg";
 
 class Splash extends React.Component {
+
   static navigationOptions = {
     header: null
   };
+
   state = {
     uid: "",
     user: ""
   };
+
   async componentDidMount() {
     const { navigate } = this.props.navigation;
 
@@ -69,8 +72,8 @@ class Splash extends React.Component {
         </Text>
         <Image
           source={splashImage}
-          style={{ height: 300, width: null, flex: 1 }}
-          resizeMode="cover"
+          style={{ height: 150, width: null, flex: 1 }}
+          resizeMode="contain"
         />
       </Container>
     );

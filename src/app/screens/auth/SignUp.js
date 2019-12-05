@@ -53,8 +53,6 @@ export default class SignUp extends Component {
     const { userPassword } = this.state;
     const { cnfrmPass } = this.state;
 
-    // // //console.log(FirstName)
-
     var obj = {
       userName: userName,
 
@@ -67,7 +65,6 @@ export default class SignUp extends Component {
     var myUId;
     // //
     var n = str1.localeCompare(str2);
-    // //console.log(n)
 
     if (n === -1) {
       alert("Password not matched");
@@ -78,15 +75,12 @@ export default class SignUp extends Component {
       fb.createUserWithEmailAndPassword(userEmail, userPassword)
         .then(createdUser => {
           alert("signed up successfully");
-          // //console.log(createdUser.user.uid)
           myUId = createdUser.user.uid;
-          //console.log('myUId')
 
           fb.signInWithEmailAndPassword(userEmail, userPassword)
             .then(signedinUser => {
               var user = fb.currentUser;
               user.sendEmailVerification().then(function() {
-                //console.log('email sent')
                 alert("Check your Email to uthorize your account");
                 // var a = this.props.navigation.navigate("Home")
                 // var a = this.props.navigation
@@ -95,10 +89,7 @@ export default class SignUp extends Component {
                 }, 5000);
               });
             })
-            .catch(function(error) {
-              // An error happened.
-              //console.log(error)
-            });
+            .catch(function(error) {});
           firebase
             .database()
             .ref("users/" + myUId + "/")
@@ -106,7 +97,6 @@ export default class SignUp extends Component {
             .then(() => {});
         })
         .catch(err => {
-          // //console.log(err)
           alert(err.message);
         });
     }

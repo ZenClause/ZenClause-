@@ -10,7 +10,6 @@ import {
   TouchableOpacity,
   AsyncStorage,
   AppState,
-  Button
 } from "react-native";
 
 import {
@@ -19,19 +18,17 @@ import {
   Icon,
   Item,
   Input,
-  Card,
-  CardItem,
   Label,
   Picker
 } from "native-base";
 import Modal from "react-native-modal";
 import email from "react-native-email";
-import Autocomplete from "react-native-autocomplete-input";
 import ModalFilterPicker from "react-native-modal-filter-picker";
 import validator from "validator";
 
 import firebase from "firebase";
-import { ScreenOrientation, ImagePicker } from "expo";
+import { ScreenOrientation } from "expo";
+import * as ImagePicker from "expo-image-picker";
 
 import {
   houses,
@@ -48,7 +45,6 @@ import blueHouse from "../../../assets/images/house_c_x.png";
 
 import Profile from "../../../assets/images/user.png";
 
-import { Dropdown } from "react-native-material-dropdown";
 import RenderUserPanel from "./dashboard/RenderUserPanel";
 import RenderIM from "./dashboard/RenderIM";
 import { RenderPost, RenderViewPost } from "./dashboard";
@@ -71,12 +67,12 @@ const numbersActivedImages = Object.keys(numbersActived).map(
 
 const settingBtns = [SettingImage, SettingImage, ...numbersImages];
 
-const cSettingBtns = numbersImages;
+const cSettingBtns = numbersActivedImages;
 
-var UID = "";
+let UID = "";
 
-var width = Dimensions.get("window").width;
-var height = Dimensions.get("window").height;
+const width = Dimensions.get("window").width;
+const height = Dimensions.get("window").height;
 
 class Dashboard extends React.Component {
   static navigationOptions = {
@@ -154,10 +150,8 @@ class Dashboard extends React.Component {
       this.state.appState.match(/inactive|background/) &&
       nextAppState === "active"
     ) {
-      console.log("App has come to the foreground!");
       this._setOnlineStatus(true);
     } else {
-      console.log("App has come to background");
       this._setOnlineStatus(false);
     }
     this.setState({ appState: nextAppState });
@@ -262,7 +256,6 @@ class Dashboard extends React.Component {
         user
           .updatePassword(newPassword)
           .then(() => {
-            console.log("Password updated!");
             alert("Password Updated ");
             // navigate("SignIn" )
             myThis.setState({
@@ -285,7 +278,6 @@ class Dashboard extends React.Component {
   changeText = () => {
     var changeText = this.state.headerText;
     //c alert(changeText)
-    // console.log(firebase )
     var a = { userName: changeText };
     this.setState({
       visbleModalForHeaderText: false
@@ -303,8 +295,6 @@ class Dashboard extends React.Component {
       aspect: [4, 3]
     });
 
-    // console.log(result);
-
     const response = await fetch(result.uri);
     const blob = await response.blob();
 
@@ -320,7 +310,7 @@ class Dashboard extends React.Component {
 
   uploadImage = async () => {
     var uri = this.state.image;
-    var imageName = "profile-image-" + Math.random(new Date()).toString(36);
+    var imageName = "profile_picture";
     const response = await fetch(uri);
     const blob = await response.blob();
     // var projectNameText = this.state.projectNameText;
@@ -342,7 +332,6 @@ class Dashboard extends React.Component {
         user
           .updateEmail(newEmail)
           .then(() => {
-            console.log("Email updated!");
             alert("Email Updated ");
             // navigate("SignIn" )
             myThis.setState({
@@ -376,7 +365,6 @@ class Dashboard extends React.Component {
   };
 
   handleLogout = () => {
-    console.log("logout");
     AsyncStorage.multiRemove(["auth", "username"], err => {
       this.setState({
         visibleModal: !this.state.visibleModal
@@ -669,7 +657,6 @@ class Dashboard extends React.Component {
     });
 
   render() {
-    console.log(this.state.neighbors);
     return (
       <Container style={{ flex: 1 }}>
         <StatusBar hidden={true} />
@@ -812,11 +799,6 @@ const styles = StyleSheet.create({
   bgImage: {
     flex: 1,
     resizeMode: "stretch"
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: "center",
-    margin: 10
   },
   container: {
     flex: 1,
@@ -1120,7 +1102,6 @@ class RenderHouse extends React.Component {
   };
 
   _checkUser = id => {
-    console.log("_checkUser: " + id);
     let userRef = firebase.database().ref("/users/");
     userRef
       .orderByKey()
@@ -1133,9 +1114,6 @@ class RenderHouse extends React.Component {
           this.setState({
             neighborInfo: neighbor
           });
-
-          console.log("neighborInfo: ");
-          console.log(this.state.neighborInfo);
         }
       });
   };
@@ -1238,8 +1216,6 @@ class RenderHouse extends React.Component {
 
   renderAddNewResident = () => {
     const { visible } = this.state;
-    console.log("emailOptions");
-    console.log(this.props.emailOptions);
     return (
       <View>
         <Item style={{ height: 50, width: "100%" }}>
@@ -1413,6 +1389,7 @@ class RenderHouse extends React.Component {
       </Modal>
     );
   };
+
   getPost = neighborID => {
     const { neighbors } = this.props;
 
@@ -1463,6 +1440,7 @@ class RenderHouse extends React.Component {
         style={styles.userPanel}
       >
         <PMMenu
+          neighborID={neighborID}
           chatInfo={chatInfo}
           headerName={headerName}
           userPic={userPic}
@@ -1533,8 +1511,6 @@ class RenderHouse extends React.Component {
         <HouseMenu
           onCancel={() => this.setState({ visibleHouseMenu: false })}
           onPress={output => {
-            console.log(UID);
-            console.log(neighborID);
             if (UID !== neighborID) {
               if (output == "cancel" || output == "next") {
                 this.setState({
@@ -1572,7 +1548,6 @@ class RenderHouse extends React.Component {
   };
 
   renderIM = (h_no, neighbor, neighborID) => {
-    console.log(neighbor);
     return (
       <Modal
         isVisible={this.state.visibleIM}

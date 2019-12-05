@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { View, Dimensions } from "react-native";
+import firebase from "firebase";
 import CustomButton from "./CustomButton";
 import PMChat from "./PMChat";
 import PMMenuImage from "./PMMenuImage";
@@ -8,6 +9,29 @@ import PMHeader from "./PMHeader";
 const deviceWidth = Dimensions.get("window").width;
 
 class PMMenu extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      neighborPicture: undefined
+    };
+  }
+
+  async componentDidMount() {
+    let neighborPicture = undefined;
+    try {
+      neighborPicture = await firebase
+        .storage()
+        .ref(`${this.props.neighborID}/profile_picture`)
+        .getDownloadURL();
+    } catch (err) {
+    } finally {
+      this.setState({
+        neighborPicture: neighborPicture
+      });
+    }
+  }
+
   render() {
     return (
       <View
@@ -35,7 +59,7 @@ class PMMenu extends Component {
               marginRight: 4
             }}
           >
-            <PMMenuImage url={this.props.picture} />
+            <PMMenuImage url={this.state.neighborPicture} />
           </View>
           <View
             style={{

@@ -82,8 +82,6 @@ export default class SignIn extends Component {
     const { userEmail, userPassword } = this.state;
     // var myNavigator = 	this.props.prop.navigator
     const { state, navigate } = this.props.navigation;
-    // // //console.log(myNavigator)
-    // //console.log('done')
     var emailVerified;
     var fb = firebase.auth();
     // const { navigate } = myThis.props.prop.navigation;
@@ -124,11 +122,8 @@ export default class SignIn extends Component {
   };
 
   moveToSignUp = () => {
-    // console.log(this.props)
     const { state, navigate } = this.props.navigation;
     navigate("SignUp");
-    console.log("navigate");
-    // console.log(navigate)
   };
 
   render() {
