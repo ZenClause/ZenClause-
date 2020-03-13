@@ -72,7 +72,7 @@ class Splash extends React.Component {
         </Text>
         <Image
           source={splashImage}
-          style={{ height: 150, width: null, flex: 1 }}
+          style={{ height: 120, width: null, flex: 1 }}
           resizeMode="contain"
         />
       </Container>

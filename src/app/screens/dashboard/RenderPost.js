@@ -43,7 +43,7 @@ class RenderPost extends React.Component {
     this.setState({
       message: ''
     })
-    this.prosp.onSendPost(true)
+    this.props.onSendPost(true)
   }
 
   render() {

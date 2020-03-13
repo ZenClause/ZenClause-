@@ -272,7 +272,7 @@ class RenderHouse extends React.Component {
       email(to, {
         // Optional additional arguments
         subject: "Invitation from - ZenClause",
-        body: "Hello, try this app"
+        body: "Hello, try this app https://play.google.com/store/apps/details?id=com.zenclause.zenclause"
       }).catch(console.error);
     } else {
       alert("Email is misformatted");

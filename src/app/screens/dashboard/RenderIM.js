@@ -28,6 +28,7 @@ class RenderIM extends React.Component {
 
   getMsg = async () => {
     let { uid, neighborID, neighbor } = this.props;
+    
     await firebase
       .database()
       .ref("/message-list")
@@ -71,11 +72,12 @@ class RenderIM extends React.Component {
       }
     }
 
-    this.prosp.onSendIM(true);
+    this.props.onSendIM(true);
   };
 
   sendIM = async () => {
     let { msgId, message, user } = this.state;
+    console.log('message sent=========',msgId, message, user)
     let { uid, neighborID } = this.props;
     let msgRef;
     const newMsgId = firebase
@@ -148,7 +150,7 @@ class RenderIM extends React.Component {
 
     // this.props.onSendIM(this.state.message)
 
-    this.prosp.onSendIM(true);
+    this.props.onSendIM(true);
   };
 
   render() {

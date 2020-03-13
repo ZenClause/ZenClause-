@@ -9,8 +9,8 @@
     "orientation": "landscape",
     "icon": "./assets/signUpLoginImages/myicon.png",
     "splash": {
-      "image": "./assets/splash/Capture.png",
-      "resizeMode": "contain",
+      "image": "./assets/splash/splash.png",
+      "resizeMode": "cover",
       "backgroundColor": "#ffffff"
     },
     "updates": {
