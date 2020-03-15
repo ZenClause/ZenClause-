@@ -1,9 +1,9 @@
 {
+  "packagerPort": 19001,
+  "packagerPid": 11700,
   "devToolsPort": 19002,
-  "expoServerPort": null,
-  "packagerPort": null,
-  "packagerPid": null,
-  "expoServerNgrokUrl": "https://3k-d6u.amnan181.zen-rn.exp.direct",
-  "packagerNgrokUrl": "https://packager.3k-d6u.amnan181.zen-rn.exp.direct",
-  "ngrokPid": 28279
+  "expoServerPort": 19000,
+  "expoServerNgrokUrl": "https://3k-d6u.anonymous.zenclause.exp.direct",
+  "packagerNgrokUrl": "https://packager.3k-d6u.anonymous.zenclause.exp.direct",
+  "ngrokPid": 11204
 }

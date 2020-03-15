@@ -1735,7 +1735,7 @@ class RenderHouse extends React.Component {
                       style={{
                         color: neighbors[id].online
                           ? id === UID
-                            ? "white"
+                            ? "rgb(116, 233, 31)"
                             : "rgb(116, 233, 31)"
                           : "rgb(239, 68, 48)",
                         fontSize: styles.deviceWidth / 51,
