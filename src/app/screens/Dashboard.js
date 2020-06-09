@@ -1376,7 +1376,11 @@ class RenderHouse extends React.Component {
           {this.state.neighborInfo.mail ? (
             <Text>Email: {this.state.neighborInfo.mail}</Text>
           ) : (
-            <Text>Add New Resident to this home</Text>
+            <Text>{
+              this.state.action === "move"
+                  ? "This house is vacant"
+                  : "Add New Resident to this home"
+            }</Text>
           )}
 
           {/* <Item style={{ height: 50, width: "100%" }}>
