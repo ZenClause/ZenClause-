@@ -48,6 +48,7 @@ import PMMenu from "./menus/PMMenu";
 import CustomButton from "./menus/CustomButton";
 
 import { IMMenu } from "./dashboard/";
+import CustomModalFilterPicker from "./dashboard/custom-components/CustomModalFilterPicker";
 
 const housesImages = Object.keys(houses).map(cH => houses[cH]);
 const housesActivedImages = Object.keys(housesActived).map(
@@ -1167,7 +1168,7 @@ class RenderHouse extends React.Component {
 
   _onPressSearch = async value => {
     let user = this.state.searchValue; // Searching user mail
-   
+
     let userRef = firebase.database().ref("/users/");
     let ts = this;
     let neighborID = this.props.neighborID;
@@ -1264,13 +1265,14 @@ class RenderHouse extends React.Component {
 
   renderAddNewResident = () => {
     const { visible } = this.state;
+
     return (
       <View>
         <Item style={{ height: 50, width: "100%" }}>
           <TouchableOpacity onPress={this._onShow}>
             <Text>Tap to select User to Add</Text>
           </TouchableOpacity>
-          <ModalFilterPicker
+          <CustomModalFilterPicker
             visible={visible}
             disabled={this.props.emailOptions.length === 0}
             onSelect={this._onSelectTopic}
@@ -1369,7 +1371,7 @@ class RenderHouse extends React.Component {
       >
         <View style={styles.modalContent}>
           <Text>Neighbor ID: #{this.props.neighborID}</Text>
-          
+
           <Text style={{marginBottom:8}}>House No.: #{this.state.house_no}</Text>
           {this.state.neighborInfo.mail ? (
             <Text>Email: {this.state.neighborInfo.mail}</Text>
@@ -1816,7 +1818,7 @@ class RenderHouse extends React.Component {
                       </React.Fragment>
                     )}
 
-                  
+
 
                     {this.checkWhoSeened(neighbors[id])?
                       neighbors[id].lastMsg ? (
