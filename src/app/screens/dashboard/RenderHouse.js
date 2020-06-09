@@ -370,7 +370,7 @@ class RenderHouse extends React.Component {
           <Text>Neighbor ID: #{this.props.neighborID}</Text>
           <Text>House No.: #{this.state.house_no}</Text>
           {this.state.neighborInfo.mail ? (
-            <Text>Email: {this.state.neighborInfo.mail}</Text>
+            <Text>Username: {this.state.neighborInfo.userName}</Text>
           ) : (
             <Text>Add New Resident to this home</Text>
           )}

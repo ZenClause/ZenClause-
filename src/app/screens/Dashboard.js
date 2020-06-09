@@ -1373,8 +1373,8 @@ class RenderHouse extends React.Component {
           <Text>Neighbor ID: #{this.props.neighborID}</Text>
 
           <Text style={{marginBottom:8}}>House No.: #{this.state.house_no}</Text>
-          {this.state.neighborInfo.mail ? (
-            <Text>Email: {this.state.neighborInfo.mail}</Text>
+          {this.state.neighborInfo.userName ? (
+            <Text>Username: {this.state.neighborInfo.userName}</Text>
           ) : (
             <Text>{
               this.state.action === "move"
