@@ -251,11 +251,21 @@ class Chat extends PureComponent {
     this.setState({ selected });
   };
 
+  selectNext = () => {
+      const {selected} = this.state;
+      const messageCount = this.props.chatInfo.length;
+
+      if (selected && selected < (messageCount - 1)) {
+          const newIndex = selected + 1;
+          this.setState({ selected: newIndex });
+      }
+  }
+
   onReply = () => {
     return this.state.selected;
   };
 
-  
+
 
   releaseSelected = (index,item) => {
     if(item.replyToUser){

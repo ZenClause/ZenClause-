@@ -4,8 +4,9 @@ import CustomButton from "./CustomButton";
 import Chat from "./Chat";
 import firebase from "firebase";
 import Modal from "react-native-modal";
-import { Thumbnail, Icon } from "native-base";
+import {Thumbnail, Icon, Item} from "native-base";
 import animatedHappyGif from "../../../../assets/images/happy.gif";
+import CustomModalFilterPicker from "../dashboard/custom-components/CustomModalFilterPicker";
 
 const deviceWidth = Dimensions.get("window").width;
 const deviceHeight = Dimensions.get("window").height;
@@ -26,7 +27,10 @@ class IMMenu extends Component {
     visibleIMMenu: false,
     chatIndex: 0,
     msgIds: [],
-    emojiVisible: false
+    emailOptions: [],
+    emojiVisible: false,
+    modalFilterVisible: false,
+    usernameSelected: undefined,
   };
 
   componentDidMount() {
@@ -115,7 +119,7 @@ class IMMenu extends Component {
   };
 
   sendReply = () => {
-    const { message, msgIds, msgId, chatIndex, messages, user } = this.state;
+    const { message, msgIds, msgId, chatIndex, messages, user, usernameSelected } = this.state;
     let { uid, neighborID } = this.props;
     this.chatRef.sendReply(
       msgId,
@@ -226,7 +230,9 @@ class IMMenu extends Component {
               bgColor="#f90f18"
               height="100%"
               width="37%"
-              onPress={this.props.onPress}
+              onPress={() => {
+                this.chatRef.selectNext();
+              }}
             />
           </View>
         </View>
