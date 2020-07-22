@@ -1,11 +1,18 @@
 import React, { Component } from "react";
-import { View, Dimensions,Image, StyleSheet, TextInput, Text,TouchableOpacity } from "react-native";
+import { View, Dimensions, Image, StyleSheet, TextInput, Text, TouchableOpacity } from "react-native";
 import CustomButton from "./CustomButton";
 import Chat from "./Chat";
 import firebase from "firebase";
 import Modal from "react-native-modal";
-import {Thumbnail, Icon, Item} from "native-base";
-import animatedHappyGif from "../../../../assets/images/happy.gif";
+import { Thumbnail, Icon, Item } from "native-base";
+
+import HappyGif from "../../../../assets/images/emojis/Happy.gif";
+import LovevGif from "../../../../assets/images/emojis/Love.gif";
+import SadGif from "../../../../assets/images/emojis/Sad.gif";
+import SmileyGif from "../../../../assets/images/emojis/Smile.gif";
+import TearGif from "../../../../assets/images/emojis/Tear.gif";
+import WinkGif from "../../../../assets/images/emojis/Wink.gif";
+
 import CustomModalFilterPicker from "../dashboard/custom-components/CustomModalFilterPicker";
 
 const deviceWidth = Dimensions.get("window").width;
@@ -14,6 +21,16 @@ const defaultPic = {
   uri:
     "https://content-static.upwork.com/uploads/2014/10/02123010/profilephoto_goodcrop.jpg"
 };
+
+const emojis = {
+  'Happy': HappyGif,
+  'Love': LovevGif,
+  'Sad': SadGif,
+  'Smile': SmileyGif,
+  'Tear': TearGif,
+  'Wink': WinkGif
+};
+
 class IMMenu extends Component {
   chatRef = null;
   setChatRef = r => (this.chatRef = r);
@@ -40,7 +57,7 @@ class IMMenu extends Component {
 
   onSend = (emoji) => {
     const { msgId, user } = this.state;
-    this.chatRef.sendIM(this.props.uid, this.props.neighborID, msgId, user,emoji);
+    this.chatRef.sendIM(this.props.uid, this.props.neighborID, msgId, user, emoji);
   };
 
   getUserProfile = async () => {
@@ -58,6 +75,21 @@ class IMMenu extends Component {
       }
     }
   };
+
+  updateNeighborhoodMessage = (mssgs, uid, neighborID) => {
+    if (mssgs && mssgs.length > 0) {
+      const mess = mssgs.filter(it => it.uid === uid);
+
+      if (mess && mess.length) {
+        firebase
+          .database()
+          .ref("/neighborhood/" + neighborID)
+          .update({
+            messages: mess
+          });
+      }
+    }
+  }
 
   getMsg = async () => {
     let { uid, neighborID } = this.props;
@@ -77,6 +109,8 @@ class IMMenu extends Component {
                 ? Object.keys(value.messages).map(key => value.messages[key])
                 : []
             });
+
+            this.updateNeighborhoodMessage(value.messages, uid, neighborID);
           }
         });
     } catch (error) {
@@ -94,17 +128,7 @@ class IMMenu extends Component {
 
     let mssgs = this.state.messages || [];
 
-    if (mssgs.length > 0) {
-      if (mssgs.indexOf(uid) !== -1) {
-        mssgs.splice(mssgs.indexOf(uid), 1);
-        await firebase
-          .database()
-          .ref("/neighborhood/" + neighborID)
-          .update({
-            messages: mssgs
-          });
-      }
-    }
+    this.updateNeighborhoodMessage(mssgs, uid, neighborID);
   };
 
   zenImoji = () => {
@@ -147,7 +171,7 @@ class IMMenu extends Component {
       >
         <View style={{ flex: 0.58 }}>
           <Chat
-          msgIds={this.state.msgIds}
+            msgIds={this.state.msgIds}
             profile_picture={this.state.profile_picture}
             ref={this.setChatRef}
             chatInfo={this.state.messages}
@@ -243,16 +267,20 @@ class IMMenu extends Component {
             onBackdropPress={() => this.setState({ emojiVisible: false })}
             backdropOpacity={0.2}
           >
-            <View style={[styles.main,{flexDirection:'row',flexWrap:'wrap'}]}>
-              <TouchableOpacity
-              activeOpacity={.9}
-              onPress={() => this.onSend('happy')}
-              >
-                <Image
-                  source={animatedHappyGif}
-                  style={{ width: 50, height: 50 }}
-                />
-              </TouchableOpacity>
+            <View style={[styles.main, { flexDirection: 'row', flexWrap: 'wrap' }]}>
+              {
+                Object.keys(emojis).map(key => (
+                  <TouchableOpacity
+                    activeOpacity={.9}
+                    onPress={() => this.onSend(key)}
+                  >
+                    <Image
+                      source={emojis[key]}
+                      style={{ width: 50, height: 50 }}
+                    />
+                  </TouchableOpacity>
+                ))
+              }
             </View>
           </Modal>
         )}
@@ -377,7 +405,7 @@ class IMMenu extends Component {
                     style={{
                       flex: 0.85,
                       height: 40,
-                      fontSize: 9,
+                      fontSize: 24,
                       fontWeight: "bold",
                       borderWidth: 2,
                       borderRadius: 6,

@@ -28,7 +28,7 @@ class RenderIM extends React.Component {
 
   getMsg = async () => {
     let { uid, neighborID, neighbor } = this.props;
-    
+
     await firebase
       .database()
       .ref("/message-list")
@@ -171,10 +171,10 @@ class RenderIM extends React.Component {
                 this.refs.scrollView.scrollTo({ y: height })
               }
             >
-              {Object.keys(this.state.messages).map(msgKey => {
+              {Object.keys(this.state.messages).map((msgKey, index) => {
                 let item = this.state.messages[msgKey];
                 return (
-                  <View style={[styles.msgItem, styles.dFlex]} key={msgKey}>
+                  <View style={[styles.msgItem, styles.dFlex]} key={msgKey + '-' + index}>
                     <View style={styles.width("20%")}>
                       <Image source={Profile} style={styles.profile} />
                     </View>

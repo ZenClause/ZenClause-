@@ -43,7 +43,8 @@ import validator from "validator";
 //   RadioButtonLabel
 // } from "react-native-simple-radio-button";
 import firebase from "firebase";
-import { ScreenOrientation, ImagePicker } from "expo";
+import * as MailComposer from 'expo-mail-composer';
+
 import BckImage from "../../../assets/images/bg.png";
 import SettingImage from "../../../assets/images/setting-icon.png";
 import NumberOne from "../../../assets/images/number-one.png";
@@ -266,14 +267,29 @@ class RenderHouse extends React.Component {
 
   _onPressMove = () => {};
 
+  sendEmail = (to) => {
+    MailComposer.composeAsync({
+      recipients: [to],
+      subject: "Invitation from - ZenClause",
+      body: '<!DOCTYPE html><html lang="en"><head><title>Zenclause Invitation</title></head><body><p>Hello!</p><p>I&rsquo;m sending you an invitation to join me on ZenClause, the new Visual Social Media Platform.</p><p><a href="https://play.google.com/store/apps/details?id=com.zenclause.zenclause">https://play.google.com/store/apps/details?id=com.zenclause.zenclause</a></p><p>See you there!</p><div style="position: absolute;width:100%;height:100%;"><p><img src="https://firebasestorage.googleapis.com/v0/b/zenclause.appspot.com/o/invitation-email%2FZenClause%20Icon.png?alt=media&token=bd9d4ace-df21-4353-b245-1160638d191d" alt="" width="391" height="220" style="margin-left: auto;margin-right: auto;display: block;"/></p><p style="text-align: center;"><a href="www.zenclause.com">www.zenclause.com</a></p></div></body></html>',
+      isHtml: true,
+      attachments: []
+    }).then(v => {
+      console.log(v);
+    }).catch(e => {
+      console.error(e);
+    });
+  }
+
   _onPressInvite = () => {
     const to = this.state.inviteEmail; // string or array of email addresses
     if (validator.isEmail(to)) {
-      email(to, {
-        // Optional additional arguments
-        subject: "Invitation from - ZenClause",
-        body: "Hello, try this app https://play.google.com/store/apps/details?id=com.zenclause.zenclause"
-      }).catch(console.error);
+      // email(to, {
+      //   // Optional additional arguments
+      //   subject: "Invitation from - ZenClause",
+      //   body: "Hello, try this app https://play.google.com/store/apps/details?id=com.zenclause.zenclause"
+      // }).catch(console.error);
+      this.sendEmail(to);
     } else {
       alert("Email is misformatted");
     }

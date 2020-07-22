@@ -12,13 +12,29 @@ import {
 import { Thumbnail, Icon } from "native-base";
 import firebase from "firebase";
 import moment from "moment";
-import animatedHappyGif from "../../../../assets/images/happy.gif";
+import HappyGif from "../../../../assets/images/emojis/Happy.gif";
+import LovevGif from "../../../../assets/images/emojis/Love.gif";
+import SadGif from "../../../../assets/images/emojis/Sad.gif";
+import SmileyGif from "../../../../assets/images/emojis/Smile.gif";
+import TearGif from "../../../../assets/images/emojis/Tear.gif";
+import WinkGif from "../../../../assets/images/emojis/Wink.gif";
+
 const today = moment().format();
 const deviceWidth = Dimensions.get("window").width;
 const defaultPic = {
   uri:
     "https://content-static.upwork.com/uploads/2014/10/02123010/profilephoto_goodcrop.jpg"
 };
+
+const emojis = {
+  'Happy': HappyGif,
+  'Love': LovevGif,
+  'Sad': SadGif,
+  'Smile': SmileyGif,
+  'Tear': TearGif,
+  'Wink': WinkGif
+};
+
 class Chat extends PureComponent {
   getMessageItemColor(index) {
     index += 4;
@@ -69,7 +85,7 @@ class Chat extends PureComponent {
           ToastAndroid.show("Sending message...!", ToastAndroid.SHORT);
         });
       let pushedData;
-      if (emoji == 'happy') {
+      if (emoji) {
         pushedData = {
           emoji,
           message: message,
@@ -252,13 +268,14 @@ class Chat extends PureComponent {
   };
 
   selectNext = () => {
-      const {selected} = this.state;
-      const messageCount = this.props.chatInfo.length;
+    const { selected } = this.state;
+    const messageCount = this.props.chatInfo.length;
 
-      if (selected && selected < (messageCount - 1)) {
-          const newIndex = selected + 1;
-          this.setState({ selected: newIndex });
-      }
+    if (selected && selected < (messageCount - 1)) {
+      const newIndex = selected + 1;
+      this.setState({ selected: newIndex });
+      this.flatListRef.scrollToIndex({ animated: true, index: newIndex });
+    }
   }
 
   onReply = () => {
@@ -267,9 +284,9 @@ class Chat extends PureComponent {
 
 
 
-  releaseSelected = (index,item) => {
-    if(item.replyToUser){
-      const {msgIds,chatInfo} = this.props;
+  releaseSelected = (index, item) => {
+    if (item.replyToUser) {
+      const { msgIds, chatInfo } = this.props;
       const indexGetting = msgIds.indexOf(item.replyTo)
       this.flatListRef.scrollToIndex({ animated: true, index: indexGetting });
     }
@@ -296,6 +313,8 @@ class Chat extends PureComponent {
         <View style={{ flex: 0.8 }}>
           <FlatList
             ref={this.flatListRefSet}
+            onContentSizeChange={() => this.state.selected === -1 ? this.flatListRef.scrollToEnd({ animated: true }) : null}
+            onLayout={() => this.state.selected === -1 ? this.flatListRef.scrollToEnd({ animated: true }) : null}
             showsVerticalScrollIndicator={false}
             data={this.props.chatInfo}
             extraData={this.state.selected}
@@ -303,7 +322,7 @@ class Chat extends PureComponent {
               return (
                 <TouchableOpacity
                   activeOpacity={0.9}
-                  onPress={() => this.releaseSelected(index,item)}
+                  onPress={() => this.releaseSelected(index, item)}
                   onLongPress={() => this.setSelected(index)}
                   style={[
                     {
@@ -410,7 +429,7 @@ class Chat extends PureComponent {
                       </View>
                       {item.emoji && (
                         <Image
-                          source={animatedHappyGif}
+                          source={emojis[item.emoji]}
                           style={{ width: 50, height: 50 }}
                         />
                       )}
@@ -461,7 +480,7 @@ class Chat extends PureComponent {
             onChangeText={message => this.setState({ message })}
             style={{
               flex: 0.85,
-              fontSize: 9,
+              fontSize: 18,
               fontWeight: "bold",
               borderWidth: 2,
               borderRadius: 6,
