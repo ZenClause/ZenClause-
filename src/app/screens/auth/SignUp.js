@@ -74,27 +74,31 @@ export default class SignUp extends Component {
       var fb = firebase.auth();
       fb.createUserWithEmailAndPassword(userEmail, userPassword)
         .then(createdUser => {
-          alert("signed up successfully");
+          console.log(createdUser);
+          // alert("signed up successfully");
           myUId = createdUser.user.uid;
 
-          fb.signInWithEmailAndPassword(userEmail, userPassword)
-            .then(signedinUser => {
-              var user = fb.currentUser;
-              user.sendEmailVerification().then(function() {
-                alert("Check your Email to uthorize your account");
-                // var a = this.props.navigation.navigate("Home")
-                // var a = this.props.navigation
-                setTimeout(function() {
-                  navigate("SignIn");
-                }, 5000);
-              });
-            })
-            .catch(function(error) {});
+          obj.profile = createdUser.user.photoURL;
+
           firebase
             .database()
             .ref("users/" + myUId + "/")
             .set(obj)
-            .then(() => {});
+            .then(() => {
+              fb.signInWithEmailAndPassword(userEmail, userPassword)
+                .then(signedinUser => {
+                  var user = fb.currentUser;
+                  user.sendEmailVerification().then(function () {
+                    alert("Check your Email to uthorize your account");
+                    // var a = this.props.navigation.navigate("Home")
+                    // var a = this.props.navigation
+                    setTimeout(function () {
+                      navigate("SignIn");
+                    }, 5000);
+                  });
+                })
+                .catch(function (error) { });
+            });
         })
         .catch(err => {
           alert(err.message);

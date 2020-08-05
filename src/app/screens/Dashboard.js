@@ -102,7 +102,7 @@ class Dashboard extends React.Component {
     neighborID: 1,
     appState: AppState.currentState,
     emailOptions: [],
-    selectedAddedUser: 'Tap to select User to Add'
+    selectedAddedUser: 'Tap To Select User To Add'
   };
 
   async componentDidMount() {
@@ -111,29 +111,24 @@ class Dashboard extends React.Component {
     // var a = this.props.navigation;
     await AppState.addEventListener("change", this._handleAppStateChange);
     ScreenOrientation.lockAsync(ScreenOrientation.Orientation.LANDSCAPE);
-    this._setOnlineStatus(true);
+    await this._setOnlineStatus(true);
 
     this._loadEmailOptions();
 
-    firebase.auth().onAuthStateChanged(user => {
-      // alert('login');
-      if (user && user.uid) {
-      } else {
-        // No user is signed in.
-      }
-    });
+    // firebase.auth().onAuthStateChanged(user => {
+    //   console.log('onAuthStateChanged', user);
+    //   // alert('login');
+    //   if (user && user.uid) {
+    //   } else {
+    //     // No user is signed in.
+    //   }
+    // });
   }
 
   async componentWillMount() {
     await AppState.removeEventListener("change", this._handleAppStateChange);
     this._RefreshHouse();
-    this._setOnlineStatus(true);
-  }
-
-  _updateUserStatus = (uid, online) => {
-    firebase
-      .database()
-      .ref("users/" + uid)
+    await this._setOnlineStatus(true);
   }
 
   _loadEmailOptions = () => {
@@ -178,20 +173,25 @@ class Dashboard extends React.Component {
     this.setState({ appState: nextAppState });
   };
 
-  _setOnlineStatus = status => {
+  _updateUserStatus = async (collection, status) => {
     firebase
       .database()
-      .ref("/neighborhood/" + UID)
+      .ref(collection + UID)
       .once("value", snap => {
         if (snap.val()) {
-          return firebase
-            .database()
-            .ref("/neighborhood/" + UID)
+          snap.ref
             .update({
               online: status
             });
+        } else {
+          console.log('update user status!');
         }
       });
+  }
+
+  _setOnlineStatus = async status => {
+    console.log('_setOnlineStatus', UID);
+    await Promise.all([this._updateUserStatus('/neighborhood/', status), this._updateUserStatus('/users/', status)])
   };
 
   _RefreshHouse = deleteId => {
@@ -399,7 +399,9 @@ class Dashboard extends React.Component {
     }
   };
 
-  handleLogout = () => {
+  handleLogout = async () => {
+    await this._setOnlineStatus(false);
+
     AsyncStorage.multiRemove(["auth", "username"], err => {
       this.setState({
         visibleModal: !this.state.visibleModal
@@ -518,7 +520,7 @@ class Dashboard extends React.Component {
               height="100%"
               width="49%"
               style={{ marginLeft: "1%" }}
-              onPress={this.handleLogout}
+              onPress={async () => await this.handleLogout()}
             />
           </View>
         </View>
@@ -1114,13 +1116,9 @@ class RenderHouse extends React.Component {
     profiles: {}
   };
 
-  componentDidMount() {
-    const userKeys = this.props.neighbors && Object.keys(this.props.neighbors);
-  }
-
   clickTimeout = null;
-  _onPress = (h_no, neighborID) => {
-    console.log('_onPress');
+  _onPress = (h_no, neighborID, e) => {
+    console.log('_onPress', e);
 
     if (neighborID) {
       if (this.clickTimeout !== null) {
@@ -1300,24 +1298,31 @@ class RenderHouse extends React.Component {
     const { visible } = this.state;
 
     return (
-      <View>
-        <Item style={{ height: 50, width: "100%" }}>
-          <TouchableOpacity onPress={this._onShow}>
-            <Text>{this.state.searchValue || 'Tap to select User to Add'}</Text>
+      <View style={{ height: 100 }}>
+        <View style={{
+          flex: 1,
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+          marginTop: 30
+        }}>
+          <TouchableOpacity onPress={this._onShow} style={{ borderBottomWidth: 1, borderBottomColor: "#ddd", paddingBottom: 10 }}>
+            <Text style={{ fontWeight: "900", fontSize: 23 }}>{this.state.searchValue || 'Tap To Select User To Add'}</Text>
           </TouchableOpacity>
-          <CustomModalFilterPicker
-            visible={visible}
-            disabled={this.props.emailOptions.length === 0}
-            onSelect={this._onSelectTopic}
-            onCancel={this._onCancel}
-            options={this.props.emailOptions}
-          />
-        </Item>
-        <TouchableOpacity onPress={this._onPressSearch}>
-          <View style={styles.button}>
-            <Text>Add To House</Text>
-          </View>
-        </TouchableOpacity>
+          <TouchableOpacity onPress={this._onPressSearch}>
+            <View style={styles.button}>
+              <Text>Add To House</Text>
+            </View>
+          </TouchableOpacity>
+        </View>
+
+        <CustomModalFilterPicker
+          visible={visible}
+          disabled={this.props.emailOptions.length === 0}
+          onSelect={this._onSelectTopic}
+          onCancel={this._onCancel}
+          options={this.props.emailOptions}
+        />
       </View>
     );
   };
@@ -1679,11 +1684,11 @@ class RenderHouse extends React.Component {
     );
   };
 
-  isIMRecieved = (messages = [], neighborID) => {
+  isIMRecieved = (messages = [], neighborID, lastMsg) => {
     if (messages.length > 0) {
       return messages.indexOf(neighborID) !== 1;
     } else {
-      return false;
+      return lastMsg && lastMsg.length ? true : false;
     }
   };
 
@@ -1755,7 +1760,7 @@ class RenderHouse extends React.Component {
             styles.houseTouchable,
             styles[`house_${h_no}`] && styles[`house_${h_no}`]
           ]}
-          onPress={() => this._onPress(h_no, neighborID)}
+          onPress={(e) => this._onPress(h_no, neighborID, e)}
         >
           {neighbors &&
             Object.keys(neighbors).map((id, p) => {
@@ -1788,14 +1793,27 @@ class RenderHouse extends React.Component {
                     {flag && (
                       <React.Fragment>
                         {neighbors &&
-                          id !== UID &&
-                          this.isIMRecieved(neighbors[id].messages, id) ? (
+                          this.isIMRecieved(neighbors[id].messages, id, neighbors[id].lastMsg) ? (
                             <React.Fragment>
                               <Image source={blueHouse} style={styles.house} />
                               {neighbors[id] && neighbors[id].profile ? (
-                                <Image source={{ uri: neighbors[id].profile }} />
+                                <TouchableOpacity
+                                  onPress={() =>
+                                    this.openIMMenu(neighbors[id], id)
+                                  }
+                                  style={styles.profile}
+                                >
+                                  <Image source={{ uri: neighbors[id].profile }} />
+                                </TouchableOpacity>
                               ) : (
-                                  <Image source={Profile} style={styles.profile} />
+                                  <TouchableOpacity
+                                    onPress={() =>
+                                      this.openIMMenu(neighbors[id], id)
+                                    }
+                                    style={styles.profile}
+                                  >
+                                    <Image source={Profile} style={styles.profile} />
+                                  </TouchableOpacity>
                                 )}
                             </React.Fragment>
                           ) : neighbors &&
