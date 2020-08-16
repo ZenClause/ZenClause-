@@ -934,7 +934,7 @@ const styles = StyleSheet.create({
 
   settingImgTouch: {
     position: "absolute",
-    zIndex: 9999,
+    zIndex: 4,
     top: 0
   },
 
@@ -966,7 +966,8 @@ const styles = StyleSheet.create({
   },
   house: {
     width: percentageX(22),
-    height: percentageX(22)
+    height: percentageX(22),
+    zIndex: 1
   },
   house_1: {
     bottom: percentageX(0),
@@ -1050,15 +1051,15 @@ const styles = StyleSheet.create({
   },
   houseTouchable: {
     position: "absolute",
-    zIndex: 9999
+    zIndex: 1
   },
   profile: {
-    width: Dimensions.get("window").width / 25,
-    height: Dimensions.get("window").width / 25,
+    width: Dimensions.get("window").width / 20,
+    height: Dimensions.get("window").width / 20,
     position: "absolute",
     top: 0,
     left: 0,
-    zIndex: 9999999999,
+    zIndex: 50,
     borderRadius: 100
   },
   userPanel: {},
@@ -1221,7 +1222,8 @@ class RenderHouse extends React.Component {
                 houseID: this.state.house_no,
                 uid,
                 neighborID,
-                online: onlineStatus
+                online: onlineStatus,
+                profile: snap.val()[objKey].profile
               };
 
               firebase
@@ -1605,6 +1607,11 @@ class RenderHouse extends React.Component {
           onCancel={() => this.setState({ visibleHouseMenu: false })}
           onPress={output => {
             if (UID !== neighborID) {
+              if (output === 'delete') {
+                alert('Oop! You are not allow to delete this user!');
+                return;
+              }
+
               if (output == "cancel" || output == "next") {
                 this.setState({
                   visibleHouseMenu: false
@@ -1618,7 +1625,24 @@ class RenderHouse extends React.Component {
                 });
               }
             } else {
-              alert("Invalid...! This is you");
+              switch (output) {
+                case 'cancel':
+                  this.setState({
+                    visibleHouseMenu: false
+                  });
+                  break;
+                case 'delete':
+                  this.setState({
+                    house_no: h_no,
+                    showActionModal: true,
+                    visibleHouseMenu: false,
+                    action: output
+                  });
+                  break;
+                default:
+                  alert("Invalid...! This is you");
+                  break;
+              }
             }
           }}
           openPostWindow={() => {
@@ -1714,6 +1738,7 @@ class RenderHouse extends React.Component {
 
   openIMMenu = (n, neighborID_) => {
     this.setState({ visibleIMMenu: true });
+
     if (n.whoSeen) {
       if (this.checkWhoSeened(n)) {
         // var newData = n.whoSeen.map((n,index) => {
@@ -1786,7 +1811,7 @@ class RenderHouse extends React.Component {
                         position: "absolute",
                         top: 10,
                         right: 6,
-                        zIndex: 9999999
+                        zIndex: 30
                       }}
                     />
 
@@ -1803,7 +1828,7 @@ class RenderHouse extends React.Component {
                                   }
                                   style={styles.profile}
                                 >
-                                  <Image source={{ uri: neighbors[id].profile }} />
+                                  <Image source={{ uri: neighbors[id].profile }} style={styles.profile} />
                                 </TouchableOpacity>
                               ) : (
                                   <TouchableOpacity
@@ -1853,14 +1878,25 @@ class RenderHouse extends React.Component {
                                       style={styles.house}
                                     />
                                     {neighbors[id].profile ? (
-                                      <Image
-                                        source={{ uri: neighbors[id].profile }}
+                                      <TouchableOpacity
+                                        onPress={(e) => {
+                                          e.preventDefault();
+                                          this.openIMMenu(neighbors[id], id)
+                                        }
+                                        }
                                         style={styles.profile}
-                                      />
+                                      >
+                                        <Image
+                                          source={{ uri: neighbors[id].profile }}
+                                          style={styles.profile}
+                                        />
+                                      </TouchableOpacity>
                                     ) : (
                                         <TouchableOpacity
-                                          onPress={() =>
+                                          onPress={(e) => {
+                                            e.preventDefault();
                                             this.openIMMenu(neighbors[id], id)
+                                          }
                                           }
                                           style={styles.profile}
                                         >
@@ -1877,17 +1913,22 @@ class RenderHouse extends React.Component {
 
                     {this.checkWhoSeened(neighbors[id]) ?
                       neighbors[id].lastMsg ? (
-                        <View
+                        <TouchableOpacity
                           style={{
                             position: "absolute",
-                            zIndex: 999999999,
+                            zIndex: 60,
                             top: 0,
                             right: -10
                           }}
+                          onPress={(e) => {
+                            e.preventDefault();
+                            this.openIMMenu(neighbors[id], id);
+                          }
+                          }
                         >
                           <Image
                             source={DialogImage}
-                            style={{ width: 60, height: 40 }}
+                            style={{ width: 60, height: 40, zIndex: 120 }}
                           />
                           <Text
                             style={{
@@ -1895,12 +1936,13 @@ class RenderHouse extends React.Component {
                               top: 2,
                               left: 10,
                               fontSize: 11,
-                              color: "#0081ee"
+                              color: "#0081ee",
+                              zIndex: 150
                             }}
                           >
                             {neighbors[id].lastMsg.substr(0, 15)}
                           </Text>
-                        </View>
+                        </TouchableOpacity>
                       ) : null : null}
                   </React.Fragment>
                 )

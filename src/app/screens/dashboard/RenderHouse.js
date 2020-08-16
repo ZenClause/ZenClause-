@@ -607,7 +607,7 @@ const styles = StyleSheet.create({
 
   settingImgTouch: {
     position: "absolute",
-    zIndex: 9999,
+    zIndex: 4,
     top: 0
   },
 
@@ -723,7 +723,7 @@ const styles = StyleSheet.create({
   },
   houseTouchable: {
     position: "absolute",
-    zIndex: 9999
+    zIndex: 1
   },
   profile: {
     width: 25,
@@ -731,6 +731,6 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 0,
     left: 0,
-    zIndex: 999
+    zIndex: 100
   }
 });

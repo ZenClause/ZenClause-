@@ -4,7 +4,7 @@ import CustomButton from "./CustomButton";
 import Chat from "./Chat";
 import firebase from "firebase";
 import Modal from "react-native-modal";
-import { Thumbnail, Icon, Item } from "native-base";
+import { Thumbnail, Icon } from "native-base";
 
 import HappyGif from "../../../../assets/images/emojis/Happy.gif";
 import LovevGif from "../../../../assets/images/emojis/Love.gif";
@@ -13,10 +13,8 @@ import SmileyGif from "../../../../assets/images/emojis/Smile.gif";
 import TearGif from "../../../../assets/images/emojis/Tear.gif";
 import WinkGif from "../../../../assets/images/emojis/Wink.gif";
 
-import CustomModalFilterPicker from "../dashboard/custom-components/CustomModalFilterPicker";
 
 const deviceWidth = Dimensions.get("window").width;
-const deviceHeight = Dimensions.get("window").height;
 const defaultPic = {
   uri:
     "https://content-static.upwork.com/uploads/2014/10/02123010/profilephoto_goodcrop.jpg"
@@ -143,7 +141,7 @@ class IMMenu extends Component {
   };
 
   sendReply = () => {
-    const { message, msgIds, msgId, chatIndex, messages, user, usernameSelected } = this.state;
+    const { message, msgIds, msgId, chatIndex, messages, user } = this.state;
     let { uid, neighborID } = this.props;
     this.chatRef.sendReply(
       msgId,
