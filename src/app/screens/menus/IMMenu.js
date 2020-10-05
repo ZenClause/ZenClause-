@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, Dimensions, Image, StyleSheet, TextInput, Text, TouchableOpacity } from "react-native";
+import { View, Dimensions, Image, StyleSheet, TextInput, Text, TouchableOpacity, Keyboard } from "react-native";
 import CustomButton from "./CustomButton";
 import Chat from "./Chat";
 import firebase from "firebase";
@@ -51,9 +51,11 @@ class IMMenu extends Component {
   componentDidMount() {
     this.getMsg();
     this.getUserProfile();
+
   }
 
   onSend = (emoji) => {
+    console.log('emoji', emoji)
     const { msgId, user } = this.state;
     this.chatRef.sendIM(this.props.uid, this.props.neighborID, msgId, user, emoji);
   };
@@ -173,6 +175,7 @@ class IMMenu extends Component {
             profile_picture={this.state.profile_picture}
             ref={this.setChatRef}
             chatInfo={this.state.messages}
+
           />
         </View>
         <View style={{ flex: 0.42 }}>
@@ -192,8 +195,9 @@ class IMMenu extends Component {
               bgColor="#0c8fd6"
               height="100%"
               width="31%"
-              onPress={this.onSend}
+              onPress={() => this.onSend()}
             />
+            {console.log('onPress', this.props.onPress)}
             <CustomButton
               fontSize={deviceWidth / 51}
               label="Username"
@@ -411,6 +415,8 @@ class IMMenu extends Component {
                     }}
                     multiline={true}
                     numberOfLines={3}
+                    returnKeyType="done"
+                    onSubmitEditing={() => { Keyboard.dismiss() }}
                   />
                 </View>
 

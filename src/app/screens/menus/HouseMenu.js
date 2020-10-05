@@ -17,6 +17,7 @@ class HouseMenu extends Component {
           height: deviceWidth / 2.8
         }}
       >
+        {/* <Text>fsdffdff</Text> */}
         <View style={{ flex: 0.65 }}>
           <View
             style={{

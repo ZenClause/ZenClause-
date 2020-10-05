@@ -427,12 +427,20 @@ class Chat extends PureComponent {
                           }}
                         />
                       </View>
-                      {item.emoji && (
+
+                      {console.log("item", item, item.emoji)}
+                      {item.emoji && !item.emoji.includes('send') && (
+
                         <Image
                           source={emojis[item.emoji]}
-                          style={{ width: 50, height: 50 }}
+                          style={{
+                            marginLeft: 10,
+                            height: deviceWidth / 50, width: deviceWidth / 50
+                          }}
                         />
                       )}
+
+
                       <Text
                         style={{
                           paddingHorizontal: 6,
@@ -444,6 +452,7 @@ class Chat extends PureComponent {
                       >
                         {item.message}
                       </Text>
+
                     </View>
                   </View>
                 </TouchableOpacity>
@@ -480,7 +489,8 @@ class Chat extends PureComponent {
             onChangeText={message => this.setState({ message })}
             style={{
               flex: 0.85,
-              fontSize: 18,
+              fontSize: deviceWidth / 79,
+              // fontSize: 18,
               fontWeight: "bold",
               borderWidth: 2,
               borderRadius: 6,

@@ -265,7 +265,7 @@ class RenderHouse extends React.Component {
       });
   };
 
-  _onPressMove = () => {};
+  _onPressMove = () => { };
 
   sendEmail = (to) => {
     MailComposer.composeAsync({
@@ -388,8 +388,8 @@ class RenderHouse extends React.Component {
           {this.state.neighborInfo.mail ? (
             <Text>Username: {this.state.neighborInfo.userName}</Text>
           ) : (
-            <Text>Add New Resident to this home</Text>
-          )}
+              <Text>Add New Resident to this home</Text>
+            )}
 
           <Item style={{ height: 50, width: "100%" }}>
             <Picker
