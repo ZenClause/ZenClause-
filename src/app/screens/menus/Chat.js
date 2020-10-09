@@ -264,14 +264,18 @@ class Chat extends PureComponent {
     }
   };
   setSelected = selected => {
+    console.log('selected', selected)
     this.setState({ selected });
   };
 
   selectNext = () => {
     const { selected } = this.state;
     const messageCount = this.props.chatInfo.length;
-
-    if (selected && selected < (messageCount - 1)) {
+    if (selected < 0) {
+      this.setState({ selected: 0 });
+      this.flatListRef.scrollToIndex({ animated: true, index: 0 });
+    }
+    if (selected > -1 && selected < (messageCount - 1)) {
       const newIndex = selected + 1;
       this.setState({ selected: newIndex });
       this.flatListRef.scrollToIndex({ animated: true, index: newIndex });
@@ -428,7 +432,6 @@ class Chat extends PureComponent {
                         />
                       </View>
 
-                      {console.log("item", item, item.emoji)}
                       {item.emoji && !item.emoji.includes('send') && (
 
                         <Image

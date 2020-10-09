@@ -17,6 +17,7 @@ import Modal from "react-native-modal";
 import email from "react-native-email";
 import ModalFilterPicker from "react-native-modal-filter-picker";
 import validator from "validator";
+import lodash from 'lodash';
 
 import firebase from "firebase";
 import { ScreenOrientation } from "expo";
@@ -1709,6 +1710,7 @@ class RenderHouse extends React.Component {
   };
 
   isIMRecieved = (messages = [], neighborID, lastMsg) => {
+    console.log("messages", lodash.indexOf(messages, { uid: neighborID }), messages, neighborID, lastMsg)
     if (messages.length > 0) {
       return messages.indexOf(neighborID) !== 1;
     } else {
@@ -1763,7 +1765,8 @@ class RenderHouse extends React.Component {
     if (data.whoSeen) {
       // alert(JSON.stringify(data))
       const d = data.whoSeen.filter(n => n == UID);
-      if (d.length) {
+      console.log('d', d, UID)
+      if (d.length > 0) {
         return false;
       }
       return true;
@@ -1873,6 +1876,7 @@ class RenderHouse extends React.Component {
                               ) : (
                                 neighbors && (
                                   <React.Fragment>
+                                    {console.log('Gray house for ', neighbors[id])}
                                     <Image
                                       source={housesActivedImages[h_no - 1]}
                                       style={styles.house}
@@ -1890,6 +1894,7 @@ class RenderHouse extends React.Component {
                                           source={{ uri: neighbors[id].profile }}
                                           style={styles.profile}
                                         />
+
                                       </TouchableOpacity>
                                     ) : (
                                         <TouchableOpacity
