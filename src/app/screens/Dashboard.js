@@ -1280,11 +1280,7 @@ class RenderHouse extends React.Component {
   };
 
   _onSelectTopic = picked => {
-    this.setState({
-      visible: false
-    });
-
-    this.setState({ searchValue: picked });
+    this.setState({ searchValue: picked.label, visible: false });
   };
 
   _onCancel = () => {
@@ -1606,7 +1602,7 @@ class RenderHouse extends React.Component {
       >
         <HouseMenu
           onCancel={() => this.setState({ visibleHouseMenu: false })}
-          onPress={output => {
+          onPress={output => { 
             if (UID !== neighborID) {
               if (output === 'delete') {
                 alert('Oop! You are not allow to delete this user!');
@@ -1821,10 +1817,10 @@ class RenderHouse extends React.Component {
                     {flag && (
                       <React.Fragment>
                         {neighbors &&
-                          this.isIMRecieved(neighbors[id].messages, id, neighbors[id].lastMsg) ? (
+                          this.isIMRecieved(neighbors[id].messages, id, neighbors[id].lastMsg) && this.checkWhoSeened(neighbors[id])  ? (
                             <React.Fragment>
                               <Image source={blueHouse} style={styles.house} />
-                              {neighbors[id] && neighbors[id].profile ? (
+                              {neighbors[id] && neighbors[id].profile  ? (
                                 <TouchableOpacity
                                   onPress={() =>
                                     this.openIMMenu(neighbors[id], id)

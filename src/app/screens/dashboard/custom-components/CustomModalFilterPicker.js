@@ -2,7 +2,9 @@ import ModalFilterPicker from "react-native-modal-filter-picker";
 
 export default class CustomModalFilterPicker extends ModalFilterPicker {
     onFilterChange = (text) => {
+      
         const { options } = this.props
+      
 
         const filter = text.toLowerCase()
 
@@ -13,7 +15,8 @@ export default class CustomModalFilterPicker extends ModalFilterPicker {
 
         this.setState({
             filter: text.toLowerCase(),
-            ds: this.state.ds.cloneWithRows(filtered)
+            ds:filtered
+            // ds: this.state.ds.cloneWithRows(filtered)
         })
     }
 }
